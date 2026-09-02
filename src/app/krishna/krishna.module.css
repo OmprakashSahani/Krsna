@@ -1,0 +1,104 @@
+:global(.site-header):has(+ .versePage) {
+  display: none;
+}
+
+.versePage + :global(.site-footer) {
+  display: none;
+}
+
+.verseHeader {
+  display: flex;
+  align-items: baseline;
+  padding: 1.5rem 0 .85rem;
+  border-bottom: 1px solid #34343a;
+}
+
+.backLink {
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.verseComposition {
+  width: min(100%, 46rem);
+  margin-inline: auto;
+  padding: clamp(2.5rem, 5vw, 4rem) 0 clamp(2.75rem, 5vw, 4rem);
+}
+
+.verseReference {
+  margin: 0 0 1.75rem;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: .1em;
+  text-align: center;
+}
+
+.devanagari {
+  margin: 0;
+  color: var(--foreground);
+  font-family: "Noto Serif Devanagari", "Kohinoor Devanagari", "Nirmala UI", Mangal, serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.75;
+  text-align: center;
+}
+
+.transliteration {
+  margin: 1.5rem 0 0;
+  color: var(--body);
+  font-size: 13.5px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.65;
+  text-align: center;
+}
+
+.translation {
+  width: min(100%, 42rem);
+  margin: 2.25rem auto 0;
+}
+
+.translation h2 {
+  margin: 0 0 .55rem;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: .08em;
+  text-align: center;
+}
+
+.translation p {
+  margin: 0;
+  color: var(--foreground);
+  font-size: 14.5px;
+  font-weight: 550;
+  line-height: 1.7;
+}
+
+.verseFooterRule {
+  padding: 1.1rem 0 1.5rem;
+  border-top: 1px solid #85858d;
+}
+
+@media (max-width: 720px) {
+  .verseHeader {
+    padding-top: 1.25rem;
+  }
+
+  .verseComposition {
+    padding: 2.75rem 0 3.25rem;
+  }
+
+  .devanagari {
+    font-size: 17px;
+  }
+
+  .transliteration {
+    font-size: 13px;
+  }
+}
