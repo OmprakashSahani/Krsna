@@ -24,7 +24,7 @@ export default function ResumePage() {
             <span>{resume.personal.location}</span>
             {resume.contacts.map((contact) => contact.href ? (
               <a key={contact.label} href={contact.href} target={contact.external ? "_blank" : undefined} rel={contact.external ? "noopener noreferrer" : undefined}>
-                {contact.label}
+                {contact.value}
                 {contact.external ? <span className="sr-only"> (opens in a new tab)</span> : null}
               </a>
             ) : <span key={contact.label}>{contact.value}</span>)}
