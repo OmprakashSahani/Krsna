@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import { NameReveal } from "@/components/NameReveal";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function HomePage() {
   return (

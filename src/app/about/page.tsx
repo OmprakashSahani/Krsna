@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "About",
   description: "About Omprakash Sahani and his work across ML systems, software engineering, distributed systems, and evaluation.",
+  alternates: { canonical: "/about" },
 };
 
 const focus = ["ML systems", "Software engineering", "Distributed systems", "Evaluation and benchmarking"];

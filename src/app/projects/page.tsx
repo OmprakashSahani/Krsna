@@ -4,6 +4,7 @@ import { ProjectIndex } from "@/components/ProjectIndex";
 export const metadata: Metadata = {
   title: "Projects",
   description: "A selected index of ML systems, evaluation, performance, search, and robotics-data projects by Omprakash Sahani.",
+  alternates: { canonical: "/projects" },
 };
 
 export default function ProjectsPage() {

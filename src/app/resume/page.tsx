@@ -6,6 +6,7 @@ import styles from "./resume.module.css";
 export const metadata: Metadata = {
   title: { absolute: "Resume — Omprakash Sahani" },
   description: "Detailed technical resume for Omprakash Sahani, covering software engineering, ML systems, distributed systems, evaluation, and robot learning.",
+  alternates: { canonical: "/resume" },
 };
 
 export default function ResumePage() {

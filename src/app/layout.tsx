@@ -7,6 +7,7 @@ import "./globals.css";
 const description = "Portfolio of Omprakash Sahani, an ML systems and software engineer working across evaluation, performance, and distributed systems.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://krsna-supreme-personality-of-godhead.vercel.app"),
   title: { default: "Omprakash Sahani — ML Systems Engineer", template: "%s — Omprakash Sahani" },
   description,
   authors: [{ name: "Omprakash Sahani" }],

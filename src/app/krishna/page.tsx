@@ -5,6 +5,7 @@ import styles from "./krishna.module.css";
 export const metadata: Metadata = {
   title: "ŚB 10.21.5 — Kṛṣṇa",
   description: "ŚB 10.21.5 in Devanagari and transliteration, with an English translation.",
+  alternates: { canonical: "/krishna" },
 };
 
 export default function KrishnaPage() {
