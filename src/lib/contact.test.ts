@@ -20,6 +20,23 @@ describe("isValidNoteEmail", () => {
     expect(isValidNoteEmail(email)).toBe(valid);
   });
 
+  it.each([64, 65])("enforces the local-part limit at %i characters", (length) => {
+    const email = `${"a".repeat(length)}@example.com`;
+    expect(isValidNoteEmail(email)).toBe(length === 64);
+  });
+
+  it.each([
+    ["first", 0],
+    ["middle", 1],
+    ["last", 2],
+  ])("enforces the length limit for the %s domain label", (_position, index) => {
+    for (const length of [63, 64]) {
+      const labels = ["mail", "example", "com"];
+      labels[index] = "a".repeat(length);
+      expect(isValidNoteEmail(`visitor@${labels.join(".")}`)).toBe(length === 63);
+    }
+  });
+
   it.each([254, 255])("enforces the length limit at %i characters", (length) => {
     // Keep the local part and every domain label valid at both boundaries.
     const email = `${"a".repeat(64)}@${"b".repeat(63)}.${"c".repeat(63)}.${"d".repeat(length - 193)}`;
