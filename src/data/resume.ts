@@ -61,10 +61,7 @@ export const resume = {
     location: "Kolhapur, Maharashtra, India",
   },
   contacts: [
-    { label: "Email", value: "Omprakash.Sahani1206@gmail.com", href: "mailto:Omprakash.Sahani1206@gmail.com" },
-    { label: "Phone", value: "+91 9561445156", href: "tel:+919561445156" },
-    { label: "GitHub", value: "github.com/OmprakashSahani", href: "https://github.com/OmprakashSahani", external: true },
-    { label: "LinkedIn", value: "linkedin.com/in/omprakashsahani", href: "https://www.linkedin.com/in/omprakashsahani/", external: true },
+    { label: "Email", value: "Omprakash.Sahani1206@gmail.com", href: "mailto:Omprakash.Sahani1206@gmail.com", external: false },
   ] satisfies readonly ResumeContact[],
   summary: [
     {

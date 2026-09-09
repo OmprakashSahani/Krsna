@@ -1,3 +1,5 @@
+import { isValidNoteEmail } from "@/lib/contact";
+
 const MAX_MESSAGE_LENGTH = 3000;
 const MAX_BODY_BYTES = 20000;
 
@@ -44,10 +46,18 @@ export async function POST(request: Request) {
     return failure(400, "invalid_request");
   }
   if (!payload || typeof payload !== "object" || Array.isArray(payload)
-    || Object.keys(payload).some((key) => key !== "message")
+    || Object.keys(payload).some((key) => key !== "message" && key !== "email")
     || !("message" in payload) || typeof payload.message !== "string"
     || !payload.message.trim() || payload.message.length > MAX_MESSAGE_LENGTH) {
     return failure(400, "invalid_message");
+  }
+  const suppliedEmail = "email" in payload ? payload.email : "";
+  if (typeof suppliedEmail !== "string") {
+    return failure(400, "invalid_email");
+  }
+  const email = suppliedEmail.trim();
+  if (!isValidNoteEmail(email)) {
+    return failure(400, "invalid_email");
   }
 
   // These values are server-only. Delivery stays unavailable until all three are configured.
@@ -60,7 +70,11 @@ export async function POST(request: Request) {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ from, to: [to], subject: "A private note from the portfolio", text: payload.message.trim() }),
+      body: JSON.stringify({
+        from, to: [to], subject: "New portfolio note",
+        text: `Message:\n${payload.message.trim()}\n\nReply email:\n${email || "Anonymous"}`,
+        ...(email ? { reply_to: email } : {}),
+      }),
       signal: AbortSignal.timeout(10000),
       cache: "no-store",
     });
