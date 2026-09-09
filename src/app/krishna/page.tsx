@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import styles from "./krishna.module.css";
 
+const description = "ŚB 10.21.5 in Devanagari and transliteration, with an English translation.";
+
 export const metadata: Metadata = {
   title: "ŚB 10.21.5 — Kṛṣṇa",
-  description: "ŚB 10.21.5 in Devanagari and transliteration, with an English translation.",
+  description,
   alternates: { canonical: "/krishna" },
+  openGraph: { type: "website", title: "ŚB 10.21.5 — Kṛṣṇa — Omprakash Sahani", description, siteName: "Omprakash Sahani" },
+  twitter: { card: "summary", title: "ŚB 10.21.5 — Kṛṣṇa — Omprakash Sahani", description },
 };
 
 export default function KrishnaPage() {

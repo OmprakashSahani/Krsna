@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { ProjectIndex } from "@/components/ProjectIndex";
 
+const description = "A selected index of ML systems, evaluation, performance, search, and robotics-data projects by Omprakash Sahani.";
+
 export const metadata: Metadata = {
   title: "Projects",
-  description: "A selected index of ML systems, evaluation, performance, search, and robotics-data projects by Omprakash Sahani.",
+  description,
   alternates: { canonical: "/projects" },
+  openGraph: { type: "website", title: "Projects — Omprakash Sahani", description, siteName: "Omprakash Sahani" },
+  twitter: { card: "summary", title: "Projects — Omprakash Sahani", description },
 };
 
 export default function ProjectsPage() {

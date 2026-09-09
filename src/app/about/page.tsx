@@ -3,10 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./about.module.css";
 
+const description = "About Omprakash Sahani and his work across ML systems, software engineering, distributed systems, and evaluation.";
+
 export const metadata: Metadata = {
   title: "About",
-  description: "About Omprakash Sahani and his work across ML systems, software engineering, distributed systems, and evaluation.",
+  description,
   alternates: { canonical: "/about" },
+  openGraph: { type: "website", title: "About — Omprakash Sahani", description, siteName: "Omprakash Sahani" },
+  twitter: { card: "summary", title: "About — Omprakash Sahani", description },
 };
 
 export default function AboutPage() {
@@ -115,6 +119,7 @@ export default function AboutPage() {
                         sizes="76px"
                       />
                       <span>Kṛṣṇa: The Supreme Personality of Godhead</span>
+                      <span className="sr-only"> (opens in a new tab)</span>
                     </a>
                   </li>
                   <li>
@@ -128,6 +133,7 @@ export default function AboutPage() {
                         sizes="76px"
                       />
                       <span>Śrīmad-Bhāgavatam</span>
+                      <span className="sr-only"> (opens in a new tab)</span>
                     </a>
                   </li>
                 </ul>

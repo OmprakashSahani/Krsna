@@ -3,10 +3,14 @@ import Link from "next/link";
 import { resume } from "@/data/resume";
 import styles from "./resume.module.css";
 
+const description = "Detailed technical resume for Omprakash Sahani, covering software engineering, ML systems, distributed systems, evaluation, and robot learning.";
+
 export const metadata: Metadata = {
   title: { absolute: "Resume — Omprakash Sahani" },
-  description: "Detailed technical resume for Omprakash Sahani, covering software engineering, ML systems, distributed systems, evaluation, and robot learning.",
+  description,
   alternates: { canonical: "/resume" },
+  openGraph: { type: "website", title: "Resume — Omprakash Sahani", description, siteName: "Omprakash Sahani" },
+  twitter: { card: "summary", title: "Resume — Omprakash Sahani", description },
 };
 
 export default function ResumePage() {
