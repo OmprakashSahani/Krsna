@@ -121,6 +121,11 @@ export function NoteDialog() {
         body: JSON.stringify({ message, ...(visitorEmail ? { email: visitorEmail } : {}) }),
         signal: controller.signal,
       });
+      if (response.status === 429) {
+        setError("Too many notes sent recently. Please try again in a few minutes.");
+        setState("error");
+        return;
+      }
       const result = await response.json();
       if (!response.ok || result.ok !== true) {
         setError(result.error === "invalid_email" ? EMAIL_ERROR : result.error === "unavailable"
