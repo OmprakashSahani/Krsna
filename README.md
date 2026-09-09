@@ -35,6 +35,12 @@ It's built with Next.js, React, and TypeScript and deployed on Vercel.
 
 I'll keep changing it as I learn new things, build more projects, and figure out what I want to explore next.
 
+### Production contact form
+
+Production deployments using the contact form require a Vercel Firewall rule matching the exact path `/api/contact` and method `POST`, with a rate limit of **3 requests per 600 seconds**, key/source **IP**, and excess requests receiving HTTP `429`.
+
+This rate-limit configuration lives in Vercel infrastructure, not in this Git repository. Ensure the rule is in place when deploying to another Vercel project and remains enabled. The application-level `Origin` / `Sec-Fetch-Site` checks are not a substitute for rate limiting because direct HTTP clients can omit or forge those headers.
+
 ## License
 
 The source code in this repository is available under the MIT License.
