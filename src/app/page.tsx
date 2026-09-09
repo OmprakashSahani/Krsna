@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { NameReveal } from "@/components/NameReveal";
+import { NoteDialog } from "@/components/NoteDialog";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   return (
-    <main id="main-content">
+    <main id="main-content" className="home-page">
       <section id="top" className="identity" aria-label="Introduction">
         <NameReveal />
 
@@ -19,41 +20,58 @@ export default function HomePage() {
             <p>I care about building software that is not only technically interesting, but useful in the real world. I think good engineering should help people, make difficult things easier to understand, and solve meaningful problems. I still have a lot to learn, and that is something I genuinely enjoy. I want to keep learning, building, and using what I learn to create systems that are reliable, understandable, and helpful to others.</p>
           </div>
 
-          <aside className="sidebar" aria-label="Current work and research interests">
-            <section aria-labelledby="current-work-heading">
-              <h2 id="current-work-heading" className="section-label">Current work</h2>
-              <ul className="sidebar-list">
-                <li><a href="https://github.com/OmprakashSahani/lerobot-state-atlas" target="_blank" rel="noopener noreferrer">LeRobot State Atlas<span className="sr-only"> (opens in a new tab)</span></a></li>
-                <li><a href="https://github.com/OmprakashSahani/searcheval-lab" target="_blank" rel="noopener noreferrer">SearchEval Lab<span className="sr-only"> (opens in a new tab)</span></a></li>
-                <li><a href="https://github.com/OmprakashSahani/evidencepatch" target="_blank" rel="noopener noreferrer">EvidencePatch<span className="sr-only"> (opens in a new tab)</span></a></li>
-                <li><a href="https://github.com/OmprakashSahani/atlas-ai" target="_blank" rel="noopener noreferrer">Atlas AI<span className="sr-only"> (opens in a new tab)</span></a></li>
-              </ul>
-            </section>
-
-            <section className="research-section" aria-labelledby="research-heading">
-              <h2 id="research-heading" className="section-label">Research interest</h2>
-              <ul className="sidebar-list">
-                <li>ML Systems</li>
-                <li>Robot Learning</li>
-                <li>AI Evaluation</li>
-                <li>Distributed Systems</li>
-              </ul>
-            </section>
-
-            <section className="writing-section" aria-labelledby="writing-heading">
-              <h2 id="writing-heading" className="section-label">Writing</h2>
-              <p className="writing-status">Coming soon</p>
-            </section>
+          <aside className="review-system" aria-labelledby="review-system-title">
+            <p className="review-annotation">{"// personal review heuristic"}</p>
+            <h2 id="review-system-title">4R SYSTEM</h2>
+            <div className="review-trace">
+              <ol role="list">
+                <li><strong>REPEAT</strong><span>what worked well</span></li>
+                <li><strong>REFINE</strong><span>what was average</span></li>
+                <li><strong>RECTIFY</strong><span>what went wrong</span></li>
+                <li><strong>REJECT</strong><span>what no longer serves</span></li>
+              </ol>
+              <span className="review-return" aria-hidden="true">↺</span>
+            </div>
+            <p className="review-iterate"><span className="sr-only">Review again: </span>ITERATE</p>
+            <p className="review-status">review → learn → adjust → continue</p>
           </aside>
         </div>
       </section>
 
       <nav className="professional-links" aria-label="Professional links">
+        <Link href="/about">About</Link>
+        <Link href="/resume">Resume</Link>
         <a href="https://github.com/OmprakashSahani" target="_blank" rel="noopener noreferrer">GitHub<span className="sr-only"> (opens in a new tab)</span></a>
         <a href="https://www.linkedin.com/in/omprakashsahani/" target="_blank" rel="noopener noreferrer">LinkedIn<span className="sr-only"> (opens in a new tab)</span></a>
-        <Link href="/resume">Resume</Link>
-        <a href="mailto:Omprakash.Sahani1206@gmail.com">Email</a>
+        <NoteDialog />
       </nav>
+
+      <div className="home-information">
+        <section aria-labelledby="current-work-heading">
+          <h2 id="current-work-heading" className="section-label">Current work</h2>
+          <ul className="home-list">
+            <li><a href="https://github.com/OmprakashSahani/lerobot-state-atlas" target="_blank" rel="noopener noreferrer">LeRobot State Atlas<span className="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://github.com/OmprakashSahani/searcheval-lab" target="_blank" rel="noopener noreferrer">SearchEval Lab<span className="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://github.com/OmprakashSahani/evidencepatch" target="_blank" rel="noopener noreferrer">EvidencePatch<span className="sr-only"> (opens in a new tab)</span></a></li>
+            <li><a href="https://github.com/OmprakashSahani/atlas-ai" target="_blank" rel="noopener noreferrer">Atlas AI<span className="sr-only"> (opens in a new tab)</span></a></li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="research-heading">
+          <h2 id="research-heading" className="section-label">Research interest</h2>
+          <ul className="home-list">
+            <li>ML Systems</li>
+            <li>Robot Learning</li>
+            <li>AI Evaluation</li>
+            <li>Distributed Systems</li>
+          </ul>
+        </section>
+
+        <section className="home-writing" aria-labelledby="writing-heading">
+          <h2 id="writing-heading" className="section-label">Writing</h2>
+          <p className="writing-status">Coming soon</p>
+        </section>
+      </div>
     </main>
   );
 }

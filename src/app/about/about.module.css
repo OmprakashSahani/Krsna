@@ -1,0 +1,375 @@
+/* Keep About's approved secondary-route frame local to this page. */
+:global(.site-header):has(+ .aboutPage) {
+  display: none;
+}
+
+.aboutPage + :global(.site-footer) {
+  display: none;
+}
+
+.aboutPage {
+  display: grid;
+  grid-template-rows: auto minmax(min-content, 1fr) auto;
+  min-height: 100svh;
+}
+
+.aboutHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  /* Keep the approved rule position when the signature's line box changes. */
+  height: calc(2.35rem + 21px);
+  padding: 1.5rem 0 .85rem;
+  border-bottom: 1px solid #34343a;
+}
+
+.backLink,
+.notation {
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.backLink:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.notation {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.profile {
+  min-width: 0;
+  padding-bottom: clamp(5rem, 10vw, 9rem);
+  color: var(--body);
+  font-size: .9375rem;
+  line-height: 1.85;
+}
+
+.hero {
+  width: min(100%, 64rem);
+  margin-inline: auto;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 20rem minmax(0, 1fr);
+  grid-template-areas: "photo label" "photo name" "photo opening";
+  grid-template-rows: auto auto 1fr;
+  align-content: start;
+  column-gap: clamp(3rem, 5.5vw, 5rem);
+  /* Match Resume's first-content inset and section padding. */
+  padding-block: clamp(2.5rem, 5vw, 4rem) 2.6rem;
+}
+
+.aboutLabel,
+.sectionLabel {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+  font-size: .6875rem;
+  font-weight: 500;
+  line-height: 1.8;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.aboutLabel {
+  grid-area: label;
+  margin-bottom: 1.25rem;
+}
+
+.portrait {
+  grid-area: photo;
+  align-self: start;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+}
+
+.name {
+  grid-area: name;
+  margin: 0 0 2.5rem;
+  color: var(--ink);
+  font-size: clamp(1.875rem, 3vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -.04em;
+}
+
+.opening {
+  grid-area: opening;
+  min-width: 0;
+}
+
+.opening p {
+  margin: 0 0 1.25rem;
+}
+
+/* Mirror the homepage biography's shell alignment and reading rhythm locally. */
+.bodyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, var(--biography-width)) 18rem;
+  align-items: start;
+  column-gap: 4rem;
+  font-size: 14.5px;
+  font-weight: 450;
+  line-height: 1.65;
+}
+
+.narrative {
+  min-width: 0;
+  max-width: var(--biography-width);
+}
+
+.continuation {
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.readingWidth p {
+  margin: 0 0 .72rem;
+}
+
+.opening > :last-child,
+.readingWidth > :last-child {
+  margin-bottom: 0;
+}
+
+.questions,
+.readingWidth .emphasis,
+.readingWidth .process {
+  /* Preserve the accents' previous desktop measure inside the wider frame. */
+  max-width: 40.5rem;
+}
+
+.storySection {
+  margin-top: 2.5rem;
+}
+
+.sectionLabel {
+  padding-bottom: .85rem;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.bodyGrid .sectionLabel {
+  margin-bottom: 1rem;
+}
+
+.favorites {
+  width: 100%;
+  max-width: 18rem;
+  min-width: 0;
+}
+
+.favoritesStack {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.favoriteLabel {
+  margin: 0 0 .5rem;
+  color: var(--muted);
+  font-size: .6875rem;
+  font-weight: 500;
+  line-height: 1.8;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.books {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bookLink {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .75rem;
+  color: var(--ink);
+  font-size: .75rem;
+  line-height: 1.65;
+  text-decoration: none;
+}
+
+.bookLink:hover span {
+  text-decoration: underline;
+  text-underline-offset: .3em;
+}
+
+.bookLink:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.bookCover {
+  display: block;
+  width: auto;
+  height: 120px;
+}
+
+.favoriteDetails {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 1.5rem;
+  margin: 0;
+  color: var(--ink);
+  font-size: .875rem;
+  font-weight: 400;
+}
+
+.favoriteDetails dd {
+  margin: 0;
+}
+
+.favoriteThumbnail {
+  display: block;
+  width: 160px;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: .5rem;
+}
+
+.movies {
+  display: grid;
+  gap: .25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.questions {
+  margin-block: 2.5rem;
+  padding-block: 1.5rem;
+  border-block: 1px solid var(--rule);
+  color: var(--ink);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.7;
+}
+
+.questions .questionBridge {
+  padding-left: 1.5rem;
+  color: var(--muted);
+  font-size: .8125rem;
+  font-weight: 400;
+}
+
+.questions p {
+  margin-bottom: 1.25rem;
+}
+
+.questions > :last-child {
+  margin-bottom: 0;
+  padding-left: 3rem;
+}
+
+.readingWidth .emphasis,
+.readingWidth .process {
+  margin-block: 2.5rem;
+  color: var(--ink);
+  font-size: .9375rem;
+  font-weight: 500;
+}
+
+.readingWidth .emphasis {
+  padding-left: 1.5rem;
+  border-left: 1px solid var(--rule);
+  line-height: 1.85;
+}
+
+.readingWidth .process {
+  padding-block: 1.5rem;
+  border-block: 1px solid var(--rule);
+  line-height: 2;
+  text-wrap: balance;
+}
+
+/* Preserve the original footer rule and the space below it, in normal flow. */
+.aboutFooterRule {
+  padding: 1.1rem 0 1.5rem;
+  border-top: 1px solid #85858d;
+}
+
+@media (max-width: 1080px) {
+  .bodyGrid {
+    grid-template-columns: minmax(0, var(--biography-width));
+    row-gap: 2.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "label" "photo" "name" "opening";
+    grid-template-rows: none;
+    width: min(100%, 64ch);
+    padding-bottom: 0;
+  }
+
+  .portrait {
+    width: min(100%, 28rem);
+    margin-bottom: 2.5rem;
+  }
+
+  .name {
+    margin-bottom: 2rem;
+  }
+
+  .bodyGrid {
+    padding-top: 2.5rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .aboutHeader {
+    height: calc(2.1rem + 21px);
+    padding-top: 1.25rem;
+  }
+
+  .profile {
+    font-size: .90625rem;
+    line-height: 1.85;
+  }
+
+  .hero {
+    padding-top: 2.5rem;
+  }
+
+  .name {
+    font-size: clamp(1.75rem, 7.5vw, 2.25rem);
+  }
+
+  .readingWidth .emphasis,
+  .readingWidth .process {
+    font-size: .90625rem;
+  }
+
+  .questions > :last-child {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .bodyGrid {
+    font-size: 14px;
+  }
+}

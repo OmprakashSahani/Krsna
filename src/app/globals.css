@@ -45,7 +45,7 @@ main { display: block; }
 #top { scroll-margin-top: 2rem; }
 .section-label { margin: 0 0 1rem; color: var(--muted); font-size: .7rem; line-height: 1.3; letter-spacing: .16em; text-transform: uppercase; }
 .identity { padding: clamp(2.75rem, 5vh, 4rem) 0 clamp(2.5rem, 4.5vh, 3.25rem); }
-.identity:has(+ .professional-links) { padding-bottom: .75rem; }
+.home-page .identity:has(+ .professional-links) { padding-bottom: 1.5rem; }
 .revealed-name { width: 100%; min-height: 1.08em; margin: 0; color: var(--foreground); white-space: nowrap; font-size: clamp(2.35rem, 5vw, 3.3rem); font-weight: 400; line-height: 1.08; letter-spacing: -.032em; }
 .revealed-name span { display: inline-block; width: 0; overflow: hidden; vertical-align: bottom; animation: reveal-name 1.48s steps(16, end) forwards; }
 @keyframes reveal-name { to { width: 16ch; } }
@@ -53,19 +53,48 @@ main { display: block; }
 .introduction { font-weight: 450; }
 .introduction p { margin: 0 0 .72rem; }
 .content-grid { display: grid; grid-template-columns: minmax(0, 48rem) minmax(10rem, 12rem); justify-content: space-between; column-gap: 4rem; margin-top: clamp(1.75rem, 3vw, 2.25rem); }
-.sidebar { justify-self: end; width: min(100%, 12rem); }
-.sidebar .section-label { margin: 0 0 .65rem; }
-.sidebar-list { display: grid; gap: .5rem; list-style: none; margin: 0; padding: 0; }
-.sidebar-list li { color: var(--body); font-size: 12.25px; font-weight: 450; line-height: 1.55; }
-.sidebar-list a { text-decoration: none; }
-.sidebar-list a:hover { text-decoration: underline; }
-.research-section { margin-top: 1.75rem; }
-.writing-section { margin-top: 1.75rem; }
-.writing-status { margin: 0; color: var(--muted); font-size: 11.5px; font-weight: 450; line-height: 1.55; }
+
+/* Keep the review visible; only its placement changes when the sidebar fits. */
+.home-page .review-system { display: block; align-self: start; min-width: 0; margin-top: 0; color: var(--muted); }
+@media (min-width: 1168px) {
+  .home-page .content-grid { grid-template-columns: var(--biography-width) minmax(0, 18rem); }
+}
+.review-annotation { margin: 0 0 .5rem; font-size: 10.5px; line-height: 1.6; }
+.review-system h2 { margin: 0 0 1.125rem; padding-bottom: .75rem; border-bottom: 1px solid var(--rule); color: var(--body); font-size: 12.5px; font-weight: 700; line-height: 1.3; letter-spacing: .14em; }
+.review-trace { position: relative; width: calc(100% - 4rem); margin-left: 3px; padding: .75rem 0 1rem; border-left: 1px solid var(--rule); border-bottom: 1px solid var(--rule); border-bottom-left-radius: 6px; }
+.review-trace ol { margin: 0; padding: 0; list-style: none; }
+.review-trace li { position: relative; padding-left: 1.125rem; }
+.review-trace li + li { margin-top: 1.375rem; }
+.review-trace li::before { content: ""; position: absolute; top: 6px; left: -3px; width: 5px; height: 5px; border-radius: 50%; background: var(--muted); }
+.review-trace strong { display: block; color: var(--ink); font-size: 12.5px; font-weight: 700; line-height: 1.5; letter-spacing: .06em; }
+.review-trace li span { display: block; font-size: 11px; line-height: 1.6; }
+.review-return { position: absolute; right: -4px; bottom: -8px; padding-left: 4px; background: var(--background); color: var(--ink); font-size: 14px; font-weight: 700; line-height: 1; }
+.review-iterate { width: calc(100% - 4rem); margin: .5rem 0 0 3px; color: var(--ink); font-size: 10.5px; font-weight: 700; line-height: 1.6; letter-spacing: .08em; text-align: right; }
+.review-status { margin: 1rem 0 0; font-size: 10px; font-weight: 400; line-height: 1.6; }
+
+@media (width < 1168px) {
+  .home-page .content-grid { grid-template-columns: minmax(0, var(--biography-width)); row-gap: 1.5rem; }
+  .home-page .review-trace,
+  .home-page .review-iterate { width: min(calc(100% - 1rem), 26rem); }
+  .home-page .review-trace li { display: grid; grid-template-columns: 5.75rem minmax(0, 1fr); column-gap: .5rem; align-items: baseline; }
+  .home-page .review-trace li + li { margin-top: 1rem; }
+}
+
+.home-page { padding-bottom: 3rem; }
+.home-page + .site-footer { display: none; }
+/* Match the biography's paragraph margin + identity padding, less the existing link-row padding. */
+.home-information { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 3.5fr) minmax(0, 2.5fr); gap: 1.75rem 6rem; max-width: var(--biography-width); margin-top: calc(.72rem + 1.5rem - 1.75rem); }
+.home-information .section-label { margin: 0 0 .65rem; }
+.home-list { display: grid; gap: .5rem; list-style: none; margin: 0; padding: 0; font-weight: 450; }
+.home-information .writing-status { margin: 0; color: var(--muted); font-size: 11.5px; font-weight: 450; line-height: 1.55; }
 .professional-links { display: flex; flex-wrap: wrap; gap: .55rem 1.75rem; padding: 0 0 1.75rem; color: var(--ink); font-size: inherit; font-weight: 450; }
-.professional-links a { text-decoration: none; transition: color 140ms ease, font-weight 140ms ease; }
-.professional-links a:hover,
-.professional-links a:focus-visible { color: var(--ink); font-weight: 600; }
+.home-page .professional-links { max-width: var(--biography-width); }
+.home-page .professional-links > a,
+.home-information a { color: var(--muted); text-decoration: none; transition: color 140ms ease; }
+.home-page .professional-links > a:hover,
+.home-page .professional-links > a:focus-visible,
+.home-information a:hover,
+.home-information a:focus-visible { color: var(--ink); }
 .project-index { list-style: none; margin: 0; padding: 0; }
 .project-row { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: 1rem; margin-bottom: 2rem; }
 .project-number { color: var(--muted); font-size: .66rem; letter-spacing: .1em; }
@@ -103,14 +132,11 @@ main { display: block; }
 
 @media (max-width: 1080px) {
   .content-grid { grid-template-columns: minmax(0, 48rem); justify-content: start; gap: 2.5rem; }
-  .sidebar { justify-self: start; width: min(100%, 12rem); }
-}
-
-@media (max-width: 1000px) {
-  .sidebar-list li { font-size: 13px; }
+  .home-information { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 4rem; }
 }
 
 @media (max-width: 560px) {
+  .home-information { grid-template-columns: minmax(0, 1fr); }
   body { font-size: 14px; }
   .site-header { display: block; }
   .site-header nav { justify-content: flex-start; max-width: 100%; margin-top: 1.1rem; }
