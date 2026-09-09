@@ -109,7 +109,7 @@ export default function AboutPage() {
                       <Image
                         className={styles.bookCover}
                         src="/images/about/krsna-book-cover.png"
-                        alt="Kṛṣṇa: The Supreme Personality of Godhead book cover"
+                        alt=""
                         width={320}
                         height={508}
                         sizes="76px"
@@ -122,7 +122,7 @@ export default function AboutPage() {
                       <Image
                         className={styles.bookCover}
                         src="/images/about/srimad-bhagavatam-book-cover.png"
-                        alt="Śrīmad-Bhāgavatam book cover"
+                        alt=""
                         width={320}
                         height={508}
                         sizes="76px"
@@ -139,7 +139,7 @@ export default function AboutPage() {
                     <Image
                       className={styles.favoriteThumbnail}
                       src="/images/about/vrindavan-destination.png"
-                      alt="Vrindavan"
+                      alt=""
                       width={450}
                       height={350}
                       sizes="160px"
@@ -153,7 +153,7 @@ export default function AboutPage() {
                     <Image
                       className={styles.favoriteThumbnail}
                       src="/images/about/rajasthan-place.png"
-                      alt="Rajasthan"
+                      alt=""
                       width={1280}
                       height={720}
                       sizes="160px"
@@ -167,7 +167,7 @@ export default function AboutPage() {
                     <Image
                       className={styles.favoriteThumbnail}
                       src="/images/about/little-krishna-poster.png"
-                      alt="Little Krishna poster"
+                      alt=""
                       width={1600}
                       height={1200}
                       sizes="160px"

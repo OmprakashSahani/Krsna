@@ -57,7 +57,7 @@ main { display: block; }
 /* Keep the review visible; only its placement changes when the sidebar fits. */
 .home-page .review-system { display: block; align-self: start; min-width: 0; margin-top: 0; color: var(--muted); }
 @media (min-width: 1168px) {
-  .home-page .content-grid { grid-template-columns: var(--biography-width) minmax(0, 18rem); }
+  .home-page .content-grid { grid-template-columns: minmax(0, var(--biography-width)) minmax(14rem, 18rem); }
 }
 .review-annotation { margin: 0 0 .5rem; font-size: 10.5px; line-height: 1.6; }
 .review-system h2 { margin: 0 0 1.125rem; padding-bottom: .75rem; border-bottom: 1px solid var(--rule); color: var(--body); font-size: 12.5px; font-weight: 700; line-height: 1.3; letter-spacing: .14em; }
