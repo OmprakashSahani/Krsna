@@ -35,7 +35,29 @@ It's built with Next.js, React, and TypeScript and deployed on Vercel.
 
 I'll keep changing it as I learn new things, build more projects, and figure out what I want to explore next.
 
+### Local development
+
+Use Node.js `^20.19.0 || ^22.13.0 || >=24.0.0`, as required by the current application and test tooling.
+
+```sh
+npm install
+npm test
+npm run lint
+npx tsc --noEmit
+npm run build
+```
+
+Run `npm run dev` to develop locally, or `npm start` to serve a production build.
+
 ### Production contact form
+
+The contact form requires three server-only environment variables. Set them in the deployment environment, or in an untracked `.env.local` file for local delivery:
+
+- `RESEND_API_KEY`: the server-only Resend API key.
+- `CONTACT_TO_EMAIL`: the fixed recipient for all notes.
+- `CONTACT_FROM_EMAIL`: a sender accepted/verified by the configured Resend account for that deployment.
+
+Never expose these variables with `NEXT_PUBLIC_` prefixes. Delivery remains unavailable until all three are configured.
 
 Production deployments using the contact form require a Vercel Firewall rule matching the exact path `/api/contact` and method `POST`, with a rate limit of **3 requests per 600 seconds**, key/source **IP**, and excess requests receiving HTTP `429`.
 
