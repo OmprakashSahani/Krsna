@@ -3,6 +3,7 @@ export type Project = {
   title: string;
   area: string;
   description: string;
+  page?: string;
   repository?: string;
 };
 
@@ -43,6 +44,7 @@ export const projects: readonly Project[] = [
     area: "Robotics data systems",
     description:
       "Robotics dataset diagnostics, dual-arm trajectory playback, and workspace coverage.",
+    page: "/projects/lerobot-state-atlas",
     repository: "https://github.com/OmprakashSahani/lerobot-state-atlas",
   },
 ] as const;
