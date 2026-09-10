@@ -154,6 +154,86 @@ No video metadata, MP4, scanned environment, URDF, or Python runtime is included
   single-episode case is defined as zero; no valid zero-episode bundle is supported.
 - Optional video timing retains timestamp-relative bounds and the 0.1s drift threshold.
 
+## Phase 2 viewer foundation
+
+The temporary server-component host is
+`src/app/projects/lerobot-state-atlas/page.tsx`. It adds one project H1, the
+requested description, static canonical/Open Graph/Twitter metadata, and the
+client viewer. Krsna's global header/footer remain in place. Homepage/project
+navigation and existing design pages remain unchanged.
+
+The following files map from pinned upstream `apps/web/components/viewer/`
+to `src/components/lerobot/`, with the same provenance notice as Phase 1:
+
+- `ViewerEntry.tsx`
+- `AtlasDataProvider.tsx`
+- `ViewerStore.tsx`
+- `AtlasViewer.tsx`
+- `ViewerCanvas.tsx`
+- `RobotDataLayer.tsx`
+- `VoxelLayer.tsx`
+- `BaseReferenceLayer.tsx`
+- `InteractionLayer.tsx`
+- `EndEffectorMarker.tsx`
+- `EpisodeAnalysisPanel.tsx`
+- `EnvironmentLayer.tsx`
+- `EnvironmentStatus.tsx`
+
+Intentional viewer adaptations:
+
+- All analytical imports target the unchanged Phase 1 `src/lib/lerobot/` modules.
+- Benchmark activation, Spark adapter, local environment hooks/configuration, and
+  their canvas props are removed. Environment status reports the procedural grid
+  and the absence of a validated scan; no experiment controls remain.
+- Viewer H1s become H2s, leaving one route H1. The unsupported-WebGL fallback links
+  to the upstream repository rather than the absent standalone methodology route.
+- WebGL 2 detection stays at the client boundary; `next/dynamic` keeps the Three
+  viewer out of SSR. The temporary detection context is released. A React error
+  boundary handles viewer startup failures with an accessible retry fallback.
+- The provider shares its initial loading promise across Strict Mode effect
+  replay. Upstream's per-viewer lazy trajectory promise remains shared across
+  playback and episode-analysis controls. No trajectories or video load initially.
+- `viewer.module.css` contains only scoped viewer styles adapted from the upstream
+  viewer rules. The temporary layout fits Krsna's shell, stacks at tablet/mobile
+  widths, and retains readable controls. Standalone site styles are excluded.
+  The upstream internal palette and analytical color normalization are retained;
+  the final portfolio frame and visual redesign are deferred to Phase 3.
+
+No dependencies, Phase 1 analytical modules/tests, or public payloads change in
+Phase 2. No Python, URDF handling, kinematics, checkpoint comparison, scanned
+environment assets, or additional routes are ported.
+
+Viewer tests added under `src/components/lerobot/`:
+
+- `AtlasViewer.test.tsx`: adapted viewer-only cases from upstream
+  `content-accessibility.test.tsx`, using native Vitest/DOM assertions instead of
+  adding jest-dom. Standalone content assertions are excluded.
+- `EndEffectorMarker.test.tsx`: upstream symbolic orientation/gripper tests.
+- `ViewerEntry.test.tsx`: adapted entry fallback tests plus startup failure,
+  disabled viewer SSR, one-H1 route, and route metadata checks.
+- `ViewerIntegration.test.tsx`: real provider/store/analytical modules with only
+  the canvas mocked, covering initial/lazy requests, error/retry, metrics,
+  visibility, spacing, selection/query/scoring, explicit episode identity,
+  playback timing/speed/scrubbing/restart, and unavailable video.
+- `VoxelLayer.test.tsx`: actual mesh picking callback, instance/arm identity,
+  unshifted Float32 selection centers, and rendered runtime-spacing offsets.
+
+The combined suite passes 276 tests (48 new tests plus the unchanged 228-test
+Phase 1 suite, including the original 78 Krsna tests). Lint, TypeScript, production
+build, and diff checks pass; both npm audits report zero vulnerabilities. The
+production build statically prerenders the new route. Component tests mock WebGL
+and do not establish rendering correctness on their own.
+
+Real-browser verification uses temporary Playwright/Chromium tooling under `/tmp`,
+outside Krsna's dependency tree, with SwiftShader software WebGL 2. At 1440×900,
+768×900, and 390×900, the scene renders, real pointer clicks select voxels, manual
+orbit/pan/zoom/reset and lazy playback work, and no horizontal page overflow or
+fatal console errors are observed. Production browser requests are exactly
+`manifest.json`, `coverage.json`, then one `trajectories.json` after activation;
+opening unavailable media adds no request. Software WebGL validates browser integration, not physical-device
+GPU performance. The long control stack and dark internal styling are intentional
+Phase 2 presentation limitations.
+
 ## Updating the integration
 
 Phase 1 validation: the original 78 tests passed before integration; the combined
