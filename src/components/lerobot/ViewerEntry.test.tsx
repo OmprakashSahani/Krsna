@@ -31,7 +31,22 @@ function scheduleDetection(supported: boolean) {
   return { detect: () => act(() => detect?.(0)), loseContext };
 }
 
-describe("viewer client boundary and temporary route", () => {
+describe("viewer client boundary and portfolio route", () => {
+  it("uses the portfolio back link and accessible external GitHub link", () => {
+    scheduleDetection(false);
+    render(<Page />);
+    expect(screen.getByRole("link", { name: "Return to homepage" }).getAttribute("href")).toBe("/");
+    const github = screen.getByRole("link", { name: /GitHub\s*\(opens in a new tab\)/ });
+    expect(github.getAttribute("href")).toBe("https://github.com/OmprakashSahani/lerobot-state-atlas");
+    expect(github.getAttribute("target")).toBe("_blank");
+    expect(github.getAttribute("rel")).toBe("noopener noreferrer");
+    expect(github.querySelector(".sr-only")?.textContent).toBe(" (opens in a new tab)");
+    expect(screen.getByText("PROJECT / ROBOT LEARNING")).toBeTruthy();
+    expect(screen.getByText(String(metadata.description))).toBeTruthy();
+    expect(metadata.openGraph?.description).toBe(metadata.description);
+    expect(metadata.twitter?.description).toBe(metadata.description);
+  });
+
   it("keeps stable loading markup until WebGL detection and provides an accessible unsupported state", () => {
     const detection = scheduleDetection(false);
     render(<ViewerEntry />);

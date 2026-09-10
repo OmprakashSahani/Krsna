@@ -11,12 +11,13 @@ import {
   Matrix4,
   Quaternion,
   Vector3,
+  SRGBColorSpace,
 } from "three";
 
 import type { PreparedVoxelArm } from "@/lib/lerobot/atlas-schema/types";
 import { spacingDeltaY } from "@/lib/lerobot/coordinates/runtimeSpacing";
 import { metricValue } from "@/lib/lerobot/data/metrics";
-import { visitColorScale } from "@/lib/lerobot/data/prepareCoverage";
+import { analyticalColorScale } from "./analyticalPalette";
 import { useViewerStore } from "./ViewerStore";
 
 export function VoxelLayer({
@@ -51,12 +52,12 @@ export function VoxelLayer({
       position.fromArray(data.centers, index * 3);
       matrix.compose(position, quaternion, scale);
       mesh.current.setMatrixAt(index, matrix);
-      const [red, green, blue] = visitColorScale(
+      const [red, green, blue] = analyticalColorScale(
         metricValue(data, index, viewer.metric),
         range[0],
         range[1],
       );
-      color.setRGB(red, green, blue);
+      color.setRGB(red, green, blue, SRGBColorSpace);
       mesh.current.setColorAt(index, color);
     }
     mesh.current.instanceMatrix.setUsage(DynamicDrawUsage);

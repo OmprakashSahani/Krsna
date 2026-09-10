@@ -42,6 +42,60 @@ function state() { return JSON.parse(screen.getByTestId("scene-state").textConte
 const trajectoryRequests = () => fetcher.mock.calls.filter(([url]) => String(url).endsWith("trajectories.json"));
 
 describe("viewer with real data provider, store, and analytical modules", () => {
+  it("keeps scene controls in DOM order inside a boundary that excludes informational sections", async () => {
+    await ready();
+    const boundary = screen.getByRole("region", { name: "Workspace interaction" });
+    const ordered = [
+      screen.getByRole("region", { name: "Interactive workspace scene" }),
+      screen.getByRole("button", { name: "Touch navigation" }),
+      screen.getByRole("heading", { name: "Workspace coverage" }),
+      screen.getByRole("heading", { name: "Robot setup" }),
+      screen.getByRole("heading", { name: "Radius query" }),
+      screen.getByRole("heading", { name: "Trajectory playback" }),
+      screen.getByRole("region", { name: "Dataset metadata" }),
+      screen.getByRole("region", { name: "Coordinate metadata" }),
+      screen.getByRole("region", { name: "Data provenance" }),
+      screen.getByRole("heading", { name: "Environment" }),
+      screen.getByRole("heading", { name: "Episode analysis" }),
+    ];
+    ordered.forEach((element, index) => {
+      expect(boundary.contains(element)).toBe(index < 6);
+      if (index > 0) expect(ordered[index - 1].compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    });
+    expect(screen.getAllByLabelText("Metric")).toHaveLength(1);
+    fireEvent.click(screen.getByRole("button", { name: "Open synchronized media" }));
+    expect(screen.getByRole("region", { name: "Trajectory playback" }).contains(screen.getByRole("region", { name: "Synchronized media" }))).toBe(true);
+    expect(trajectoryRequests()).toHaveLength(0);
+  });
+
+  it("defaults to touch page scrolling and exposes an explicit camera gesture mode without changing analytical state", async () => {
+    await ready();
+    const before = state();
+    const toggle = screen.getByRole("button", { name: "Touch navigation", pressed: false });
+    expect(canvasProps.touchNavigation).toBe(false);
+    expect(screen.getByText(/swipe over the scene to scroll the page/)).toBeTruthy();
+    fireEvent.click(toggle);
+    expect(screen.getByRole("button", { name: "Touch navigation", pressed: true })).toBe(toggle);
+    expect(canvasProps.touchNavigation).toBe(true);
+    expect(screen.getByText(/use two fingers to pan or zoom/)).toBeTruthy();
+    expect(state()).toEqual(before);
+    fireEvent.click(toggle);
+    expect(canvasProps.touchNavigation).toBe(false);
+    expect(trajectoryRequests()).toHaveLength(0);
+  });
+
+  it("keeps native selected states and visible analytical limitations in the redesigned controls", async () => {
+    await ready();
+    const metric = screen.getByLabelText("Metric") as HTMLSelectElement;
+    fireEvent.change(metric, { target: { value: "episodes" } });
+    expect(metric.selectedOptions[0].textContent).toBe("Distinct episodes");
+    expect((screen.getByRole("checkbox", { name: /Left arm entries/ }) as HTMLInputElement).checked).toBe(true);
+    fireEvent.click(screen.getByRole("checkbox", { name: /Left arm entries/ }));
+    expect((screen.getByRole("checkbox", { name: /Left arm entries/ }) as HTMLInputElement).checked).toBe(false);
+    expect(screen.getByText(/not an anomaly detector/).textContent).toContain("task success or physical novelty");
+    expect(screen.getByText(/No validated Gaussian Splat scan/)).toBeTruthy();
+  });
+
   it("loads manifest then coverage once in Strict Mode without trajectories or media", async () => {
     mount();
     expect(screen.getByRole("status").textContent).toContain("Loading pinned atlas data");

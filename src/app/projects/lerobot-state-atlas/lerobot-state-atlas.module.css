@@ -1,0 +1,26 @@
+:global(.site-header):has(+ .projectPage) { display: none; }
+.projectPage + :global(.site-footer) { display: none; }
+
+.projectPage { min-width: 0; }
+.projectHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 1.5rem 0 .85rem;
+  border-bottom: 1px solid #34343a;
+}
+.backLink { color: var(--ink); font-size: 20px; font-weight: 600; line-height: 1; text-decoration: none; }
+.githubLink { color: var(--body); font-size: 12px; font-weight: 500; line-height: 1.4; text-decoration: none; }
+.backLink:hover, .githubLink:hover { color: var(--foreground); text-decoration: underline; text-underline-offset: 4px; }
+.projectHeader a:focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
+.projectComposition { padding: clamp(2.5rem, 5vw, 4rem) 0 clamp(4rem, 8vw, 6.5rem); }
+.intro { padding-bottom: clamp(2rem, 4vw, 3rem); margin-bottom: 2rem; border-bottom: 1px solid var(--rule); }
+.label { margin: 0 0 1rem; color: var(--muted); font-size: 11px; font-weight: 500; line-height: 1.4; letter-spacing: .12em; }
+.intro h1 { margin: 0; color: var(--foreground); font-size: clamp(2.2rem, 5vw, 3.25rem); font-weight: 400; line-height: 1.08; letter-spacing: -.032em; }
+.description { max-width: 43rem; margin: 1.25rem 0 0; color: var(--body); line-height: 1.8; }
+.footerRule { padding: 1.1rem 0 1.5rem; border-top: 1px solid #85858d; }
+@media (max-width: 720px) {
+  .projectHeader { padding-top: 1.25rem; }
+  .projectComposition { padding: 2.5rem 0 4rem; }
+}
+@media (max-width: 420px) { .intro h1 { font-size: 2.1rem; } }

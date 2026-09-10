@@ -246,7 +246,7 @@ describe("accessible viewer content", () => {
         render(<AtlasViewer />);
         expect(screen.getByText("demo-v2 / episodes 0–9")?.isConnected).toBe(true);
         const viewerControls = screen.getByRole("complementary", {
-            name: "Viewer controls and metadata",
+            name: "Viewer controls",
         });
         const episodeAnalysis = screen.getByRole("complementary", {
             name: "Episode analysis",
@@ -283,7 +283,7 @@ describe("accessible viewer content", () => {
         expect(mediaToggle.getAttribute("aria-controls")).toBe("synchronized-media-panel");
         expect(screen.queryByText("Synchronized media is not included in this bundle.")?.isConnected).not.toBe(true);
         expect(screen.queryByRole("region", { name: "Synchronized media" })?.isConnected).not.toBe(true);
-        expect(screen.getByTestId("viewer-visuals").classList.contains(styles["viewer-visuals--media-open"])).not.toBe(true);
+        expect(screen.getByTestId("viewer-visuals").querySelector("#synchronized-media-panel")).toBeNull();
         expect(loadEpisodeVideos).not.toHaveBeenCalled();
         expect(loadTrajectories).not.toHaveBeenCalled();
         expect(screen.queryByRole("video")?.isConnected).not.toBe(true);
@@ -312,7 +312,7 @@ describe("accessible viewer content", () => {
         expect(region?.isConnected).toBe(true);
         expect(within(region).getByText("Synchronized media is not included in this bundle.").getAttribute("role")).toBe("note");
         expect(within(region).getAllByText("Synchronized media is not included in this bundle.")).toHaveLength(1);
-        expect(screen.getByTestId("viewer-visuals").classList.contains(styles["viewer-visuals--media-open"])).toBe(true);
+        expect(screen.getByRole("region", { name: "Trajectory playback" }).contains(screen.getByRole("region", { name: "Synchronized media" }))).toBe(true);
         expect(loadEpisodeVideos).not.toHaveBeenCalled();
         expect(loadTrajectories).not.toHaveBeenCalled();
         expect(region.querySelector("video")?.isConnected).not.toBe(true);
@@ -327,7 +327,7 @@ describe("accessible viewer content", () => {
         fireEvent.keyDown(region, { key: "Escape" });
         await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("button", { name: "Open synchronized media" })));
         expect(screen.queryByRole("region", { name: "Synchronized media" })?.isConnected).not.toBe(true);
-        expect(screen.getByTestId("viewer-visuals").classList.contains(styles["viewer-visuals--media-open"])).not.toBe(true);
+        expect(screen.getByTestId("viewer-visuals").querySelector("#synchronized-media-panel")).toBeNull();
         fireEvent.click(screen.getByRole("button", { name: "Open synchronized media" }));
         expect(screen.getByRole("region", { name: "Synchronized media" })?.isConnected).toBe(true);
         expect(loadEpisodeVideos).not.toHaveBeenCalled();
@@ -688,7 +688,7 @@ describe("accessible viewer content", () => {
         expect(openMedia.getAttribute("aria-expanded")).toBe("false");
         expect(openMedia.getAttribute("aria-controls")).toBe("synchronized-media-panel");
         expect(screen.queryByRole("region", { name: "Synchronized media" })?.isConnected).not.toBe(true);
-        expect(screen.getByTestId("viewer-visuals").classList.contains(styles["viewer-visuals--media-open"])).not.toBe(true);
+        expect(screen.getByTestId("viewer-visuals").querySelector("#synchronized-media-panel")).toBeNull();
         expect(loadEpisodeVideos).not.toHaveBeenCalled();
         fireEvent.click(openMedia);
         expect(loadEpisodeVideos).toHaveBeenCalledTimes(1);
@@ -696,7 +696,7 @@ describe("accessible viewer content", () => {
         expect(screen.queryByLabelText("Timeline")?.isConnected).not.toBe(true);
         expect(screen.getByRole("button", { name: "Close synchronized media" }).getAttribute("aria-expanded")).toBe("true");
         expect(screen.getByRole("region", { name: "Synchronized media" })?.isConnected).toBe(true);
-        expect(screen.getByTestId("viewer-visuals").classList.contains(styles["viewer-visuals--media-open"])).toBe(true);
+        expect(screen.getByRole("region", { name: "Trajectory playback" }).contains(screen.getByRole("region", { name: "Synchronized media" }))).toBe(true);
         expect((await screen.findByText("Load trajectory playback to select synchronized episode media."))?.isConnected).toBe(true);
         expect(screen.queryByRole("button", {
             name: "Close synchronized media panel",
@@ -727,7 +727,7 @@ describe("accessible viewer content", () => {
         await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("button", { name: "Open synchronized media" })));
         expect(screen.queryByRole("region", { name: "Synchronized media" })?.isConnected).not.toBe(true);
         expect(screen.queryByLabelText("Left wrist camera synchronized episode video")?.isConnected).not.toBe(true);
-        expect(screen.getByTestId("viewer-visuals").classList.contains(styles["viewer-visuals--media-open"])).not.toBe(true);
+        expect(screen.getByTestId("viewer-visuals").querySelector("#synchronized-media-panel")).toBeNull();
         fireEvent.click(screen.getByRole("button", { name: "Open synchronized media" }));
         expect(loadEpisodeVideos).toHaveBeenCalledTimes(1);
         expect(screen.getByLabelText("Left wrist camera synchronized episode video").getAttribute("src")).toBe("/lerobot-state-atlas/demo-v2/media/episode-1/left.mp4");

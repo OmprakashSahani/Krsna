@@ -9,7 +9,7 @@ export function EnvironmentStatus() {
       <div className={styles["section-title-row"]}><h2 id="environment-heading">Environment</h2><span>Independent layer</span></div>
       <dl>
         <div><dt>Current state</dt><dd>Analytical grid active</dd></div>
-        <div><dt>Gaussian Splat status</dt><dd>Unavailable</dd></div>
+        <div><dt>Gaussian Splat status</dt><dd><span className={styles["unavailable"]}>Unavailable</span></dd></div>
       </dl>
       <p role="note">No validated Gaussian Splat scan or environment-to-robot calibration is bundled with this demo. No real reconstruction or calibrated environment alignment is claimed. The robot workspace viewer remains fully available.</p>
     </section>

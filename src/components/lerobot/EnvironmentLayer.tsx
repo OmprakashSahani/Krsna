@@ -20,13 +20,13 @@ export function EnvironmentLayer({ source }: { source: EnvironmentSource }) {
   return (
     <group name={`environment:${source.id}`}>
       <gridHelper
-        args={[2.4, 48, "#33516c", "#172c3d"]}
+        args={[2.4, 48, "#92928a", "#c0c0b7"]}
         position={[0.25, 0, 0]}
         rotation={[Math.PI / 2, 0, 0]}
       />
       <mesh position={[0.25, 0, -0.012]}>
         <planeGeometry args={[2.4, 2.4]} />
-        <meshStandardMaterial color="#07111b" roughness={0.92} />
+        <meshStandardMaterial color="#d6d6cd" roughness={0.92} />
       </mesh>
     </group>
   );

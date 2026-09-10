@@ -6,6 +6,8 @@
 import type { AtlasManifest } from "@/lib/lerobot/atlas-schema/types";
 import { applyRuntimeSpacing } from "@/lib/lerobot/coordinates/runtimeSpacing";
 
+import { ARM_COLORS } from "./analyticalPalette";
+
 function BaseReference({
   arm,
   position,
@@ -13,14 +15,14 @@ function BaseReference({
   arm: "left" | "right";
   position: [number, number, number];
 }) {
-  const color = arm === "left" ? "#67e8f9" : "#fb7185";
+  const color = ARM_COLORS[arm];
   return (
     <group name={`${arm}-base-reference`} position={position}>
       <mesh position={[0, 0, 0.018]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.055, 0.07, 0.036, 24]} />
         <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.2} />
       </mesh>
-      <axesHelper args={[0.12]} />
+      <axesHelper args={[0.12]} onUpdate={(axes) => axes.setColors("#a65f45", "#6f9d63", "#4f7896")} />
     </group>
   );
 }

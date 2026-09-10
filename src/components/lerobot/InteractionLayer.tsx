@@ -20,6 +20,8 @@ import { selectRecordedPlaybackSample } from "@/lib/lerobot/playback/controller"
 import { EndEffectorMarker } from "./EndEffectorMarker";
 import { useViewerStore } from "./ViewerStore";
 
+import { ARM_COLORS, QUERY_COLOR } from "./analyticalPalette";
+
 function WidePath({
   points,
   color,
@@ -129,16 +131,16 @@ export function InteractionLayer({
           <mesh>
             <sphereGeometry args={[Math.max(viewer.radius, 0.002), 24, 16]} />
             <meshBasicMaterial
-              color="#ffffff"
+              color={QUERY_COLOR}
               transparent
-              opacity={0.12}
+              opacity={0.3}
               wireframe
               depthWrite={false}
             />
           </mesh>
           <mesh>
             <sphereGeometry args={[0.008, 16, 12]} />
-            <meshBasicMaterial color="#ffffff" />
+            <meshBasicMaterial color={QUERY_COLOR} />
           </mesh>
         </group>
       ) : null}
@@ -146,28 +148,28 @@ export function InteractionLayer({
         <group name="trajectory-playback">
           <WidePath
             points={leftPath}
-            color="#5ee4ff"
+            color={ARM_COLORS.left}
             lineWidth={0.003}
             opacity={0.32}
             renderOrder={20}
           />
           <WidePath
             points={rightPath}
-            color="#ff6f91"
+            color={ARM_COLORS.right}
             lineWidth={0.003}
             opacity={0.32}
             renderOrder={20}
           />
           <WidePath
             points={travelledLeftPath}
-            color="#5ee4ff"
+            color={ARM_COLORS.left}
             lineWidth={0.006}
             opacity={0.96}
             renderOrder={21}
           />
           <WidePath
             points={travelledRightPath}
-            color="#ff6f91"
+            color={ARM_COLORS.right}
             lineWidth={0.006}
             opacity={0.96}
             renderOrder={21}

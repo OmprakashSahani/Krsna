@@ -6,10 +6,9 @@ import type {
   Vector3,
 } from "@/lib/lerobot/atlas-schema/types";
 
-export const END_EFFECTOR_MARKER_COLORS = {
-  left: "#5ee4ff",
-  right: "#ff6f91",
-} as const;
+import { ARM_COLORS } from "./analyticalPalette";
+
+export const END_EFFECTOR_MARKER_COLORS = ARM_COLORS;
 
 export const MIN_SYMBOLIC_FINGER_SEPARATION = 0.012;
 export const MAX_SYMBOLIC_FINGER_SEPARATION = 0.034;
@@ -137,11 +136,11 @@ export function EndEffectorMarker({
           </mesh>
           <mesh name={`${arm}-tool-local-x`} renderOrder={31}>
             <boxGeometry args={[0.034, 0.004, 0.004]} />
-            <MarkerMaterial color="#ffbf69" />
+            <MarkerMaterial color="#80651f" />
           </mesh>
           <mesh name={`${arm}-tool-local-y`} renderOrder={31}>
             <boxGeometry args={[0.004, 0.028, 0.004]} />
-            <MarkerMaterial color="#8cff98" />
+            <MarkerMaterial color="#527647" />
           </mesh>
           {description.orientationGlyph.symbolicGripper ? (
             <group name={`${arm}-tool-symbolic-gripper`}>

@@ -58,6 +58,7 @@ function formatMetric(value: number, metric: CoverageMetric) {
 export function AtlasViewer() {
   const atlas = useAtlasData();
   const viewer = useViewerStore();
+  const [touchNavigation, setTouchNavigation] = useState(false);
   const [trajectories, setTrajectories] = useState<TrajectoryState>({
     status: "idle",
   });
@@ -363,320 +364,332 @@ export function AtlasViewer() {
 
   return (
     <div className={styles["viewer-shell"]}>
-      <div
-        className={`${styles["viewer-visuals"]}${mediaOpen ? ` ${styles["viewer-visuals--media-open"]}` : ""}`}
-        data-testid="viewer-visuals"
-      >
-        <section className={styles["viewer-stage"]} aria-label="Interactive workspace scene">
-          <ViewerCanvas
-            data={atlas.data}
-            episode={episode}
-            orientationEpisode={orientationEpisode}
-            recordedGripperEpisode={recordedGripperEpisode}
-            playbackFrame={playback.frame}
-          />
-          <div className={styles["scene-badge"]}><span className={styles["live-dot"]} aria-hidden="true" />Canonical shared world</div>
-          <p className={styles["scene-help"]}>Click a voxel to query · Drag to orbit · Scroll to zoom</p>
-        </section>
-        {mediaOpen ? (
-        <section
-          aria-label="Synchronized media"
-          className={styles["episode-video-panel"]}
-          id="synchronized-media-panel"
-          tabIndex={-1}
-          onKeyDown={(event) => {
-            if (event.key === "Escape") closeMedia();
-          }}
+      <section className={styles["interactive-workspace"]} aria-label="Workspace interaction">
+        <div
+          className={styles["viewer-visuals"]}
+          data-testid="viewer-visuals"
         >
-          <div className={styles["episode-video-heading"]}>
-            <div>
-              <p className={styles["eyebrow"]}>Synchronized media</p>
-              <h2 id="episode-video-heading">Episode video</h2>
+          <section className={styles["viewer-stage"]} aria-label="Interactive workspace scene">
+            <div className={styles["canvas-surface"]} data-touch-navigation={touchNavigation}>
+              <ViewerCanvas
+                data={atlas.data}
+                episode={episode}
+                orientationEpisode={orientationEpisode}
+                recordedGripperEpisode={recordedGripperEpisode}
+                playbackFrame={playback.frame}
+                touchNavigation={touchNavigation}
+              />
             </div>
-            {episodeVideos.status === "ready" &&
-            episodeVideos.data.cameras.length > 1 ? (
-              <div className={styles["episode-video-camera"]}>
-                <label htmlFor="video-camera">Camera</label>
-                <select
-                  id="video-camera"
-                  value={cameraId ?? ""}
-                  onChange={(event) => setCameraId(event.target.value)}
-                >
-                  {episodeVideos.data.cameras.map((camera) => (
-                    <option key={camera.cameraId} value={camera.cameraId}>
-                      {camera.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ) : null}
+            <div className={styles["scene-badge"]}>Canonical shared world</div>
+          </section>
+          <div className={styles["scene-help"]}>
+            <p>Click a voxel to query · Drag to orbit · Right-drag to pan · Scroll to zoom</p>
+            <button type="button" className={styles["compact-button"]} aria-pressed={touchNavigation} aria-describedby="touch-navigation-help" onClick={() => setTouchNavigation((enabled) => !enabled)}>Touch navigation</button>
+            <p id="touch-navigation-help">{touchNavigation ? "Touch navigation on: drag to orbit; use two fingers to pan or zoom. Turn off to scroll the page over the scene." : "Touch navigation off: swipe over the scene to scroll the page. Enable to orbit, pan and zoom with touch."}</p>
           </div>
-          {!hasEpisodeVideos ? (
-            <p className={styles["episode-video-message"]} role="note">
-              Synchronized media is not included in this bundle.
-            </p>
-          ) : null}
-          {hasEpisodeVideos && episodeVideos.status === "loading" ? (
-            <p className={styles["episode-video-message"]} role="status">
-              Loading synchronized video metadata…
-            </p>
-          ) : null}
-          {hasEpisodeVideos && episodeVideos.status === "error" ? (
-            <p className={styles["episode-video-message"]} role="note">
-              Synchronized episode video is unavailable. {episodeVideos.message}
-            </p>
-          ) : null}
-          {hasEpisodeVideos && episodeVideos.status === "error" ? (
-            <button
-              className={styles["compact-button"] + " " + styles["episode-video-retry"]}
-              onClick={loadEpisodeVideoMetadata}
-              type="button"
-            >
-              Retry synchronized media
-            </button>
-          ) : null}
-          {hasEpisodeVideos && episodeVideos.status === "ready" && !episode ? (
-            <p className={styles["episode-video-message"]} role="note">
-              Load trajectory playback to select synchronized episode media.
-            </p>
-          ) : null}
-          {hasEpisodeVideos &&
-          episodeVideos.status === "ready" &&
-          episode &&
-          !videoSource ? (
-            <p className={styles["episode-video-message"]} role="note">
-              No synchronized {videoCamera?.label.toLowerCase() ?? "camera"} video
-              is available for this episode.
-            </p>
-          ) : null}
-          {hasEpisodeVideos && videoSource && videoCamera ? (
-            <video
-              aria-label={`${videoCamera.label} synchronized episode video`}
-              key={videoSource.filename}
-              playsInline
-              preload="metadata"
-              ref={videoRef}
-              src={episodeVideoAssetUrl(videoSource.filename)}
-            />
-          ) : null}
-        </section>
-        ) : null}
-      </div>
-      <aside className={styles["viewer-panel"]} aria-label="Viewer controls and metadata">
-        <div className={styles["panel-heading"]}>
-          <div><p className={styles["eyebrow"]}>{manifest.bundleId} / {episodeSelectionLabel}</p><h2>Workspace coverage</h2></div>
-          <span className={styles["schema-chip"]}>
-            schema v{manifest.schema.major}.{manifest.schema.minor}
-          </span>
         </div>
-
-        <section className={styles["control-section"]} aria-labelledby="metric-heading">
-          <div className={styles["section-title-row"]}><h2 id="metric-heading">Coverage metric</h2><span>{metricLabels[viewer.metric]}</span></div>
-          <label className={styles["field-label"]} htmlFor="coverage-metric">Metric</label>
-          <select
-            id="coverage-metric"
-            value={viewer.metric}
-            onChange={(event) => viewer.setMetric(event.target.value as CoverageMetric)}
-          >
-            <option value="visits">Visits</option>
-            <option value="log-visits">Log visits</option>
-            <option value="episodes">Distinct episodes</option>
-          </select>
-          <small className={styles["control-help"]}>{metricDescriptions[viewer.metric]}</small>
-          <div className={styles["legend"]} aria-label={`${metricLabels[viewer.metric]} color range`}>
-            <div className={styles["legend-gradient"]} aria-hidden="true" />
-            <div><span>{formatMetric(domain[0], viewer.metric)}</span><span>{formatMetric(domain[1], viewer.metric)}</span></div>
-          </div>
-        </section>
-
-        <section className={styles["control-section"]} aria-labelledby="scene-heading">
-          <div className={styles["section-title-row"]}><h2 id="scene-heading">Scene</h2><button className={styles["compact-button"]} type="button" onClick={viewer.resetCamera}>Reset camera</button></div>
-          <label className={styles["layer-toggle"]}><input checked={viewer.leftVisible} onChange={() => viewer.toggleArm("left")} type="checkbox" /><span className={styles["arm-dot"] + " " + styles["arm-dot-left"]} aria-hidden="true" />Left arm entries<strong>{preparedArms[0].visits.length.toLocaleString()}</strong></label>
-          <label className={styles["layer-toggle"]}><input checked={viewer.rightVisible} onChange={() => viewer.toggleArm("right")} type="checkbox" /><span className={styles["arm-dot"] + " " + styles["arm-dot-right"]} aria-hidden="true" />Right arm entries<strong>{preparedArms[1].visits.length.toLocaleString()}</strong></label>
-          <label className={styles["layer-toggle"] + " " + styles["simple-toggle"]}><input checked={viewer.autoRotate} onChange={(event) => viewer.setAutoRotate(event.target.checked)} type="checkbox" />Auto rotate</label>
-        </section>
-
-        <EnvironmentStatus />
-
-        <section className={styles["control-section"] + " " + styles["robot-setup"]} aria-labelledby="robot-setup-heading">
-          <div className={styles["section-title-row"]}><h2 id="robot-setup-heading">Robot setup</h2><span>Provisional geometry</span></div>
-          <p className={styles["control-help"]}>
-            Distance between the left and right arm bases in the shared world.
-            Both arms move symmetrically when this value changes.
-          </p>
-
-          <div className={styles["spacing-current"]} aria-live="polite">
-            <span>Current shared-world spacing</span>
-            <strong>{viewer.spacing.toFixed(2)} m</strong>
+        <aside className={styles["viewer-panel"]} aria-label="Viewer controls">
+          <div className={styles["panel-heading"]}>
+            <div><p className={styles["eyebrow"]}>{manifest.bundleId} / {episodeSelectionLabel}</p><h2>Workspace coverage</h2></div>
+            <span className={styles["schema-chip"]}>
+              schema v{manifest.schema.major}.{manifest.schema.minor}
+            </span>
           </div>
 
-          <form
-            className={styles["spacing-form"]}
-            noValidate
-            onSubmit={(event) => {
-              event.preventDefault();
-              commitSpacingInput();
+          <section className={styles["control-section"]} aria-labelledby="metric-heading">
+            <div className={styles["section-title-row"]}><h3 id="metric-heading">Coverage metric</h3><span>{metricLabels[viewer.metric]}</span></div>
+            <label className={styles["field-label"]} htmlFor="coverage-metric">Metric</label>
+            <select
+              id="coverage-metric"
+              value={viewer.metric}
+              onChange={(event) => viewer.setMetric(event.target.value as CoverageMetric)}
+            >
+              <option value="visits">Visits</option>
+              <option value="log-visits">Log visits</option>
+              <option value="episodes">Distinct episodes</option>
+            </select>
+            <small className={styles["control-help"]}>{metricDescriptions[viewer.metric]}</small>
+            <div className={styles["legend"]} aria-label={`${metricLabels[viewer.metric]} color range`}>
+              <div className={styles["legend-swatches"]} aria-hidden="true"><i /><i /><i /><i /></div>
+              <div><span>{formatMetric(domain[0], viewer.metric)}</span><span>{formatMetric(domain[1], viewer.metric)}</span></div>
+            </div>
+          </section>
+
+          <section className={styles["control-section"]} aria-labelledby="scene-heading">
+            <div className={styles["section-title-row"]}><h3 id="scene-heading">Scene</h3><button className={styles["compact-button"]} type="button" onClick={viewer.resetCamera}>Reset camera</button></div>
+            <label className={styles["layer-toggle"]}><input checked={viewer.leftVisible} onChange={() => viewer.toggleArm("left")} type="checkbox" /><span className={styles["arm-dot"] + " " + styles["arm-dot-left"]} aria-hidden="true" />Left arm entries<strong>{preparedArms[0].visits.length.toLocaleString()}</strong></label>
+            <label className={styles["layer-toggle"]}><input checked={viewer.rightVisible} onChange={() => viewer.toggleArm("right")} type="checkbox" /><span className={styles["arm-dot"] + " " + styles["arm-dot-right"]} aria-hidden="true" />Right arm entries<strong>{preparedArms[1].visits.length.toLocaleString()}</strong></label>
+            <label className={styles["layer-toggle"] + " " + styles["simple-toggle"]}><input checked={viewer.autoRotate} onChange={(event) => viewer.setAutoRotate(event.target.checked)} type="checkbox" />Auto rotate</label>
+          </section>
+
+
+          <section className={styles["control-section"] + " " + styles["robot-setup"]} aria-labelledby="robot-setup-heading">
+            <div className={styles["section-title-row"]}><h2 id="robot-setup-heading">Robot setup</h2><span>Provisional geometry</span></div>
+            <p className={styles["control-help"]}>
+              Distance between the left and right arm bases in the shared world.
+              Both arms move symmetrically when this value changes.
+            </p>
+
+            <div className={styles["spacing-current"]} aria-live="polite">
+              <span>Current shared-world spacing</span>
+              <strong>{viewer.spacing.toFixed(2)} m</strong>
+            </div>
+
+            <form
+              className={styles["spacing-form"]}
+              noValidate
+              onSubmit={(event) => {
+                event.preventDefault();
+                commitSpacingInput();
+              }}
+            >
+              <label className={styles["field-label"]} htmlFor="arm-spacing-number">
+                Arm spacing (metres)
+              </label>
+              <div className={styles["spacing-input-row"]}>
+                <input
+                  aria-describedby="arm-spacing-help"
+                  defaultValue={viewer.spacing.toFixed(2)}
+                  id="arm-spacing-number"
+                  inputMode="decimal"
+                  key={`arm-spacing-${viewer.spacing.toFixed(2)}`}
+                  max={MAX_ARM_SPACING}
+                  min={MIN_ARM_SPACING}
+                  onBlur={commitSpacingInput}
+                  ref={spacingInputRef}
+                  step="0.01"
+                  type="number"
+                />
+                <button className={styles["compact-button"]} type="submit">
+                  Apply spacing
+                </button>
+              </div>
+            </form>
+
+            <label className={styles["field-label"]} htmlFor="arm-spacing-slider">
+              Arm spacing slider: {viewer.spacing.toFixed(2)} m
+            </label>
+            <input
+              id="arm-spacing-slider"
+              max={MAX_ARM_SPACING}
+              min={MIN_ARM_SPACING}
+              onChange={(event) => viewer.setSpacing(Number(event.target.value))}
+              step="0.02"
+              type="range"
+              value={viewer.spacing}
+            />
+
+            <small className={styles["control-help"]} id="arm-spacing-help">
+              Allowed range: {MIN_ARM_SPACING.toFixed(2)}–{MAX_ARM_SPACING.toFixed(2)} m.
+              This changes only the runtime shared-world transform.
+            </small>
+
+            <div className={styles["spacing-actions"]}>
+              <button
+                className={styles["compact-button"]}
+                type="button"
+                onClick={() => viewer.setSpacing(manifest.coverage.armSpacing)}
+              >
+                Restore manifest spacing
+              </button>
+              <small>Manifest baseline: {manifest.coverage.armSpacing.toFixed(2)} m</small>
+            </div>
+          </section>
+
+
+          <section className={styles["control-section"]} aria-labelledby="query-heading">
+            <div className={styles["section-title-row"]}><h2 id="query-heading">Radius query</h2>{viewer.selection ? <button className={styles["compact-button"]} type="button" onClick={viewer.clearSelection}>Clear selection</button> : null}</div>
+            <label className={styles["field-label"]} htmlFor="query-radius">Query radius: {viewer.radius.toFixed(3)} m</label>
+            <input id="query-radius" type="range" min="0" max="0.3" step="0.005" value={viewer.radius} onChange={(event) => viewer.setRadius(Number(event.target.value))} />
+            {radiusResult ? (
+              <div className={styles["query-result"]} role="status" aria-live="polite">
+                <strong>{radiusResult.selectedArm} arm voxel selected</strong>
+                <span>Center: {radiusResult.center.map((value) => value.toFixed(3)).join(", ")} m</span>
+                <span>Radius: {radiusResult.radius.toFixed(3)} m</span>
+                <span>Arm-specific entries: {radiusResult.entryCount.toLocaleString()}</span>
+                <span>Tool-point visits: {radiusResult.toolPointVisits.toLocaleString()}</span>
+                <span>Left / right visits: {radiusResult.leftVisits.toLocaleString()} / {radiusResult.rightVisits.toLocaleString()}</span>
+                <span>Exact episode union: {radiusResult.distinctEpisodeCount.toLocaleString()}</span>
+                <span>Selected voxel: {selectedVisits.toLocaleString()} raw visits · {selectedEpisodes.toLocaleString()} exact episodes</span>
+              </div>
+            ) : <p className={styles["control-help"]}>Select an occupied voxel in the scene.</p>}
+          </section>
+
+          <section className={styles["control-section"]} aria-labelledby="playback-heading" ref={playbackSectionRef}>
+            <div className={styles["section-title-row"]}><h2 id="playback-heading">Trajectory playback</h2><span>Optional payload</span></div>
+            <div className={styles["playback-primary-actions"]}>
+              <button
+                aria-controls="synchronized-media-panel"
+                aria-expanded={mediaOpen}
+                className={styles["compact-button"] + " " + styles["playback-primary-action"]}
+                onClick={mediaOpen ? closeMedia : openMedia}
+                ref={mediaToggleRef}
+                type="button"
+              >
+                {mediaOpen
+                  ? "Close synchronized media"
+                  : "Open synchronized media"}
+              </button>
+              {trajectories.status === "idle" ? (
+                <button
+                  className={styles["compact-button"] + " " + styles["playback-primary-action"]}
+                  type="button"
+                  onClick={() => activatePlayback()}
+                >
+                  Load playback
+                </button>
+              ) : null}
+            </div>
+          {mediaOpen ? (
+          <section
+            aria-label="Synchronized media"
+            className={styles["episode-video-panel"]}
+            id="synchronized-media-panel"
+            tabIndex={-1}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") closeMedia();
             }}
           >
-            <label className={styles["field-label"]} htmlFor="arm-spacing-number">
-              Arm spacing (metres)
-            </label>
-            <div className={styles["spacing-input-row"]}>
-              <input
-                aria-describedby="arm-spacing-help"
-                defaultValue={viewer.spacing.toFixed(2)}
-                id="arm-spacing-number"
-                inputMode="decimal"
-                key={`arm-spacing-${viewer.spacing.toFixed(2)}`}
-                max={MAX_ARM_SPACING}
-                min={MIN_ARM_SPACING}
-                onBlur={commitSpacingInput}
-                ref={spacingInputRef}
-                step="0.01"
-                type="number"
-              />
-              <button className={styles["compact-button"]} type="submit">
-                Apply spacing
-              </button>
-            </div>
-          </form>
-
-          <label className={styles["field-label"]} htmlFor="arm-spacing-slider">
-            Arm spacing slider: {viewer.spacing.toFixed(2)} m
-          </label>
-          <input
-            id="arm-spacing-slider"
-            max={MAX_ARM_SPACING}
-            min={MIN_ARM_SPACING}
-            onChange={(event) => viewer.setSpacing(Number(event.target.value))}
-            step="0.02"
-            type="range"
-            value={viewer.spacing}
-          />
-
-          <small className={styles["control-help"]} id="arm-spacing-help">
-            Allowed range: {MIN_ARM_SPACING.toFixed(2)}–{MAX_ARM_SPACING.toFixed(2)} m.
-            This changes only the runtime shared-world transform.
-          </small>
-
-          <div className={styles["spacing-actions"]}>
-            <button
-              className={styles["compact-button"]}
-              type="button"
-              onClick={() => viewer.setSpacing(manifest.coverage.armSpacing)}
-            >
-              Restore manifest spacing
-            </button>
-            <small>Manifest baseline: {manifest.coverage.armSpacing.toFixed(2)} m</small>
-          </div>
-        </section>
-
-        <section className={styles["control-section"]} aria-labelledby="query-heading">
-          <div className={styles["section-title-row"]}><h2 id="query-heading">Radius query</h2>{viewer.selection ? <button className={styles["compact-button"]} type="button" onClick={viewer.clearSelection}>Clear selection</button> : null}</div>
-          <label className={styles["field-label"]} htmlFor="query-radius">Query radius: {viewer.radius.toFixed(3)} m</label>
-          <input id="query-radius" type="range" min="0" max="0.3" step="0.005" value={viewer.radius} onChange={(event) => viewer.setRadius(Number(event.target.value))} />
-          {radiusResult ? (
-            <div className={styles["query-result"]} role="status" aria-live="polite">
-              <strong>{radiusResult.selectedArm} arm voxel selected</strong>
-              <span>Center: {radiusResult.center.map((value) => value.toFixed(3)).join(", ")} m</span>
-              <span>Radius: {radiusResult.radius.toFixed(3)} m</span>
-              <span>Arm-specific entries: {radiusResult.entryCount.toLocaleString()}</span>
-              <span>Tool-point visits: {radiusResult.toolPointVisits.toLocaleString()}</span>
-              <span>Left / right visits: {radiusResult.leftVisits.toLocaleString()} / {radiusResult.rightVisits.toLocaleString()}</span>
-              <span>Exact episode union: {radiusResult.distinctEpisodeCount.toLocaleString()}</span>
-              <span>Selected voxel: {selectedVisits.toLocaleString()} raw visits · {selectedEpisodes.toLocaleString()} exact episodes</span>
-            </div>
-          ) : <p className={styles["control-help"]}>Select an occupied voxel in the scene.</p>}
-        </section>
-
-        <section className={styles["control-section"]} aria-labelledby="playback-heading" ref={playbackSectionRef}>
-          <div className={styles["section-title-row"]}><h2 id="playback-heading">Trajectory playback</h2><span>Optional payload</span></div>
-          <div className={styles["playback-primary-actions"]}>
-            <button
-              aria-controls="synchronized-media-panel"
-              aria-expanded={mediaOpen}
-              className={styles["compact-button"] + " " + styles["playback-primary-action"]}
-              onClick={mediaOpen ? closeMedia : openMedia}
-              ref={mediaToggleRef}
-              type="button"
-            >
-              {mediaOpen
-                ? "Close synchronized media"
-                : "Open synchronized media"}
-            </button>
-            {trajectories.status === "idle" ? (
-              <button
-                className={styles["compact-button"] + " " + styles["playback-primary-action"]}
-                type="button"
-                onClick={() => activatePlayback()}
-              >
-                Load playback
-              </button>
-            ) : null}
-          </div>
-          {trajectories.status === "loading" ? <p role="status">Loading trajectories…</p> : null}
-          {trajectories.status === "error" ? <p role="alert">{trajectories.message}</p> : null}
-          {trajectories.status === "ready" && episode ? (
-            <div className={styles["playback-controls"]}>
-              <label className={styles["field-label"]} htmlFor="episode-selector">Episode</label>
-              <select ref={episodeSelectorRef} id="episode-selector" value={episode.episodeId} onChange={(event) => { setEpisodeId(Number(event.target.value)); setPlayback((state) => ({ ...state, frame: 0, playing: false })); }}>
-                {trajectories.data.episodes.map((item) => <option key={item.episodeId} value={item.episodeId}>Episode {item.episodeId}</option>)}
-              </select>
-              <div className={styles["button-row"]}>
-                <button className={styles["compact-button"]} type="button" onClick={() => setPlayback((state) => ({ ...state, playing: !state.playing }))}>{playback.playing ? "Pause" : "Play"}</button>
-                <button className={styles["compact-button"]} type="button" onClick={() => setPlayback((state) => ({ ...state, frame: 0, playing: false }))}>Restart</button>
+            <div className={styles["episode-video-heading"]}>
+              <div>
+                <p className={styles["eyebrow"]}>Synchronized media</p>
+                <h3 id="episode-video-heading">Episode video</h3>
               </div>
-              <label className={styles["field-label"]} htmlFor="playback-timeline">Timeline</label>
-              <input id="playback-timeline" type="range" min="0" max={episode.frameIndices.length - 1} step="1" value={frameIndex} onChange={(event) => setPlayback((state) => ({ ...state, frame: Number(event.target.value), playing: false }))} />
-              <span className={styles["playback-status"]}>
-                {formatPlaybackStatus(episode, playback.frame)}
-              </span>
-              {recordedSample?.left.recordedGripperValue !== undefined ||
-              recordedSample?.right.recordedGripperValue !== undefined ? (
-                <div
-                  aria-label="Recorded raw gripper values"
-                  className={styles["raw-gripper-readout"]}
-                  role="group"
-                >
-                  <dl>
-                    {recordedSample.left.recordedGripperValue !== undefined ? (
-                      <div>
-                        <dt>Left raw value</dt>
-                        <dd>
-                          {String(recordedSample.left.recordedGripperValue)}
-                        </dd>
-                      </div>
-                    ) : null}
-                    {recordedSample.right.recordedGripperValue !== undefined ? (
-                      <div>
-                        <dt>Right raw value</dt>
-                        <dd>
-                          {String(recordedSample.right.recordedGripperValue)}
-                        </dd>
-                      </div>
-                    ) : null}
-                  </dl>
-                  <p>
-                    Symbolic display only. Values are raw and device-specific;
-                    physical jaw width is not calibrated, and open/closed
-                    polarity is not established.
-                  </p>
+              {episodeVideos.status === "ready" &&
+              episodeVideos.data.cameras.length > 1 ? (
+                <div className={styles["episode-video-camera"]}>
+                  <label htmlFor="video-camera">Camera</label>
+                  <select
+                    id="video-camera"
+                    value={cameraId ?? ""}
+                    onChange={(event) => setCameraId(event.target.value)}
+                  >
+                    {episodeVideos.data.cameras.map((camera) => (
+                      <option key={camera.cameraId} value={camera.cameraId}>
+                        {camera.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               ) : null}
-              {trajectories.data.gripper.status === "degraded" ? (
-                <p className={styles["playback-capability-note"]} role="note">
-                  {trajectories.data.gripper.warning}
-                </p>
-              ) : null}
-              <label className={styles["field-label"]} htmlFor="playback-speed">Playback speed</label>
-              <select id="playback-speed" value={playback.speed} onChange={(event) => setPlayback((state) => ({ ...state, speed: Number(event.target.value) }))}>
-                <option value="0.5">0.5×</option><option value="1">1×</option><option value="2">2×</option>
-              </select>
-              <label className={styles["layer-toggle"] + " " + styles["simple-toggle"]}><input type="checkbox" checked={playback.loop} onChange={(event) => setPlayback((state) => ({ ...state, loop: event.target.checked }))} />Loop playback</label>
             </div>
+            {!hasEpisodeVideos ? (
+              <p className={styles["episode-video-message"]} role="note">
+                Synchronized media is not included in this bundle.
+              </p>
+            ) : null}
+            {hasEpisodeVideos && episodeVideos.status === "loading" ? (
+              <p className={styles["episode-video-message"]} role="status">
+                Loading synchronized video metadata…
+              </p>
+            ) : null}
+            {hasEpisodeVideos && episodeVideos.status === "error" ? (
+              <p className={styles["episode-video-message"]} role="note">
+                Synchronized episode video is unavailable. {episodeVideos.message}
+              </p>
+            ) : null}
+            {hasEpisodeVideos && episodeVideos.status === "error" ? (
+              <button
+                className={styles["compact-button"] + " " + styles["episode-video-retry"]}
+                onClick={loadEpisodeVideoMetadata}
+                type="button"
+              >
+                Retry synchronized media
+              </button>
+            ) : null}
+            {hasEpisodeVideos && episodeVideos.status === "ready" && !episode ? (
+              <p className={styles["episode-video-message"]} role="note">
+                Load trajectory playback to select synchronized episode media.
+              </p>
+            ) : null}
+            {hasEpisodeVideos &&
+            episodeVideos.status === "ready" &&
+            episode &&
+            !videoSource ? (
+              <p className={styles["episode-video-message"]} role="note">
+                No synchronized {videoCamera?.label.toLowerCase() ?? "camera"} video
+                is available for this episode.
+              </p>
+            ) : null}
+            {hasEpisodeVideos && videoSource && videoCamera ? (
+              <video
+                aria-label={`${videoCamera.label} synchronized episode video`}
+                key={videoSource.filename}
+                playsInline
+                preload="metadata"
+                ref={videoRef}
+                src={episodeVideoAssetUrl(videoSource.filename)}
+              />
+            ) : null}
+          </section>
           ) : null}
-        </section>
+            {trajectories.status === "loading" ? <p role="status">Loading trajectories…</p> : null}
+            {trajectories.status === "error" ? <p role="alert">{trajectories.message}</p> : null}
+            {trajectories.status === "ready" && episode ? (
+              <div className={styles["playback-controls"]}>
+                <label className={styles["field-label"]} htmlFor="episode-selector">Episode</label>
+                <select ref={episodeSelectorRef} id="episode-selector" value={episode.episodeId} onChange={(event) => { setEpisodeId(Number(event.target.value)); setPlayback((state) => ({ ...state, frame: 0, playing: false })); }}>
+                  {trajectories.data.episodes.map((item) => <option key={item.episodeId} value={item.episodeId}>Episode {item.episodeId}</option>)}
+                </select>
+                <div className={styles["button-row"]}>
+                  <button className={styles["compact-button"]} type="button" aria-pressed={playback.playing} onClick={() => setPlayback((state) => ({ ...state, playing: !state.playing }))}>{playback.playing ? "Pause" : "Play"}</button>
+                  <button className={styles["compact-button"]} type="button" onClick={() => setPlayback((state) => ({ ...state, frame: 0, playing: false }))}>Restart</button>
+                </div>
+                <label className={styles["field-label"]} htmlFor="playback-timeline">Timeline</label>
+                <input id="playback-timeline" type="range" min="0" max={episode.frameIndices.length - 1} step="1" value={frameIndex} onChange={(event) => setPlayback((state) => ({ ...state, frame: Number(event.target.value), playing: false }))} />
+                <span className={styles["playback-status"]}>
+                  {formatPlaybackStatus(episode, playback.frame)}
+                </span>
+                {recordedSample?.left.recordedGripperValue !== undefined ||
+                recordedSample?.right.recordedGripperValue !== undefined ? (
+                  <div
+                    aria-label="Recorded raw gripper values"
+                    className={styles["raw-gripper-readout"]}
+                    role="group"
+                  >
+                    <dl>
+                      {recordedSample.left.recordedGripperValue !== undefined ? (
+                        <div>
+                          <dt>Left raw value</dt>
+                          <dd>
+                            {String(recordedSample.left.recordedGripperValue)}
+                          </dd>
+                        </div>
+                      ) : null}
+                      {recordedSample.right.recordedGripperValue !== undefined ? (
+                        <div>
+                          <dt>Right raw value</dt>
+                          <dd>
+                            {String(recordedSample.right.recordedGripperValue)}
+                          </dd>
+                        </div>
+                      ) : null}
+                    </dl>
+                    <p>
+                      Symbolic display only. Values are raw and device-specific;
+                      physical jaw width is not calibrated, and open/closed
+                      polarity is not established.
+                    </p>
+                  </div>
+                ) : null}
+                {trajectories.data.gripper.status === "degraded" ? (
+                  <p className={styles["playback-capability-note"]} role="note">
+                    {trajectories.data.gripper.warning}
+                  </p>
+                ) : null}
+                <label className={styles["field-label"]} htmlFor="playback-speed">Playback speed</label>
+                <select id="playback-speed" value={playback.speed} onChange={(event) => setPlayback((state) => ({ ...state, speed: Number(event.target.value) }))}>
+                  <option value="0.5">0.5×</option><option value="1">1×</option><option value="2">2×</option>
+                </select>
+                <label className={styles["layer-toggle"] + " " + styles["simple-toggle"]}><input type="checkbox" checked={playback.loop} onChange={(event) => setPlayback((state) => ({ ...state, loop: event.target.checked }))} />Loop playback</label>
+              </div>
+            ) : null}
+          </section>
 
+
+        </aside>
+      </section>
+      <div className={styles["dataset-notes"]}>
         <section className={styles["control-section"] + " " + styles["metadata-grid"]} aria-label="Dataset metadata">
           <div><span>Dataset frames</span><strong>{manifest.totals.datasetFrameCount.toLocaleString()}</strong></div>
           <div><span>Tool-point visits</span><strong>{manifest.totals.toolPointVisitCount.toLocaleString()}</strong></div>
@@ -691,7 +704,8 @@ export function AtlasViewer() {
         </section>
         {manifest.exporter.workingTreeDirty ? <div className={styles["source-warning"]} role="note"><strong>Uncommitted exporter source</strong><p>{manifest.exporter.sourceDescription}</p></div> : null}
         <div className={styles["spacing-warning"]} role="note"><strong>Provisional geometry</strong><p>{manifest.coverage.spacingDisclosure}</p></div>
-      </aside>
+          <EnvironmentStatus />
+      </div>
       <EpisodeAnalysisPanel
         coverage={coverage}
         episodeCount={manifest.dataset.episodeCount}

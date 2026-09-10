@@ -102,7 +102,7 @@ export function EpisodeAnalysisPanel({
           <p className={styles["control-help"] + " " + styles["uncommon-disclosure"]}>
             Scores describe only this exported coverage set, not the full
             dataset or physical workspace generally. A score is not a
-            probability, percentile, task-quality judgment, or anomaly label.
+            probability, percentile, task-quality judgment, or anomaly label. It does not measure task success or physical novelty and is not an anomaly detector.
           </p>
           <label className={styles["field-label"]} htmlFor="uncommon-episode-scope">
             Episode scoring scope
