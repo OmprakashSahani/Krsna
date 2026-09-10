@@ -242,6 +242,22 @@ vi.mock("@/lib/lerobot/data/loadBundle", () => ({
     loadTrajectories: vi.fn(async () => decodeTrajectories(trajectoriesJson, manifest)),
 }));
 describe("accessible viewer content", () => {
+    it("keeps one scene, controls and evidence in the interaction boundary before provenance", () => {
+        render(<AtlasViewer />);
+        const workspace = screen.getByRole("region", { name: "Workspace interaction" });
+        const visuals = screen.getByTestId("viewer-visuals");
+        const controls = screen.getByRole("complementary", { name: "Viewer controls" });
+        const evidence = screen.getByRole("complementary", { name: "Coverage evidence" });
+        expect(Array.from(workspace.children)).toEqual([visuals, controls, evidence]);
+        expect(screen.getAllByRole("region", { name: "Interactive workspace scene" })).toHaveLength(1);
+        expect(visuals.querySelectorAll("button, input, select, a, [tabindex]")).toHaveLength(0);
+        expect(within(evidence).getByRole("region", { name: "Dataset metadata" })).toBeTruthy();
+        expect(within(evidence).getByRole("region", { name: "Selected region" })).toBeTruthy();
+        expect(within(evidence).getByRole("complementary", { name: "Episode analysis" })).toBeTruthy();
+        expect(workspace.contains(screen.getByRole("region", { name: "Data provenance" }))).toBe(false);
+        expect(workspace.compareDocumentPosition(screen.getByRole("region", { name: "Data provenance" })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+        expect(screen.getByRole("group", { name: "Visits color range" })).toBeTruthy();
+    });
     it("labels viewer controls and preserves the spacing disclosure", () => {
         render(<AtlasViewer />);
         expect(screen.getByText("demo-v2 / episodes 0–9")?.isConnected).toBe(true);

@@ -114,7 +114,7 @@ export function ViewerCanvas({
       dpr={[1, 1.75]}
       gl={{ antialias: true, powerPreference: "high-performance" }}
       onCreated={({ gl }) => {
-        gl.setClearColor("#e7e7e2");
+        gl.setClearColor("#17191d");
       }}
     >
       <ambientLight intensity={0.8} />

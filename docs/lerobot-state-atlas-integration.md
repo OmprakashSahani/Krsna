@@ -256,3 +256,68 @@ output could not be read. The successful build contains only the existing routes
 5. Rerun semantic tests and the original Krsna suite, lint, type checking, build,
    diff checks, and dependency audits. Review lockfile changes for unrelated churn.
 6. Do not modify the standalone repository or its deployment as part of a Krsna update.
+
+## Editorial landing and dedicated Shared World
+
+The project host is now split into two routes:
+
+- `/projects/lerobot-state-atlas` is a server-rendered editorial introduction with
+  purpose, methodology, and the demo's explicit limits. Its same-tab Next Link
+  opens `/projects/lerobot-state-atlas/shared-world`; prefetch is disabled so
+  reading the landing page does not initiate the analytical route's loading.
+- `/projects/lerobot-state-atlas/shared-world` is the sole route importing
+  `ViewerEntry`. It retains the dynamic, non-SSR Three viewer and one provider,
+  store, canvas, and playback state. Its back link returns to the project; the
+  project back link returns home. Homepage and project-index links are unchanged.
+
+The analytical region uses an asymmetric desktop grid: Workspace Coverage,
+Canonical Shared World, and Coverage Evidence. The scene's dark technical window
+uses bounded `position: sticky`, a thin border, and a restrained shadow. The
+surrounding page remains light. Only canvas/background/grid material colors
+change; geometry, metric palette, coordinates, and analytical code are unchanged.
+The window reports actual bundle, metric, visibility, and loaded episode/playback
+state. “Static bundle” describes the source; it does not imply streaming data.
+
+The non-focusable scene overview comes first in the DOM, followed by workspace
+controls and then evidence. Desktop CSS places that visual overview centrally;
+all keyboard controls retain their DOM and visual column order. Below 1180px the
+scene precedes two control/evidence columns; below 681px those columns stack.
+At mobile sizes the complete window is approximately 300px tall. Sticky behavior
+is disabled at viewport heights of 600px or less. Controls use scroll margins to
+remain reachable below the sticky scene. No modal, fixed positioning, scroll
+lock, duplicate canvas, or duplicate state is introduced.
+
+Query results, dataset totals, and uncommon-space episode analysis now live in
+Coverage Evidence, within the same sticky interaction boundary. Coordinates,
+export provenance, provisional spacing disclosure, and environment status follow
+outside that boundary, so the scene exits before those notes and the footer.
+Scene/touch controls remain in Workspace Coverage alongside metrics, spacing,
+radius, and trajectory playback. Touch navigation remains opt-in; unavailable
+synchronized media remains request-free. The metric legend retains its labeled
+`group` role. Route tests cover both H1s, viewer isolation, internal navigation,
+and accessible external GitHub links; viewer tests enforce the revised region
+and DOM boundaries without changing analytical assertions.
+
+Validation for this redesign (2026-09-10): 293 tests pass across 22 files;
+ESLint, `tsc --noEmit`, production build, and `git diff --check` pass. Both
+`npm audit --omit=dev` and `npm audit` report zero vulnerabilities. The production
+loadable manifests contain no dynamic viewer entry for the landing route and
+one dynamic viewer entry for Shared World; both routes are statically generated.
+No Phase 1 analytical module, public demo byte, dependency, or license changes.
+
+Production Chromium checks at 1440×900, 1168×900, 768×900, and 390×844 confirm
+one persistent canvas, no horizontal overflow (also at 125% root text sizing),
+bounded sticky behavior, and release before provenance. Short-height checks at
+500px confirm non-sticky positioning. The default mobile window measures 300px
+high with 20px side margins. Real pointer picking produces radius evidence in
+the same scene as loaded trajectories; camera orbit and spacing controls work.
+Initial browser requests are exactly manifest then coverage, followed by one
+trajectory request after playback activation. Unavailable media adds no request,
+and landing-page navigation does not preload the viewer or demo data.
+Touch-event checks confirm page scrolling over the canvas with navigation off,
+scene manipulation with navigation on, and page scrolling outside the scene.
+Keyboard checks confirm visible focus after scrolling settles; route back links
+return through the project to home. No application console errors were observed;
+Chromium reported a non-fatal unused CSS-preload warning during route navigation.
+These checks use temporary Playwright tooling and SwiftShader software WebGL,
+not physical-device GPU or touch hardware validation.

@@ -81,8 +81,8 @@ export function EpisodeAnalysisPanel({
       className={styles["episode-analysis-panel"]}
     >
       <header className={styles["episode-analysis-header"]}>
-        <p className={styles["eyebrow"]}>Coverage evidence</p>
-        <h2 id="episode-analysis-heading">Episode analysis</h2>
+        <p className={styles["eyebrow"]}>Episode scope</p>
+        <h3 id="episode-analysis-heading">Episode analysis</h3>
       </header>
       <section
         aria-labelledby="uncommon-episodes-heading"
@@ -90,7 +90,7 @@ export function EpisodeAnalysisPanel({
       >
         <div className={styles["episode-analysis-context"]}>
           <div className={styles["section-title-row"]}>
-            <h3 id="uncommon-episodes-heading">Uncommon-space episodes</h3>
+            <h4 id="uncommon-episodes-heading">Uncommon-space episodes</h4>
             <span>{usesRadiusScope ? "Local" : "Global"}</span>
           </div>
           <p className={styles["control-help"] + " " + styles["uncommon-disclosure"]}>

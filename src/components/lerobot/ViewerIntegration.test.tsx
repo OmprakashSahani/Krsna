@@ -42,24 +42,24 @@ function state() { return JSON.parse(screen.getByTestId("scene-state").textConte
 const trajectoryRequests = () => fetcher.mock.calls.filter(([url]) => String(url).endsWith("trajectories.json"));
 
 describe("viewer with real data provider, store, and analytical modules", () => {
-  it("keeps scene controls in DOM order inside a boundary that excludes informational sections", async () => {
+  it("keeps scene, controls and evidence in DOM order inside a boundary that excludes provenance", async () => {
     await ready();
     const boundary = screen.getByRole("region", { name: "Workspace interaction" });
     const ordered = [
       screen.getByRole("region", { name: "Interactive workspace scene" }),
-      screen.getByRole("button", { name: "Touch navigation" }),
       screen.getByRole("heading", { name: "Workspace coverage" }),
+      screen.getByRole("button", { name: "Touch navigation" }),
       screen.getByRole("heading", { name: "Robot setup" }),
       screen.getByRole("heading", { name: "Radius query" }),
       screen.getByRole("heading", { name: "Trajectory playback" }),
       screen.getByRole("region", { name: "Dataset metadata" }),
+      screen.getByRole("heading", { name: "Episode analysis" }),
       screen.getByRole("region", { name: "Coordinate metadata" }),
       screen.getByRole("region", { name: "Data provenance" }),
       screen.getByRole("heading", { name: "Environment" }),
-      screen.getByRole("heading", { name: "Episode analysis" }),
     ];
     ordered.forEach((element, index) => {
-      expect(boundary.contains(element)).toBe(index < 6);
+      expect(boundary.contains(element)).toBe(index < 8);
       if (index > 0) expect(ordered[index - 1].compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     });
     expect(screen.getAllByLabelText("Metric")).toHaveLength(1);

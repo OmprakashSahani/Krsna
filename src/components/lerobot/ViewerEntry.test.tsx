@@ -7,6 +7,7 @@ import { act, cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
 import { ViewerEntry } from "./ViewerEntry";
+import SharedWorldPage, { metadata as sharedMetadata } from "@/app/projects/lerobot-state-atlas/shared-world/page";
 import Page, { metadata } from "@/app/projects/lerobot-state-atlas/page";
 
 const state = vi.hoisted(() => ({ crash: false, options: {} as { ssr?: boolean } }));
@@ -45,6 +46,35 @@ describe("viewer client boundary and portfolio route", () => {
     expect(screen.getByText(String(metadata.description))).toBeTruthy();
     expect(metadata.openGraph?.description).toBe(metadata.description);
     expect(metadata.twitter?.description).toBe(metadata.description);
+  });
+
+  it("keeps the editorial landing viewer-free and links internally to shared world", () => {
+    const detection = scheduleDetection(true);
+    render(<Page />);
+    detection.detect();
+    const link = screen.getByRole("link", { name: "Open shared world" });
+    expect(link.getAttribute("href")).toBe("/projects/lerobot-state-atlas/shared-world");
+    expect(link.hasAttribute("target")).toBe(false);
+    expect(screen.queryByRole("region", { name: "Loaded viewer" })).toBeNull();
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(screen.getByRole("link", { name: /Methodology/ }).getAttribute("href")).toBe("#methodology");
+    expect(document.getElementById("methodology")).not.toBeNull();
+  });
+
+  it.each([false, true])("mounts one viewer on Shared World, with route navigation and one H1 (WebGL=%s)", (supported) => {
+    const detection = scheduleDetection(supported);
+    render(<SharedWorldPage />);
+    expect(screen.getAllByRole("status")).toHaveLength(1);
+    detection.detect();
+    expect(screen.getAllByRole("heading", { level: 1 }).map((heading) => heading.textContent)).toEqual(["Canonical Shared World"]);
+    expect(screen.getByRole("link", { name: "Return to LeRobot State Atlas" }).getAttribute("href")).toBe("/projects/lerobot-state-atlas");
+    const github = screen.getByRole("link", { name: /GitHub.*opens in a new tab/ });
+    expect(github.getAttribute("target")).toBe("_blank");
+    expect(github.getAttribute("rel")).toBe("noopener noreferrer");
+    expect(github.getAttribute("href")).toBe("https://github.com/OmprakashSahani/lerobot-state-atlas");
+    expect(sharedMetadata.alternates?.canonical).toBe("/projects/lerobot-state-atlas/shared-world");
+    if (supported) expect(screen.getAllByRole("region", { name: "Loaded viewer" })).toHaveLength(1);
+    else expect(screen.getByRole("alert").textContent).toContain("WebGL unavailable");
   });
 
   it("keeps stable loading markup until WebGL detection and provides an accessible unsupported state", () => {

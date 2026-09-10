@@ -370,6 +370,9 @@ export function AtlasViewer() {
           data-testid="viewer-visuals"
         >
           <section className={styles["viewer-stage"]} aria-label="Interactive workspace scene">
+            <header className={styles["window-heading"]}>
+              <h2>Canonical shared world</h2><span>Static bundle</span>
+            </header>
             <div className={styles["canvas-surface"]} data-touch-navigation={touchNavigation}>
               <ViewerCanvas
                 data={atlas.data}
@@ -380,13 +383,13 @@ export function AtlasViewer() {
                 touchNavigation={touchNavigation}
               />
             </div>
-            <div className={styles["scene-badge"]}>Canonical shared world</div>
+            <div className={styles["window-status"]}>
+              <span>{manifest.bundleId} · {metricLabels[viewer.metric]}</span>
+              <span>{episode ? `Episode ${episode.episodeId} · ${playback.playing ? "Playing" : "Paused"}` : "Coverage only"}</span>
+              <span><i className={styles["arm-dot-left"]} aria-hidden="true" />Left arm {viewer.leftVisible ? "on" : "off"}</span>
+              <span><i className={styles["arm-dot-right"]} aria-hidden="true" />Right arm {viewer.rightVisible ? "on" : "off"}</span>
+            </div>
           </section>
-          <div className={styles["scene-help"]}>
-            <p>Click a voxel to query · Drag to orbit · Right-drag to pan · Scroll to zoom</p>
-            <button type="button" className={styles["compact-button"]} aria-pressed={touchNavigation} aria-describedby="touch-navigation-help" onClick={() => setTouchNavigation((enabled) => !enabled)}>Touch navigation</button>
-            <p id="touch-navigation-help">{touchNavigation ? "Touch navigation on: drag to orbit; use two fingers to pan or zoom. Turn off to scroll the page over the scene." : "Touch navigation off: swipe over the scene to scroll the page. Enable to orbit, pan and zoom with touch."}</p>
-          </div>
         </div>
         <aside className={styles["viewer-panel"]} aria-label="Viewer controls">
           <div className={styles["panel-heading"]}>
@@ -420,11 +423,16 @@ export function AtlasViewer() {
             <label className={styles["layer-toggle"]}><input checked={viewer.leftVisible} onChange={() => viewer.toggleArm("left")} type="checkbox" /><span className={styles["arm-dot"] + " " + styles["arm-dot-left"]} aria-hidden="true" />Left arm entries<strong>{preparedArms[0].visits.length.toLocaleString()}</strong></label>
             <label className={styles["layer-toggle"]}><input checked={viewer.rightVisible} onChange={() => viewer.toggleArm("right")} type="checkbox" /><span className={styles["arm-dot"] + " " + styles["arm-dot-right"]} aria-hidden="true" />Right arm entries<strong>{preparedArms[1].visits.length.toLocaleString()}</strong></label>
             <label className={styles["layer-toggle"] + " " + styles["simple-toggle"]}><input checked={viewer.autoRotate} onChange={(event) => viewer.setAutoRotate(event.target.checked)} type="checkbox" />Auto rotate</label>
+            <div className={styles["scene-help"]}>
+              <p>Click a voxel to query · Drag to orbit · Right-drag to pan · Scroll to zoom</p>
+              <button type="button" className={styles["compact-button"]} aria-pressed={touchNavigation} aria-describedby="touch-navigation-help" onClick={() => setTouchNavigation((enabled) => !enabled)}>Touch navigation</button>
+              <p id="touch-navigation-help">{touchNavigation ? "Touch navigation on: drag to orbit; use two fingers to pan or zoom. Turn off to scroll the page over the scene." : "Touch navigation off: swipe over the scene to scroll the page. Enable to orbit, pan and zoom with touch."}</p>
+            </div>
           </section>
 
 
           <section className={styles["control-section"] + " " + styles["robot-setup"]} aria-labelledby="robot-setup-heading">
-            <div className={styles["section-title-row"]}><h2 id="robot-setup-heading">Robot setup</h2><span>Provisional geometry</span></div>
+            <div className={styles["section-title-row"]}><h3 id="robot-setup-heading">Robot setup</h3><span>Provisional geometry</span></div>
             <p className={styles["control-help"]}>
               Distance between the left and right arm bases in the shared world.
               Both arms move symmetrically when this value changes.
@@ -498,25 +506,14 @@ export function AtlasViewer() {
 
 
           <section className={styles["control-section"]} aria-labelledby="query-heading">
-            <div className={styles["section-title-row"]}><h2 id="query-heading">Radius query</h2>{viewer.selection ? <button className={styles["compact-button"]} type="button" onClick={viewer.clearSelection}>Clear selection</button> : null}</div>
+            <div className={styles["section-title-row"]}><h3 id="query-heading">Radius query</h3>{viewer.selection ? <button className={styles["compact-button"]} type="button" onClick={viewer.clearSelection}>Clear selection</button> : null}</div>
             <label className={styles["field-label"]} htmlFor="query-radius">Query radius: {viewer.radius.toFixed(3)} m</label>
             <input id="query-radius" type="range" min="0" max="0.3" step="0.005" value={viewer.radius} onChange={(event) => viewer.setRadius(Number(event.target.value))} />
-            {radiusResult ? (
-              <div className={styles["query-result"]} role="status" aria-live="polite">
-                <strong>{radiusResult.selectedArm} arm voxel selected</strong>
-                <span>Center: {radiusResult.center.map((value) => value.toFixed(3)).join(", ")} m</span>
-                <span>Radius: {radiusResult.radius.toFixed(3)} m</span>
-                <span>Arm-specific entries: {radiusResult.entryCount.toLocaleString()}</span>
-                <span>Tool-point visits: {radiusResult.toolPointVisits.toLocaleString()}</span>
-                <span>Left / right visits: {radiusResult.leftVisits.toLocaleString()} / {radiusResult.rightVisits.toLocaleString()}</span>
-                <span>Exact episode union: {radiusResult.distinctEpisodeCount.toLocaleString()}</span>
-                <span>Selected voxel: {selectedVisits.toLocaleString()} raw visits · {selectedEpisodes.toLocaleString()} exact episodes</span>
-              </div>
-            ) : <p className={styles["control-help"]}>Select an occupied voxel in the scene.</p>}
+            <p className={styles["control-help"]}>Select an occupied voxel in the scene. Results appear in Coverage evidence.</p>
           </section>
 
           <section className={styles["control-section"]} aria-labelledby="playback-heading" ref={playbackSectionRef}>
-            <div className={styles["section-title-row"]}><h2 id="playback-heading">Trajectory playback</h2><span>Optional payload</span></div>
+            <div className={styles["section-title-row"]}><h3 id="playback-heading">Trajectory playback</h3><span>Optional payload</span></div>
             <div className={styles["playback-primary-actions"]}>
               <button
                 aria-controls="synchronized-media-panel"
@@ -688,14 +685,45 @@ export function AtlasViewer() {
 
 
         </aside>
+        <aside className={styles["evidence-panel"]} aria-labelledby="coverage-evidence-heading">
+          <div className={styles["panel-heading"]}>
+            <div><p className={styles["eyebrow"]}>Exported observations</p><h2 id="coverage-evidence-heading">Coverage evidence</h2></div>
+          </div>
+          <section className={styles["control-section"] + " " + styles["metadata-grid"]} aria-label="Dataset metadata">
+            <div><span>Dataset frames</span><strong>{manifest.totals.datasetFrameCount.toLocaleString()}</strong></div>
+            <div><span>Tool-point visits</span><strong>{manifest.totals.toolPointVisitCount.toLocaleString()}</strong></div>
+            <div><span>Arm voxel entries</span><strong>{manifest.totals.armVoxelEntryCount.toLocaleString()}</strong></div>
+            <div><span>Shared grid cells</span><strong>{manifest.totals.uniqueSharedGridCellCount.toLocaleString()}</strong></div>
+          </section>
+          <section className={styles["control-section"]} aria-labelledby="query-evidence-heading">
+            <h3 id="query-evidence-heading">Selected region</h3>
+            {radiusResult ? (
+              <div className={styles["query-result"]} role="status" aria-live="polite">
+                <strong>{radiusResult.selectedArm} arm voxel selected</strong>
+                <span>Center: {radiusResult.center.map((value) => value.toFixed(3)).join(", ")} m</span>
+                <span>Radius: {radiusResult.radius.toFixed(3)} m</span>
+                <span>Arm-specific entries: {radiusResult.entryCount.toLocaleString()}</span>
+                <span>Tool-point visits: {radiusResult.toolPointVisits.toLocaleString()}</span>
+                <span>Left / right visits: {radiusResult.leftVisits.toLocaleString()} / {radiusResult.rightVisits.toLocaleString()}</span>
+                <span>Exact episode union: {radiusResult.distinctEpisodeCount.toLocaleString()}</span>
+                <span>Selected voxel: {selectedVisits.toLocaleString()} raw visits · {selectedEpisodes.toLocaleString()} exact episodes</span>
+              </div>
+            ) : <p className={styles["control-help"]}>Select an occupied voxel in the scene.</p>}
+          </section>
+          <EpisodeAnalysisPanel
+            coverage={coverage}
+            episodeCount={manifest.dataset.episodeCount}
+            episodeIds={manifest.dataset.episodeIds}
+            radiusResult={radiusResult}
+            selection={viewer.selection}
+            trajectories={trajectories}
+            onCheckPlayback={() => activatePlayback()}
+            onOpenPlayback={activatePlayback}
+          />
+        </aside>
       </section>
       <div className={styles["dataset-notes"]}>
-        <section className={styles["control-section"] + " " + styles["metadata-grid"]} aria-label="Dataset metadata">
-          <div><span>Dataset frames</span><strong>{manifest.totals.datasetFrameCount.toLocaleString()}</strong></div>
-          <div><span>Tool-point visits</span><strong>{manifest.totals.toolPointVisitCount.toLocaleString()}</strong></div>
-          <div><span>Arm voxel entries</span><strong>{manifest.totals.armVoxelEntryCount.toLocaleString()}</strong></div>
-          <div><span>Shared grid cells</span><strong>{manifest.totals.uniqueSharedGridCellCount.toLocaleString()}</strong></div>
-        </section>
+        <h2>Coordinates &amp; provenance</h2>
         <section className={styles["control-section"] + " " + styles["detail-list"]} aria-label="Coordinate metadata">
           <div><span>Dataset</span><strong>{manifest.dataset.repositoryId}</strong></div><div><span>Robot</span><strong>{manifest.robot.modelName}</strong></div><div><span>Voxel edge</span><strong>{manifest.coverage.voxelSize.toFixed(2)} m</strong></div><div><span>Frame</span><strong>Right-handed · metres</strong></div>
         </section>
@@ -706,16 +734,6 @@ export function AtlasViewer() {
         <div className={styles["spacing-warning"]} role="note"><strong>Provisional geometry</strong><p>{manifest.coverage.spacingDisclosure}</p></div>
           <EnvironmentStatus />
       </div>
-      <EpisodeAnalysisPanel
-        coverage={coverage}
-        episodeCount={manifest.dataset.episodeCount}
-        episodeIds={manifest.dataset.episodeIds}
-        radiusResult={radiusResult}
-        selection={viewer.selection}
-        trajectories={trajectories}
-        onCheckPlayback={() => activatePlayback()}
-        onOpenPlayback={activatePlayback}
-      />
     </div>
   );
 }

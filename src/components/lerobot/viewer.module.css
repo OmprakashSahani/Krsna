@@ -11,7 +11,7 @@
   --query-ink: #80651f;
   --active-tint: #e4eeeb;
   --sticky-top: 1.5rem;
-  --scene-height: min(570px, 64svh);
+  --scene-height: min(520px, 58svh);
   min-width: 0;
   color: var(--ink);
   font-size: .8125rem;
@@ -21,10 +21,10 @@
 .viewer-root *, .viewer-root *::before, .viewer-root *::after { box-sizing: border-box; }
 .viewer-root :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .viewer-root p { margin: .65rem 0; }
-.viewer-root h2, .viewer-root h3 { color: var(--ink); font-weight: 500; margin: 0; }
+.viewer-root h2, .viewer-root h3, .viewer-root h4 { color: var(--ink); font-weight: 500; margin: 0; }
 .viewer-root h2 { font-size: 1.125rem; line-height: 1.4; letter-spacing: -.025em; }
 .viewer-root h3 { font-size: .8125rem; line-height: 1.5; }
-.viewer-root button, .viewer-root input, .viewer-root select { font: inherit; }
+.viewer-root button, .viewer-root input, .viewer-root select { font: inherit; scroll-margin-bottom: 1rem; }
 .viewer-root select, .viewer-root input[type="number"] {
   display: block; width: 100%; min-width: 0; min-height: 44px;
   color: var(--ink); background: var(--background); border: 1px solid var(--rule);
@@ -51,26 +51,36 @@
 .button:hover, .compact-button:hover { background: var(--selection); border-color: var(--ink); }
 .compact-button[aria-pressed="true"], .compact-button[aria-expanded="true"] { background: var(--active-tint); border-color: var(--left-arm); }
 .viewer-shell { display: grid; gap: 2rem; min-width: 0; }
-/* This boundary contains only the scene and its direct controls. */
-.interactive-workspace { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 0 1.5rem; align-items: start; min-width: 0; }
-.viewer-visuals, .viewer-panel { min-width: 0; }
-.viewer-visuals { position: sticky; top: var(--sticky-top); }
-.viewer-stage { position: relative; min-width: 0; border: 1px solid var(--rule); background: var(--background); }
-.canvas-surface { height: var(--scene-height); background: #e7e7e2; }
+/* One persistent scene; the interaction boundary ends before provenance.
+ * Only this non-focusable viewport is placed visually. All keyboard controls
+ * follow their natural DOM order: workspace controls, then evidence. */
+.interactive-workspace { display: grid; grid-template-columns: minmax(210px, .85fr) minmax(0, 2.2fr) minmax(235px, 1fr); gap: 1.5rem; align-items: start; min-width: 0; }
+.viewer-visuals, .viewer-panel, .evidence-panel { min-width: 0; }
+.viewer-visuals { grid-column: 2; grid-row: 1; position: sticky; top: var(--sticky-top); z-index: 2; }
+.viewer-panel { grid-column: 1; grid-row: 1; }
+.evidence-panel { grid-column: 3; grid-row: 1; }
+.viewer-stage { min-width: 0; border: 1px solid #444a50; background: #17191d; color: #d7dbdc; box-shadow: 0 8px 24px #24242918, 0 2px 4px #24242912; }
+.window-heading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: .35rem .75rem; padding: .8rem 1rem; border-bottom: 1px solid #444a50; }
+.viewer-root .window-heading h2 { font-size: .625rem; text-transform: uppercase; letter-spacing: .09em; color: #e0e3e4; }
+.window-heading > span { color: #a7afb6; font-size: .5625rem; text-transform: uppercase; letter-spacing: .07em; }
+.canvas-surface { height: var(--scene-height); background: #17191d; }
 .canvas-surface canvas { display: block; touch-action: pan-y pinch-zoom !important; }
 .canvas-surface[data-touch-navigation="true"] canvas { touch-action: none !important; }
-.scene-badge { position: absolute; top: .85rem; left: .85rem; color: #52525a; font-size: .625rem; letter-spacing: .08em; text-transform: uppercase; pointer-events: none; }
-.scene-help { background: var(--background); padding: .65rem .85rem; border: 1px solid var(--rule); border-top: 0; color: var(--body); font-size: .6875rem; }
+.window-status { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .4rem .75rem; padding: .75rem 1rem; border-top: 1px solid #444a50; color: #bdc4c9; font-size: .625rem; }
+.window-status span { display: flex; align-items: center; gap: .4rem; overflow-wrap: anywhere; }
+.window-status i { display: inline-block; width: 8px; height: 8px; flex-shrink: 0; }
+.scene-help { padding-top: .75rem; color: var(--body); font-size: .6875rem; }
 .scene-help p { margin: 0 0 .55rem; }
 .scene-help p:last-child { margin: .5rem 0 0; }
 .scene-help .compact-button { min-height: 44px; font-size: .6875rem; }
 .panel-heading { overflow-wrap: anywhere; display: flex; align-items: flex-start; flex-wrap: wrap; gap: .5rem; padding-bottom: 1.25rem; }
+.panel-heading h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .07em; }
 .panel-heading .eyebrow { margin-top: 0; }
 .schema-chip { color: var(--muted); font-size: .6875rem; }
 .control-section { padding: 1.25rem 0; border-top: 1px solid var(--rule); min-width: 0; }
 .section-title-row { display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; margin-bottom: .65rem; }
 .section-title-row > span { color: var(--muted); font-size: .6875rem; }
-.section-title-row h2, .section-title-row h3 { font-size: .75rem; letter-spacing: .07em; text-transform: uppercase; }
+.section-title-row h2, .section-title-row h3, .section-title-row h4 { font-size: .75rem; letter-spacing: .07em; text-transform: uppercase; }
 .control-help { display: block; color: var(--body); line-height: 1.7; margin-top: .55rem; }
 .legend { margin-top: .9rem; font-size: .6875rem; color: var(--body); }
 .legend > div:last-child { display: flex; justify-content: space-between; margin-top: .25rem; }
@@ -88,8 +98,9 @@
 .spacing-input-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; }
 .spacing-actions { display: flex; align-items: flex-start; flex-direction: column; gap: .5rem; margin-top: .75rem; }
 .spacing-actions small { color: var(--body); }
-.dataset-notes { min-width: 0; }
-.metadata-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.dataset-notes { min-width: 0; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+.dataset-notes > h2 { margin-bottom: 1.5rem; }
+.metadata-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 .metadata-grid span { display: block; font-size: .6875rem; color: var(--body); }
 .metadata-grid strong { display: block; font-size: 1.3rem; letter-spacing: -.03em; }
 .detail-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem 1.5rem; }
@@ -124,11 +135,11 @@
 .episode-video-camera { min-width: 0; }
 .episode-video-message { color: var(--body); }
 .episode-video-panel video { display: block; width: 100%; margin-top: 1rem; background: #242429; }
-.episode-analysis-panel { grid-column: 1 / -1; min-width: 0; padding-top: 2rem; border-top: 1px solid var(--rule); }
+.episode-analysis-panel { min-width: 0; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
 .episode-analysis-header { margin-bottom: 1.5rem; }
 .episode-analysis-header .eyebrow { margin-top: 0; }
-.episode-analysis-header h2 { font-size: 1.5rem; font-weight: 400; }
-.uncommon-episodes { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 2.5rem; }
+.episode-analysis-header h3 { font-size: 1rem; font-weight: 400; }
+.uncommon-episodes { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
 .episode-analysis-context, .episode-analysis-results { min-width: 0; }
 .uncommon-disclosure { font-size: .75rem; }
 .uncommon-result-summary, .uncommon-special-state, .uncommon-playback-state, .episode-analysis-radius-context { font-size: .75rem; color: var(--body); }
@@ -137,8 +148,9 @@
 .uncommon-episode-list > li:last-child { border-bottom: 1px solid var(--rule); }
 .uncommon-episode-heading { display: flex; flex-wrap: wrap; gap: .5rem 1rem; justify-content: space-between; align-items: baseline; }
 .uncommon-episode-heading span { color: #426780; font-size: .75rem; font-variant-numeric: tabular-nums; }
-.uncommon-episode-list dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: .6rem 0; font-size: .6875rem; }
-.uncommon-episode-list dd { font-size: .75rem; }
+.uncommon-episode-list dl { display: grid; grid-template-columns: minmax(0, 1fr); gap: .4rem; margin: .6rem 0; font-size: .6875rem; }
+.uncommon-episode-list dl > div { display: flex; justify-content: space-between; gap: .75rem; }
+.uncommon-episode-list dd { flex-shrink: 0; font-size: .75rem; }
 .uncommon-playback-availability { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1rem; font-size: .6875rem; color: var(--body); }
 .uncommon-playback-availability p { margin: 0; }
 .viewer-status, .viewer-fallback { padding: 3rem 0; min-height: 350px; }
@@ -146,33 +158,27 @@
 .status-pulse { display: inline-block; width: 7px; height: 7px; background: var(--muted); }
 .viewer-fallback { max-width: 44rem; color: var(--body); }
 .viewer-fallback a { color: var(--ink); text-underline-offset: 4px; }
-@media (max-width: 1167px) {
-  .viewer-root { --sticky-top: .75rem; --scene-height: min(360px, 40svh); }
-  .interactive-workspace { grid-template-columns: minmax(0, 1fr); }
-  /* The canvas stays sticky in the interaction grid; help remains in DOM order. */
-  .viewer-visuals { display: contents; }
-  .viewer-stage { position: sticky; top: var(--sticky-top); z-index: 2; }
-  .viewer-stage::before { content: ""; position: absolute; inset: calc(-1 * var(--sticky-top) - 1px) -1px auto; height: var(--sticky-top); background: var(--background); pointer-events: none; }
-  .scene-help { margin-bottom: 1.5rem; }
-  .viewer-panel :is(button, input, select), .scene-help button,
-  .viewer-panel section { scroll-margin-top: calc(var(--scene-height) + var(--sticky-top) + 1rem); }
-  .uncommon-episodes { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
-  .episode-analysis-context { max-width: 46rem; }
+@media (max-width: 1179px) {
+  .viewer-root { --sticky-top: .75rem; --scene-height: min(350px, 39svh); }
+  .interactive-workspace { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem 2rem; }
+  .viewer-visuals { grid-column: 1 / -1; grid-row: auto; }
+  .viewer-panel, .evidence-panel { grid-column: auto; grid-row: auto; }
+  .viewer-visuals::before { content: ""; position: absolute; inset: calc(-1 * var(--sticky-top)) 0 auto; height: var(--sticky-top); background: var(--background); pointer-events: none; }
+  .interactive-workspace :is(button, input, select, section) { scroll-margin-top: calc(var(--scene-height) + var(--sticky-top) + 8rem); }
 }
-@media (max-width: 600px) {
-  .viewer-root { --scene-height: min(300px, 40svh); }
+@media (max-width: 680px) {
+  .viewer-root { --scene-height: min(300px, 40svh); --sticky-top: .5rem; }
+  .interactive-workspace { grid-template-columns: minmax(0, 1fr); }
   .viewer-shell { row-gap: 1.5rem; }
-  .metadata-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .window-heading { padding: .6rem .75rem; }
+  .window-status { padding: .55rem .75rem; }
   .detail-list { grid-template-columns: minmax(0, 1fr); }
-  .uncommon-episode-list dl { grid-template-columns: minmax(0, 1fr); gap: .4rem; }
-  .uncommon-episode-list dl > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .75rem; }
   .uncommon-episode-heading { flex-direction: column; gap: .2rem; }
-  .scene-badge { font-size: .6rem; }
-  .spacing-input-row { grid-template-columns: minmax(0, 1fr); }
+  .evidence-panel { padding-top: 1rem; }
 }
 /* Short/landscape viewports need the space for controls more than a sticky scene. */
 @media (max-height: 600px) {
-  .viewer-visuals, .viewer-stage { position: relative; top: auto; }
-  .viewer-panel :is(button, input, select), .scene-help button,
-  .viewer-panel section { scroll-margin-top: 1rem; }
+  .viewer-visuals { position: relative; top: auto; }
+  .viewer-visuals::before { display: none; }
+  .interactive-workspace :is(button, input, select, section) { scroll-margin-top: 1rem; }
 }
