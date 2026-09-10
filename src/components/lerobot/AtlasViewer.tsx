@@ -409,7 +409,7 @@ export function AtlasViewer() {
               <option value="episodes">Distinct episodes</option>
             </select>
             <small className={styles["control-help"]}>{metricDescriptions[viewer.metric]}</small>
-            <div className={styles["legend"]} aria-label={`${metricLabels[viewer.metric]} color range`}>
+            <div className={styles["legend"]} aria-label={`${metricLabels[viewer.metric]} color range`} role="group">
               <div className={styles["legend-swatches"]} aria-hidden="true"><i /><i /><i /><i /></div>
               <div><span>{formatMetric(domain[0], viewer.metric)}</span><span>{formatMetric(domain[1], viewer.metric)}</span></div>
             </div>
