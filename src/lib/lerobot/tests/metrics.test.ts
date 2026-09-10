@@ -1,0 +1,39 @@
+// Adapted from OmprakashSahani/lerobot-state-atlas (Apache-2.0),
+// commit 39116927d8d0fc56c4a380678a3d645ae0f893ac; modified for the Krsna portfolio integration.
+
+import { describe, expect, it } from "vitest";
+
+import coverageJson from "../../../../public/lerobot-state-atlas/demo-v2/coverage.json";
+import manifestJson from "../../../../public/lerobot-state-atlas/demo-v2/manifest.json";
+import { decodeCoverage, decodeManifest } from "@/lib/lerobot/atlas-schema/validate";
+import { metricDomain, metricValue } from "@/lib/lerobot/data/metrics";
+import { prepareCoverage } from "@/lib/lerobot/data/prepareCoverage";
+
+const arms = prepareCoverage(
+  decodeManifest(manifestJson),
+  decodeCoverage(coverageJson),
+);
+
+describe("coverage metrics", () => {
+  it("uses raw visits and log1p without rewriting raw data", () => {
+    const raw = arms[0].visits[3];
+    expect(metricValue(arms[0], 3, "visits")).toBe(raw);
+    expect(metricValue(arms[0], 3, "log-visits")).toBeCloseTo(Math.log1p(raw));
+    expect(arms[0].visits[3]).toBe(raw);
+  });
+
+  it("uses the exact CSR distinct-episode count", () => {
+    const source = decodeCoverage(coverageJson).arms[0];
+    const index = source.episodeCounts.findIndex((count) => count > 1);
+    expect(metricValue(arms[0], index, "episodes")).toBe(
+      source.episodeIdOffsets[index + 1] - source.episodeIdOffsets[index],
+    );
+  });
+
+  it("keeps one stable cross-arm domain", () => {
+    expect(metricDomain(arms, "visits")).toEqual([
+      Math.min(...coverageJson.arms.flatMap((arm) => arm.visitCounts)),
+      Math.max(...coverageJson.arms.flatMap((arm) => arm.visitCounts)),
+    ]);
+  });
+});
