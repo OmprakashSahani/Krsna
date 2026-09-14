@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { projects } from "@/data/projects";
 
 export function ProjectIndex() {
@@ -12,7 +13,11 @@ export function ProjectIndex() {
               <p className="project-area">{project.area}</p>
             </div>
             <p className="project-description">{project.description}</p>
-            {project.repository ? (
+            {project.page ? (
+              <Link className="project-link" href={project.page}>
+                View project<span aria-hidden="true"> →</span>
+              </Link>
+            ) : project.repository ? (
               <a className="project-link" href={project.repository} target="_blank" rel="noreferrer">
                 View repository<span aria-hidden="true"> ↗</span>
                 <span className="sr-only"> (opens in a new tab)</span>

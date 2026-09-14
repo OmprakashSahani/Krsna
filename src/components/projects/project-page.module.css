@@ -1,0 +1,294 @@
+:global(.site-header):has(+ .projectPage) {
+  display: none;
+}
+
+.projectPage + :global(.site-footer) {
+  display: none;
+}
+
+.projectPage {
+  display: grid;
+  grid-template-rows: auto minmax(min-content, 1fr) auto;
+  min-height: 100svh;
+}
+
+.projectHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 0 .85rem;
+  border-bottom: 1px solid #34343a;
+}
+
+.backLink {
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.backLink:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.projectLabel {
+  color: var(--body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: right;
+}
+
+.projectComposition {
+  min-width: 0;
+  padding-bottom: clamp(5rem, 10vw, 9rem);
+  color: var(--body);
+  font-size: 14.5px;
+  font-weight: 450;
+  line-height: 1.65;
+}
+
+.intro {
+  max-width: 46rem;
+  padding-block: clamp(2.5rem, 5vw, 4rem) 3rem;
+}
+
+.eyebrow,
+.sectionHeading,
+.railLabel,
+.facts dt {
+  font-size: .6875rem;
+  line-height: 1.8;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.intro .eyebrow {
+  margin: 0 0 1.25rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.intro h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -.04em;
+}
+
+.intro .subtitle {
+  margin: .75rem 0 1.75rem;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.intro p,
+.storySection p {
+  margin: 0 0 .72rem;
+}
+
+.intro > :last-child,
+.storySection > :last-child {
+  margin-bottom: 0;
+}
+
+.bodyGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  align-items: start;
+  column-gap: clamp(2rem, 4vw, 3rem);
+}
+
+.narrative {
+  min-width: 0;
+}
+
+.storySection + .storySection {
+  margin-top: 2.5rem;
+}
+
+.sectionHeading {
+  margin: 0 0 1rem;
+  padding-bottom: .85rem;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem 1rem;
+  margin: 1.5rem 0 1rem;
+  padding-block: 1.25rem;
+  border-block: 1px solid var(--rule);
+}
+
+.metrics > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: .6rem;
+}
+
+.metrics dt {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.metrics dd {
+  order: -1;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(1.5rem, 2.2vw, 1.875rem);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.projectRail {
+  --rail-inset: clamp(1.5rem, 3vw, 2.5rem);
+  min-width: 0;
+  padding-left: var(--rail-inset);
+  border-left: 1px solid var(--rule);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.railSection {
+  position: relative;
+}
+
+.railSection::before {
+  content: "";
+  position: absolute;
+  top: calc(.6875rem * .9 - 2.5px);
+  /* Centre the 5px marker on the rail's existing 1px border. */
+  left: calc(-1 * var(--rail-inset) - 3px);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.railSection + .railSection {
+  margin-top: 2rem;
+}
+
+.projectLinks {
+  display: grid;
+  gap: .65rem;
+}
+
+.externalLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  min-height: 44px;
+  padding: .7rem .85rem;
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.externalLink:hover {
+  border-color: var(--ink);
+}
+
+.externalLink:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.facts,
+.toolGroups {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+}
+
+.toolGroups {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.facts dt,
+.railLabel {
+  margin: 0 0 .3rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.facts dd {
+  margin: 0;
+}
+
+.railList {
+  display: grid;
+  gap: .35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.railSection p {
+  margin: 0;
+}
+
+.footerRule {
+  padding: 1.1rem 0 1.5rem;
+  border-top: 1px solid #85858d;
+}
+
+@media (max-width: 1080px) {
+  .bodyGrid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 3rem;
+    max-width: var(--biography-width);
+  }
+
+  .projectRail {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .railSection::before {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .projectHeader {
+    padding-top: 1.25rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .projectComposition {
+    font-size: 14px;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .toolGroups {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
