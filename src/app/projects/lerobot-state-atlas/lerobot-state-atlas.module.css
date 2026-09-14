@@ -1,53 +1,30 @@
-:global(.site-header):has(+ .projectPage) { display: none; }
-.projectPage + :global(.site-footer) { display: none; }
-
-.projectPage { min-width: 0; }
-.projectHeader {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  padding: 1.5rem 0 .85rem;
-  border-bottom: 1px solid #34343a;
+.evidenceNote {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.7;
 }
-.backLink { color: var(--ink); font-size: 20px; font-weight: 600; line-height: 1; text-decoration: none; }
-.githubLink { color: var(--body); font-size: 12px; font-weight: 500; line-height: 1.4; text-decoration: none; }
-.backLink:hover, .githubLink:hover { color: var(--foreground); text-decoration: underline; text-underline-offset: 4px; }
-.projectHeader a:focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
-.projectComposition { padding: clamp(2.5rem, 5vw, 4rem) 0 clamp(4rem, 8vw, 6.5rem); }
-.intro { padding-bottom: clamp(2rem, 4vw, 3rem); margin-bottom: 2rem; border-bottom: 1px solid var(--rule); }
-.label { margin: 0 0 1rem; color: var(--muted); font-size: 11px; font-weight: 500; line-height: 1.4; letter-spacing: .12em; }
-.intro h1 { margin: 0; color: var(--foreground); font-size: clamp(2.2rem, 5vw, 3.25rem); font-weight: 400; line-height: 1.08; letter-spacing: -.032em; }
-.description { max-width: 43rem; margin: 1.25rem 0 0; color: var(--body); line-height: 1.8; }
-.footerRule { padding: 1.1rem 0 1.5rem; border-top: 1px solid #85858d; }
-@media (max-width: 720px) {
-  .projectHeader { padding-top: 1.25rem; }
-  .projectComposition { padding: 2.5rem 0 4rem; }
-}
-@media (max-width: 420px) { .intro h1 { font-size: 2.1rem; } }
 
-.projectActions { display: flex; align-items: baseline; flex-wrap: wrap; gap: 1.25rem 2.5rem; padding: 0 0 2.75rem; }
-.projectActions a { font-size: .8125rem; text-underline-offset: .4em; }
-.projectActions .primaryAction { display: inline-flex; gap: 2rem; align-items: baseline; padding: .7rem 0; border-block: 1px solid #28766e; color: #28766e; font-size: 1rem; font-weight: 500; text-decoration: none; }
-.primaryAction:hover { background: #e4eeeb; }
-.projectNarrative { max-width: 60rem; }
-.projectNarrative section { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 2rem; padding: 2.25rem 0; border-top: 1px solid var(--rule); scroll-margin-top: 2rem; }
-.sectionIndex { margin: .25rem 0 0; font-size: .6875rem; color: var(--muted); letter-spacing: .08em; }
-.projectNarrative h2 { margin: 0 0 1rem; color: var(--ink); font-size: 1.15rem; font-weight: 400; line-height: 1.5; letter-spacing: -.025em; }
-.projectNarrative p { line-height: 1.85; }
-.projectNarrative p:last-child { margin-bottom: 0; }
-.measurements { margin: 0; }
-.measurements > div + div { margin-top: 1.5rem; }
-.measurements dt { color: var(--ink); font-size: .8125rem; font-weight: 500; }
-.measurements dd { margin: .5rem 0 0; line-height: 1.85; }
-.sourceNote { font-size: .75rem; color: var(--muted); padding-top: 1rem; }
-:global(.site-shell):has(.sharedPage) { width: min(calc(100% - 3rem), 88rem); }
-.sharedPage .projectComposition { padding-top: 2.25rem; }
-.sharedIntro { margin-bottom: 1.75rem; padding-bottom: 1.75rem; }
-.sharedIntro h1 { font-size: clamp(1.8rem, 3.4vw, 2.5rem); }
-.sharedIntro .description { max-width: 53rem; font-size: .8125rem; margin-top: .85rem; }
-@media (max-width: 720px) {
-  .projectNarrative section { grid-template-columns: minmax(0, 1fr); gap: .9rem; padding: 1.75rem 0; }
-  :global(.site-shell):has(.sharedPage) { width: calc(100% - 2.5rem); }
-  .sharedPage .projectComposition { padding-top: 1.75rem; }
-  .sharedIntro .label { font-size: .625rem; }
+.environmentTools {
+  grid-column: 1 / -1;
+}
+
+.developmentNote,
+.workflow dd,
+.guidanceNote {
+  color: var(--muted);
+}
+
+.workflow dt {
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.guidance .guideName {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.guidance .guidanceNote {
+  margin-top: .75rem;
 }
