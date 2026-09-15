@@ -58,9 +58,10 @@ export function ProjectStorySection({ headingId, title, children, className }: P
   );
 }
 
-export function ProjectRailSection({ headingId, title, children, className }: ProjectSectionProps) {
+export function ProjectRailSection({ headingId, title, children, className, trace }: ProjectSectionProps & { trace?: "left" }) {
   return (
     <section className={[styles.railSection, className].filter(Boolean).join(" ")} aria-labelledby={headingId}>
+      {trace === "left" && <span className={styles.leftRailMarker} aria-hidden="true" />}
       <h2 id={headingId} className={styles.sectionHeading}>{title}</h2>
       {children}
     </section>

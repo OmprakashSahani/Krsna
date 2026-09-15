@@ -27,7 +27,7 @@ it("links SearchEval internally from home and the index while retaining its repo
   expect(indexLink.hasAttribute("target")).toBe(false);
   expect(projects.find((project) => project.title === "SearchEval Lab")).toMatchObject({ page: route, repository });
 
-  for (const title of ["Atlas AI", "EvidencePatch", "Codex Benchmark Guardian"]) {
+  for (const title of ["Atlas AI", "Codex Benchmark Guardian"]) {
     const otherArticle = index.getByRole("heading", { name: title }).closest("article");
     const link = within(otherArticle!).getByRole("link", { name: /View repository/ });
     expect(link.getAttribute("href")).toBe(projects.find((project) => project.title === title)?.repository);

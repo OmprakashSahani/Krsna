@@ -1,3 +1,47 @@
+.introLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  align-items: center;
+  gap: clamp(2rem, 4vw, 3rem);
+  padding-block: clamp(2.5rem, 5vw, 4rem) 3rem;
+}
+
+.introLayout > :first-child {
+  min-width: 0;
+  padding-block: 0;
+}
+
+.introMedia {
+  width: 100%;
+  max-width: 22rem;
+  margin: 0;
+}
+
+.introMedia video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+}
+
+.introMedia figcaption {
+  margin-top: .65rem;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+@media (max-width: 1080px) {
+  .introLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .introMedia {
+    max-width: 20rem;
+  }
+}
+
 .evidenceNote {
   color: var(--muted);
   font-size: 12px;

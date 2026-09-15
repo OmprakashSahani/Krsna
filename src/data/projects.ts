@@ -28,6 +28,7 @@ export const projects: readonly Project[] = [
     title: "EvidencePatch",
     area: "Software evidence",
     description: "Evidence-aware software change decisions.",
+    page: "/projects/evidencepatch",
     repository: "https://github.com/OmprakashSahani/evidencepatch",
   },
   {

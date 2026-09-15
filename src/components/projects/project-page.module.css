@@ -189,6 +189,39 @@
   content: none;
 }
 
+.leftRailMarker {
+  display: none;
+}
+
+@media (min-width: 1081px) {
+  .bodyGrid[data-trace="left"] {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
+  }
+
+  .projectRail[data-trace="left"] {
+    padding-left: 0;
+    padding-right: var(--rail-inset);
+    border-left: 0;
+    border-right: 1px solid var(--rule);
+  }
+
+  .projectRail[data-trace="left"] .railSection::before {
+    content: none;
+  }
+
+  .leftRailMarker {
+    display: block;
+    position: absolute;
+    top: calc(.6875rem * .9 - 2.5px);
+    /* Mirror the right rail: centre each marker on the border beside its heading. */
+    right: calc(-1 * var(--rail-inset) - 3px);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+}
+
 .horizontalTrace {
   position: relative;
   display: flex;
