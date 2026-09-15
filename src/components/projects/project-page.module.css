@@ -185,6 +185,34 @@
   background: var(--muted);
 }
 
+.projectRail[data-trace="none"] .railSection::before {
+  content: none;
+}
+
+.horizontalTrace {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding-inline: 3px;
+}
+
+.horizontalTrace::before {
+  content: "";
+  position: absolute;
+  inset: 2px 0 auto;
+  height: 1px;
+  background: var(--rule);
+}
+
+.horizontalTrace > span {
+  z-index: 1;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
 .railSection + .railSection {
   margin-top: 2rem;
 }
