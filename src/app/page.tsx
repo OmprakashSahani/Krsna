@@ -51,7 +51,7 @@ export default function HomePage() {
           <h2 id="current-work-heading" className="section-label">Current work</h2>
           <ul className="home-list">
             <li><Link href="/projects/lerobot-state-atlas">LeRobot State Atlas</Link></li>
-            <li><a href="https://github.com/OmprakashSahani/searcheval-lab" target="_blank" rel="noopener noreferrer">SearchEval Lab<span className="sr-only"> (opens in a new tab)</span></a></li>
+            <li><Link href="/projects/searcheval-lab">SearchEval Lab</Link></li>
             <li><a href="https://github.com/OmprakashSahani/evidencepatch" target="_blank" rel="noopener noreferrer">EvidencePatch<span className="sr-only"> (opens in a new tab)</span></a></li>
             <li><a href="https://github.com/OmprakashSahani/atlas-ai" target="_blank" rel="noopener noreferrer">Atlas AI<span className="sr-only"> (opens in a new tab)</span></a></li>
           </ul>

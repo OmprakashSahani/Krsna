@@ -75,3 +75,12 @@ export function ProjectExternalLink({ href, children }: { href: string; children
     </a>
   );
 }
+
+// Place this horizontal trace at the content edge; rail traces retain their existing layout.
+export function ProjectTrace() {
+  return (
+    <div className={styles.horizontalTrace} aria-hidden="true">
+      {Array.from({ length: 6 }, (_, index) => <span key={index} />)}
+    </div>
+  );
+}

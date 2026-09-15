@@ -1,0 +1,134 @@
+.story {
+  min-width: 0;
+}
+
+.story > section > p {
+  max-width: 64rem;
+}
+
+.details {
+  margin-top: 3rem;
+}
+
+.details > :first-child {
+  margin-top: 0;
+}
+
+.metadata {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 2.5rem clamp(1.5rem, 3vw, 2.5rem);
+  margin-top: 2.5rem;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.metadata .metadataSection {
+  grid-column: span 2;
+  min-width: 0;
+}
+
+.metadata .metadataSection + .metadataSection {
+  margin-top: 0;
+}
+
+.metadata .metadataSection::before {
+  content: none;
+}
+
+.metadata .tools {
+  grid-column: span 4;
+}
+
+.metadata .provenance {
+  grid-column: span 3;
+}
+
+.provenance strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.metadata .toolColumns {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.note {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.comparison {
+  display: grid;
+  gap: .35rem;
+  margin: 1rem 0;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.comparison > div {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.comparison dt {
+  min-width: 12ch;
+}
+
+.comparison dd {
+  margin: 0;
+  color: var(--ink);
+}
+
+.systemWorkflow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem .75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+
+.systemWorkflow li {
+  display: flex;
+  align-items: baseline;
+  gap: .75rem;
+}
+
+.systemWorkflow span {
+  color: var(--muted);
+}
+
+@media (max-width: 1080px) {
+  .metadata {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metadata .metadataSection {
+    grid-column: 1 / -1;
+  }
+
+  .metadata .provenance {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .metadata {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .metadata .toolColumns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .metadata .toolColumns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -36,6 +36,7 @@ export const projects: readonly Project[] = [
     area: "Search evaluation",
     description:
       "Retrieval evaluation and regression analysis across relevance, latency, and query-level failures.",
+    page: "/projects/searcheval-lab",
     repository: "https://github.com/OmprakashSahani/searcheval-lab",
   },
   {
