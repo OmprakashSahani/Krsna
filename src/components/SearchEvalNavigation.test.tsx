@@ -45,6 +45,13 @@ it("provides a route home and the real repository without a demo link", () => {
   expect(page.getAllByRole("link")).toHaveLength(2);
 });
 
+it("preserves explicit list semantics for the System Workflow ordered list", () => {
+  const page = render(<SearchEvalLabPage />);
+  const section = page.getByRole("heading", { name: "System Workflow" }).closest("section");
+  expect(section).not.toBeNull();
+  expect(section!.querySelector("ol")?.getAttribute("role")).toBe("list");
+});
+
 it("overrides homepage social metadata with the project description", () => {
   expect(metadata.title).toBe("SearchEval Lab");
   expect(metadata.description).toEqual(expect.any(String));

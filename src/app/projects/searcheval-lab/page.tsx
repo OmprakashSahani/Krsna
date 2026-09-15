@@ -88,7 +88,7 @@ export default function SearchEvalLabPage() {
           </ProjectStorySection>
 
           <ProjectStorySection headingId="system-workflow-heading" title="System Workflow">
-            <ol className={localStyles.systemWorkflow}>
+            <ol className={localStyles.systemWorkflow} role="list">
               {workflow.map((step, index) => (
                 <li key={step}>
                   {index > 0 && <span aria-hidden="true">→</span>}
