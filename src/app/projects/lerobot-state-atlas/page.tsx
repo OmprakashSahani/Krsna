@@ -9,10 +9,14 @@ import {
 import styles from "@/components/projects/project-page.module.css";
 import localStyles from "./lerobot-state-atlas.module.css";
 
+const description = "Robot workspace intelligence: an editorial account of LeRobot dataset analysis, forward kinematics, spatial coverage, and ongoing environment reconstruction work.";
+
 export const metadata: Metadata = {
   title: "LeRobot State Atlas",
-  description: "Robot workspace intelligence: an editorial account of LeRobot dataset analysis, forward kinematics, spatial coverage, and ongoing environment reconstruction work.",
+  description,
   alternates: { canonical: "/projects/lerobot-state-atlas" },
+  openGraph: { type: "website", title: "LeRobot State Atlas — Omprakash Sahani", description, siteName: "Omprakash Sahani" },
+  twitter: { card: "summary", title: "LeRobot State Atlas — Omprakash Sahani", description },
 };
 
 export default function LeRobotStateAtlasPage() {
