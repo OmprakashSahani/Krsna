@@ -25,15 +25,28 @@ export default function LeRobotStateAtlasPage() {
       <ProjectPageHeader title="LeRobot State Atlas" backHref="/" backLabel="Return to homepage" />
 
       <article className={styles.projectComposition} aria-labelledby="project-title">
-        <ProjectIntro
-          headingId="project-title"
-          eyebrow="Project / Robot Learning"
-          title="LeRobot State Atlas"
-          subtitle="Robot Workspace Intelligence"
-        >
-          <p>LeRobot State Atlas is a robotics-data analysis and visualization project I am developing to understand how recorded robot demonstrations occupy physical workspace.</p>
-          <p>It converts robot state trajectories into end-effector motion and spatial coverage so repeated, sparse, and unusual regions can be inspected.</p>
-        </ProjectIntro>
+        <div className={localStyles.introLayout}>
+          <ProjectIntro
+            headingId="project-title"
+            eyebrow="Project / Robot Learning"
+            title="LeRobot State Atlas"
+            subtitle="Robot Workspace Intelligence"
+          >
+            <p>LeRobot State Atlas is a robotics-data analysis and visualization project I am developing to understand how recorded robot demonstrations occupy physical workspace.</p>
+            <p>It converts robot state trajectories into end-effector motion and spatial coverage so repeated, sparse, and unusual regions can be inspected.</p>
+          </ProjectIntro>
+
+          <figure className={localStyles.introMedia}>
+            <video
+              src="/videos/projects/lerobot-state-atlas/gaussian-splat-demo.mp4"
+              aria-label="Gaussian Splat workspace reconstruction demo"
+              controls
+              playsInline
+              preload="metadata"
+            />
+            <figcaption>Gaussian Splat · Workspace Reconstruction</figcaption>
+          </figure>
+        </div>
 
         <div className={styles.bodyGrid}>
           <div className={styles.narrative}>

@@ -1,0 +1,98 @@
+.introLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  align-items: center;
+  gap: clamp(2rem, 4vw, 3rem);
+  padding-block: clamp(2.5rem, 5vw, 4rem) 3rem;
+}
+
+.introLayout > :first-child {
+  min-width: 0;
+  padding-block: 0;
+}
+
+.certificate {
+  width: 100%;
+  max-width: 22rem;
+  margin: 0;
+}
+
+.certificateLink {
+  display: block;
+  border: 1px solid var(--rule);
+}
+
+.certificateLink:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.certificate img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.certificate figcaption {
+  margin-top: .65rem;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.7;
+}
+
+.toolColumns {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.story {
+  overflow-wrap: anywhere;
+}
+
+.story code {
+  font-family: inherit;
+  font-size: .9em;
+}
+
+.story .mcpTools {
+  margin-block: 1rem;
+}
+
+.resultMetrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.computeMetrics {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.note {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.provenance strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+@media (max-width: 1080px) {
+  .introLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .certificate {
+    max-width: 20rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .resultMetrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
