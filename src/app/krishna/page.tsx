@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import KrishnaBookIntro from "./KrishnaBookIntro";
 import styles from "./krishna.module.css";
 
 const description = "ŚB 10.21.5 in Devanagari and transliteration, with an English translation.";
@@ -16,18 +16,7 @@ export const metadata: Metadata = {
 export default function KrishnaPage() {
   return (
     <main id="main-content" className={styles.versePage}>
-      <div className={styles.bookIntro} aria-hidden="true">
-        <div className={styles.bookIntroPanel}>
-          <Image
-            className={styles.bookIntroImage}
-            src="/images/about/krsna-book-cover.png"
-            alt=""
-            width={1086}
-            height={1448}
-            priority
-          />
-        </div>
-      </div>
+      <KrishnaBookIntro />
 
       <header className={styles.verseHeader}>
         <Link className={styles.backLink} href="/" aria-label="Return to homepage">←</Link>

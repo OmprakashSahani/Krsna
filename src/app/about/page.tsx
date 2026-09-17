@@ -114,8 +114,8 @@ export default function AboutPage() {
                         className={`${styles.bookCover} ${styles.primaryBookCover}`}
                         src="/images/about/krsna-book-cover.png"
                         alt=""
-                        width={320}
-                        height={508}
+                        width={1086}
+                        height={1448}
                         sizes="160px"
                       />
                       <span>Kṛṣṇa: The Supreme Personality of Godhead</span>

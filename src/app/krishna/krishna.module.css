@@ -93,6 +93,13 @@
   place-items: center;
   padding: 1.25rem;
   background: rgb(24 24 28 / 55%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.bookIntroReady {
+  pointer-events: auto;
   animation: book-intro-overlay 3.5s ease forwards;
 }
 
@@ -107,6 +114,9 @@
   border: 1px solid var(--rule);
   border-radius: 10px;
   background: var(--background);
+}
+
+.bookIntroReady .bookIntroPanel {
   animation: book-intro-panel 3.5s ease forwards;
 }
 
