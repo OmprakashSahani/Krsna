@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import KrishnaBookIntro from "./KrishnaBookIntro";
 import styles from "./krishna.module.css";
 
 const description = "ŚB 10.21.5 in Devanagari and transliteration, with an English translation.";
@@ -15,6 +16,8 @@ export const metadata: Metadata = {
 export default function KrishnaPage() {
   return (
     <main id="main-content" className={styles.versePage}>
+      <KrishnaBookIntro />
+
       <header className={styles.verseHeader}>
         <Link className={styles.backLink} href="/" aria-label="Return to homepage">←</Link>
       </header>
