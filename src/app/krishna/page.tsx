@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import styles from "./krishna.module.css";
 
@@ -15,6 +16,19 @@ export const metadata: Metadata = {
 export default function KrishnaPage() {
   return (
     <main id="main-content" className={styles.versePage}>
+      <div className={styles.bookIntro} aria-hidden="true">
+        <div className={styles.bookIntroPanel}>
+          <Image
+            className={styles.bookIntroImage}
+            src="/images/about/krsna-book-cover.png"
+            alt=""
+            width={1086}
+            height={1448}
+            priority
+          />
+        </div>
+      </div>
+
       <header className={styles.verseHeader}>
         <Link className={styles.backLink} href="/" aria-label="Return to homepage">←</Link>
       </header>

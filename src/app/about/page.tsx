@@ -108,15 +108,15 @@ export default function AboutPage() {
               <div>
                 <h3 className={styles.favoriteLabel}>Favorite books</h3>
                 <ul className={styles.books}>
-                  <li>
+                  <li className={styles.primaryBook}>
                     <a className={styles.bookLink} href="https://vedabase.io/en/library/kb/" target="_blank" rel="noopener noreferrer">
                       <Image
-                        className={styles.bookCover}
+                        className={`${styles.bookCover} ${styles.primaryBookCover}`}
                         src="/images/about/krsna-book-cover.png"
                         alt=""
                         width={320}
                         height={508}
-                        sizes="76px"
+                        sizes="160px"
                       />
                       <span>Kṛṣṇa: The Supreme Personality of Godhead</span>
                       <span className="sr-only"> (opens in a new tab)</span>
@@ -136,54 +136,121 @@ export default function AboutPage() {
                       <span className="sr-only"> (opens in a new tab)</span>
                     </a>
                   </li>
+                  <li>
+                    <a className={styles.bookLink} href="https://vedabase.io/en/library/bg/" target="_blank" rel="noopener noreferrer">
+                      <Image
+                        className={styles.bookCover}
+                        src="/images/about/bhagavad-gita-book-cover.png"
+                        alt=""
+                        width={320}
+                        height={508}
+                        sizes="76px"
+                      />
+                      <span>Bhagavad Gītā</span>
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  </li>
                 </ul>
               </div>
               <dl className={styles.favoriteDetails}>
                 <div>
                   <dt className={styles.favoriteLabel}>Favorite destination</dt>
                   <dd>
-                    <Image
-                      className={styles.favoriteThumbnail}
-                      src="/images/about/vrindavan-destination.png"
-                      alt=""
-                      width={450}
-                      height={350}
-                      sizes="160px"
-                    />
+                    <div className={styles.favoriteImagePair}>
+                      <Image
+                        className={styles.favoriteThumbnail}
+                        src="/images/about/vrindavan-destination.png"
+                        alt=""
+                        width={450}
+                        height={350}
+                        sizes="136px"
+                      />
+                      <Image
+                        className={styles.favoriteThumbnail}
+                        src="/images/about/mathura-vrindavan.png"
+                        alt=""
+                        width={725}
+                        height={481}
+                        sizes="136px"
+                      />
+                    </div>
                     Vrindavan
                   </dd>
                 </div>
+
                 <div>
                   <dt className={styles.favoriteLabel}>Favorite place</dt>
                   <dd>
-                    <Image
-                      className={styles.favoriteThumbnail}
-                      src="/images/about/rajasthan-place.png"
-                      alt=""
-                      width={1280}
-                      height={720}
-                      sizes="160px"
-                    />
+                    <div className={styles.favoriteImagePair}>
+                      <Image
+                        className={styles.favoriteThumbnail}
+                        src="/images/about/rajasthan-place.png"
+                        alt=""
+                        width={1280}
+                        height={720}
+                        sizes="136px"
+                      />
+                      <Image
+                        className={styles.favoriteThumbnail}
+                        src="/images/about/rajasthan-patwon.png"
+                        alt=""
+                        width={1125}
+                        height={750}
+                        sizes="136px"
+                      />
+                    </div>
                     Rajasthan
                   </dd>
                 </div>
+
                 <div>
                   <dt className={styles.favoriteLabel}>Favorite movies</dt>
                   <dd>
-                    <Image
-                      className={styles.favoriteThumbnail}
-                      src="/images/about/little-krishna-poster.png"
-                      alt=""
-                      width={1600}
-                      height={1200}
-                      sizes="160px"
-                    />
-                    <ul className={styles.movies}>
-                      <li>Little Krishna</li>
-                      <li>Spider-Man</li>
-                      <li>Mahavatar Narsimha</li>
-                      <li>Superman</li>
-                      <li>Marvel’s Avengers</li>
+                    <ul className={styles.moviePosters}>
+                      <li>
+                        <Image
+                          className={styles.moviePoster}
+                          src="/images/about/little-krishna-poster.png"
+                          alt=""
+                          width={1600}
+                          height={1200}
+                          sizes="136px"
+                        />
+                        <span>Little Krishna</span>
+                      </li>
+                      <li>
+                        <Image
+                          className={styles.moviePoster}
+                          src="/images/about/mahavatar-narsimha-poster.png"
+                          alt=""
+                          width={554}
+                          height={554}
+                          sizes="136px"
+                        />
+                        <span>Mahavatar Narsimha</span>
+                      </li>
+                      <li>
+                        <Image
+                          className={styles.moviePoster}
+                          src="/images/about/spider-man-poster.png"
+                          alt=""
+                          width={364}
+                          height={549}
+                          sizes="136px"
+                        />
+                        <span>Spider-Man</span>
+                      </li>
+                      <li>
+                        <Image
+                          className={styles.moviePoster}
+                          src="/images/about/superman-poster.png"
+                          alt=""
+                          width={495}
+                          height={619}
+                          sizes="136px"
+                        />
+                        <span>Superman</span>
+                      </li>
                     </ul>
                   </dd>
                 </div>

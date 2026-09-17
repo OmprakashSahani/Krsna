@@ -222,7 +222,18 @@
 .bookCover {
   display: block;
   width: auto;
-  height: 120px;
+  height: 135px;
+  border-radius: 6px;
+}
+
+.primaryBook {
+  grid-column: 1 / -1;
+}
+
+.primaryBookCover {
+  width: 170px;
+  max-width: 100%;
+  height: auto;
 }
 
 .favoriteDetails {
@@ -242,10 +253,11 @@
 
 .favoriteThumbnail {
   display: block;
-  width: 160px;
+  width: 180px;
   max-width: 100%;
   height: auto;
   margin-bottom: .5rem;
+  border-radius: 6px;
 }
 
 .movies {
@@ -372,4 +384,45 @@
   .bodyGrid {
     font-size: 14px;
   }
+}
+
+.favoriteImagePair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: .75rem;
+  margin-bottom: .5rem;
+}
+
+.favoriteImagePair .favoriteThumbnail {
+  width: 180px;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 0;
+}
+
+.moviePosters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  margin: 0 0 .75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.moviePosters li {
+  min-width: 0;
+}
+
+.moviePoster {
+  display: block;
+  width: 180px;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: .4rem;
+  border-radius: 6px;
+}
+
+.moviePosters span {
+  display: block;
+  line-height: 1.5;
 }
