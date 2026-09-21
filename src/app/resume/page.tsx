@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ResumeDownloadDialog } from "./ResumeDownloadDialog";
 import { resume } from "@/data/resume";
 import styles from "./resume.module.css";
 
@@ -18,7 +19,7 @@ export default function ResumePage() {
     <main id="main-content" className={styles.resumePage}>
       <header className={styles.resumeHeader}>
         <Link className={styles.backLink} href="/" aria-label="Return to homepage">←</Link>
-        <span className={styles.downloadPlaceholder}>Download Resume</span>
+        <ResumeDownloadDialog />
       </header>
 
       <article className={styles.resumeComposition}>
