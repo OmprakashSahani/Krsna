@@ -11,7 +11,7 @@ const currentProjects: Project[] = [
   ...["SearchEval Lab", "EvidencePatch", "Atlas AI"].map(title => projects.find(project => project.title === title)!),
 ];
 
-export function WorkPanel({ active }: { active: boolean }) {
+export function WorkPanel({ active, showPreview }: { active: boolean; showPreview: boolean }) {
   const video = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     if (!active && video.current && !video.current.paused) video.current.pause();
@@ -21,7 +21,7 @@ export function WorkPanel({ active }: { active: boolean }) {
       {currentProjects.map((project, index) => <article key={project.title} className={styles.project}>
         <p className={styles.annotation}>{String(index + 1).padStart(2, "0")} / {project.area}</p>
         <h3>{project.title}</h3><p>{project.description}</p>
-        {index === 0 && <video ref={video} className={styles.video} src="/videos/projects/lerobot-state-atlas/gaussian-splat-demo.mp4" poster="/images/projects/lerobot-workspace.jpg" aria-label="Gaussian Splat workspace reconstruction demo" controls playsInline preload="metadata" />}
+        {index === 0 && showPreview && <video ref={video} className={styles.video} src="/videos/projects/lerobot-state-atlas/gaussian-splat-demo.mp4" poster="/images/projects/lerobot-workspace.jpg" aria-label="Gaussian Splat workspace reconstruction demo" controls playsInline preload="metadata" />}
         <div className={styles.projectLinks}>
           {project.page && <Link href={project.page} aria-label={`${project.title} — View project`}>View project ↗</Link>}
           <a href={project.repository} target="_blank" rel="noopener noreferrer" aria-label={`${project.title} — GitHub (opens in a new tab)`}>GitHub ↗</a>

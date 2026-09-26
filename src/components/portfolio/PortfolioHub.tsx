@@ -18,6 +18,7 @@ import styles from "./portfolio.module.css";
 export function PortfolioHub({ initialSection = null }: { initialSection?: SectionId | null }) {
   const initialSide = initialSection ? sections.find(item => item.id === initialSection)!.side : null;
   const [active, setActive] = useState<SectionId | null>(initialSection);
+  const [visited, setVisited] = useState<SectionId[]>(() => initialSection ? [initialSection] : []);
   const [lastSection, setLastSection] = useState<SectionId>(initialSection ?? "about");
   const [lastOnSide, setLastOnSide] = useState({
     left: initialSide === "left" && initialSection ? initialSection : "about",
@@ -31,6 +32,7 @@ export function PortfolioHub({ initialSection = null }: { initialSection?: Secti
   function select(id: SectionId) {
     if (id === active) return;
     if (id === "note") note.current?.prepare();
+    setVisited(previous => previous.includes(id) ? previous : [...previous, id]);
     setActive(id);
     setLastSection(id);
     const side = sections.find(item => item.id === id)!.side;
@@ -63,7 +65,7 @@ export function PortfolioHub({ initialSection = null }: { initialSection?: Secti
   }, [active]);
 
   const panels = {
-    about: <AboutPanel />, resume: <ResumePanel />, work: <WorkPanel active={active === "work"} />,
+    about: <AboutPanel />, resume: <ResumePanel showPreview={visited.includes("resume")} />, work: <WorkPanel active={active === "work"} showPreview={visited.includes("work")} />,
     favorites: <FavoritesPanel active={active === "favorites"} />, research: <ResearchPanel />, writing: <WritingPanel />,
     contact: <ContactPanel />, note: <NotePanel ref={note} />,
   };

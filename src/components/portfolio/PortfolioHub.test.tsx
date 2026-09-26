@@ -1,13 +1,91 @@
 // @vitest-environment jsdom
 import { cleanup, fireEvent, render } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { PortfolioHub } from "./PortfolioHub";
 import { AboutFavoritesCarousel } from "@/components/AboutFavoritesCarousel";
 import { aboutStories } from "@/data/about";
 import { sections } from "./sections";
+import { ResumeDownloadDialog } from "@/components/ResumeDownloadDialog";
 
 beforeEach(() => vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+
+it("includes panel content in the initial HTML without mounting heavyweight previews", () => {
+  const document = new DOMParser().parseFromString(renderToStaticMarkup(<PortfolioHub />), "text/html");
+  const content = document.body.textContent;
+  for (const story of aboutStories) for (const paragraph of story.paragraphs) expect(content).toContain(paragraph.text);
+  for (const text of ["Omprakash Sahani", "Resume / PDF document", "DOWNLOAD RESUME", "Open PDF", "LeRobot State Atlas", "SplatLab", "SearchEval Lab", "EvidencePatch", "Atlas AI", "ML Systems", "Coming soon.", "Omprakash.Sahani1206@gmail.com"])
+    expect(content).toContain(text);
+  expect(document.querySelector('a[download]')?.getAttribute("href")).toBe("/documents/omprakash-sahani-resume.pdf");
+  expect(document.querySelector('a[aria-label="LeRobot State Atlas — View project"]')?.getAttribute("href")).toBe("/projects/lerobot-state-atlas");
+  expect(document.querySelector("object")).toBeNull();
+  expect(document.querySelector("video")).toBeNull();
+
+  const view = render(<PortfolioHub />);
+  expect(view.container.querySelector("object, video")).toBeNull();
+  fireEvent.click(view.getByRole("button", { name: "01 About" }));
+  expect(view.container.querySelector("object, video")).toBeNull();
+});
+
+it("mounts the unchanged Work video on first visit and retains it across close/reopen", () => {
+  const view = render(<PortfolioHub />);
+  const open = () => fireEvent.click(view.getByRole("button", { name: "03 Current work" }));
+  open();
+  const video = view.getByLabelText("Gaussian Splat workspace reconstruction demo");
+  expect(video.tagName).toBe("VIDEO");
+  expect(video.getAttribute("src")).toBe("/videos/projects/lerobot-state-atlas/gaussian-splat-demo.mp4");
+  expect(video.getAttribute("poster")).toBe("/images/projects/lerobot-workspace.jpg");
+  expect(video.getAttribute("preload")).toBe("metadata");
+  for (const attribute of ["controls", "playsinline"]) expect(video.hasAttribute(attribute)).toBe(true);
+  for (const attribute of ["autoplay", "loop", "muted"]) expect(video.hasAttribute(attribute)).toBe(false);
+  expect(view.container.querySelector("object")).toBeNull();
+  const pause = vi.spyOn(video as HTMLVideoElement, "pause").mockImplementation(() => {});
+  Object.defineProperty(video, "paused", { configurable: true, value: false });
+  fireEvent.click(view.getByRole("button", { name: "Close current work" }));
+  expect(pause).toHaveBeenCalledOnce();
+  expect(view.container.querySelector("video")).toBe(video);
+  open();
+  expect(view.container.querySelector("video")).toBe(video);
+  pause.mockRestore();
+});
+
+it("mounts the Resume preview on first visit while preserving actions and the preview across reopening", () => {
+  const view = render(<PortfolioHub />);
+  const open = () => fireEvent.click(view.getByRole("button", { name: "02 Resume" }));
+  open();
+  const preview = view.getByLabelText("Omprakash Sahani resume preview");
+  expect(preview.tagName).toBe("OBJECT");
+  expect(preview.getAttribute("data")).toBe("/documents/omprakash-sahani-resume.pdf");
+  expect(preview.getAttribute("type")).toBe("application/pdf");
+  for (const name of [/DOWNLOAD RESUME/, /Open PDF/]) expect(view.getByRole("link", { name }).getAttribute("href")).toBe(preview.getAttribute("data"));
+  expect(view.container.querySelector("video")).toBeNull();
+  fireEvent.keyDown(document.activeElement!, { key: "Escape" });
+  expect(view.container.querySelector("object")).toBe(preview);
+  open();
+  expect(view.container.querySelector("object")).toBe(preview);
+  fireEvent.click(view.getByRole("button", { name: "03 Current work" }));
+  expect(view.container.querySelector("object")).toBe(preview);
+  expect(view.container.querySelector("video")).not.toBeNull();
+});
+
+it.each(["resume", "work"] as const)("includes the initially visited %s preview in the initial HTML", (initialSection) => {
+  const html = new DOMParser().parseFromString(renderToStaticMarkup(<PortfolioHub initialSection={initialSection} />), "text/html");
+  const preview = initialSection === "resume" ? "object" : "video";
+  const other = initialSection === "resume" ? "video" : "object";
+  expect(html.querySelector(preview)).not.toBeNull();
+  expect(html.querySelector(other)).toBeNull();
+  const view = render(<PortfolioHub initialSection={initialSection} />);
+  expect(view.container.querySelector(preview)).not.toBeNull();
+  expect(view.container.querySelector(other)).toBeNull();
+});
+
+it("keeps the shared Resume dialog preview enabled by default", () => {
+  const view = render(<ResumeDownloadDialog />);
+  const preview = view.container.querySelector("dialog object");
+  expect(preview?.getAttribute("data")).toBe("/documents/omprakash-sahani-resume.pdf");
+  expect(view.container.querySelector("a[download]")?.getAttribute("href")).toBe(preview?.getAttribute("data"));
+});
 
 it("starts with a stable Krsna link, eight section controls, and no modal", () => {
   const view = render(<PortfolioHub />);
