@@ -1,0 +1,12 @@
+:global(body):has(.page) { --background: #f3f0e7; }
+:global(.site-shell):has(> .page) > :global(.site-header),
+:global(.site-shell):has(> .page) > :global(.site-footer) { display: none; }
+
+.page { padding: 24px 0 40px; }
+.back { display: inline-flex; align-items: center; min-width: 32px; min-height: 32px; margin-left: 3.5rem; font: 16px/1 var(--font-editorial-mono); text-decoration: none; }
+.page .intro { margin: 20px 0 32px 3.5rem; }
+.intro :global(.section-label) { margin-bottom: 8px; }
+.intro h1 { margin-bottom: 12px; }
+.intro > p:last-child { margin: 0; }
+.page :global(.project-row) { margin-bottom: 28px; }
+.page :global(.project-row:last-child) { margin-bottom: 0; }

@@ -1,3 +1,19 @@
+.trigger {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+  transition: color 140ms ease;
+}
+
+.trigger:hover,
+.trigger:focus-visible {
+  color: var(--ink);
+}
+
 .dialog {
   width: min(58rem, calc(100% - 2.5rem));
   height: min(52rem, calc(100dvh - 2.5rem));
@@ -63,52 +79,9 @@
   color: var(--ink);
 }
 
-.preview {
-  min-height: 0;
-  flex: 1;
-  padding: 1rem;
-  background: #e8e8e5;
-}
-
-.document {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  border-radius: 6px;
-  background: white;
-}
-
-.fallback {
-  margin: 0;
-  padding: 2rem;
-}
-
-.footer {
-  padding: 1rem 1.5rem 1.1rem;
-  border-top: 1px solid var(--rule);
-}
-
-.download {
-  display: block;
-  color: var(--ink);
-  font-size: .75rem;
-  font-weight: 500;
-  line-height: 1.4;
-  letter-spacing: .12em;
-  text-decoration: none;
-}
-
-.download:hover {
-  color: var(--foreground);
-}
-
-.close:focus-visible,
-.download:focus-visible {
-  outline: 2px solid var(--foreground);
-  outline-offset: 4px;
-  border-radius: 1px;
-}
+.dialog > div:not(.header) { margin-inline: 1.5rem; }
+.dialog > object { flex: 1; min-height: 0; }
+.close:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }
 
 @keyframes resume-enter {
   from {
@@ -142,13 +115,6 @@
     padding: 1rem;
   }
 
-  .preview {
-    padding: .75rem;
-  }
-
-  .footer {
-    padding: .9rem 1rem 1rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,0 +1,19 @@
+.carousel { font-family: var(--font-editorial-mono); width: 100%; min-width: 0; margin: 0; }
+@media (min-width: 1201px) { .carousel { width: 90%; margin-inline: auto; } }
+.window { overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--background); }
+.slide { display: grid; grid-template-rows: 330px auto; width: 100%; color: inherit; text-decoration: none; }
+.imageFrame { position: relative; min-width: 0; }
+.image { object-fit: contain; padding: 18px; }
+.caption { display: grid; gap: 5px; padding: 14px 18px; border-top: 1px solid var(--rule); }
+.caption span { color: var(--muted); font: 9px/1.6 var(--font-editorial-mono); letter-spacing: .08em; text-transform: uppercase; }
+.caption strong { color: var(--ink); font-size: 15px; font-weight: 400; line-height: 1.5; }
+.slide[href]:hover .caption strong { text-decoration: underline; text-underline-offset: .25em; }
+.slide[href]:focus-visible { outline: 2px solid var(--accent); outline-offset: -5px; }
+.status { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-top: 12px; color: var(--muted); font: 9px/1.7 var(--font-editorial-mono); }
+.status > span { text-align: center; }
+.status button { flex-shrink: 0; width: 44px; height: 44px; border: 1px solid var(--rule); border-radius: 50%; background: transparent; color: var(--ink); font: 16px/1 var(--font-editorial-mono); cursor: pointer; }
+.status button:hover { background: #dedbd2; border-color: var(--accent); }
+@media (max-width: 1080px) { .slide { grid-template-rows: 280px auto; } }
+@media (max-width: 720px) { .slide { grid-template-rows: 300px auto; } }
+
+.status button:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }

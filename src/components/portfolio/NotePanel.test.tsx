@@ -1,40 +1,16 @@
 // @vitest-environment jsdom
 
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { afterAll, afterEach, beforeAll, beforeEach, expect, it, vi } from "vitest";
-import { NoteDialog } from "./NoteDialog";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { PortfolioHub } from "./PortfolioHub";
 
 const fetchMock = vi.fn<typeof fetch>();
 let unexpectedFetchCalls = 0;
-const originalShowModal = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, "showModal");
-const originalClose = Object.getOwnPropertyDescriptor(HTMLDialogElement.prototype, "close");
 let originalBodyStyle: string | null;
 const windowDescriptors = new Map<string, PropertyDescriptor | undefined>();
 
-beforeAll(() => {
-  // Only emulate open/close state and the close event, not native modality or inertness.
-  Object.defineProperty(HTMLDialogElement.prototype, "showModal", {
-    configurable: true,
-    value: function (this: HTMLDialogElement) { this.open = true; },
-  });
-  Object.defineProperty(HTMLDialogElement.prototype, "close", {
-    configurable: true,
-    value: function (this: HTMLDialogElement) {
-      if (!this.open) return;
-      this.open = false;
-      this.dispatchEvent(new Event("close"));
-    },
-  });
-});
-
-afterAll(() => {
-  if (originalShowModal) Object.defineProperty(HTMLDialogElement.prototype, "showModal", originalShowModal);
-  else Reflect.deleteProperty(HTMLDialogElement.prototype, "showModal");
-  if (originalClose) Object.defineProperty(HTMLDialogElement.prototype, "close", originalClose);
-  else Reflect.deleteProperty(HTMLDialogElement.prototype, "close");
-});
-
 beforeEach(() => {
+  vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
   originalBodyStyle = document.body.getAttribute("style");
   unexpectedFetchCalls = 0;
   fetchMock.mockReset().mockImplementation(async () => {
@@ -65,8 +41,8 @@ afterEach(async () => {
 });
 
 function fillNote() {
-  const view = render(<NoteDialog />);
-  fireEvent.click(screen.getByRole("button", { name: "Leave a note" }));
+  const view = render(<PortfolioHub />);
+  fireEvent.click(screen.getByRole("button", { name: "08 Leave a note" }));
   const message = screen.getByLabelText<HTMLTextAreaElement>("Your note");
   const email = screen.getByLabelText<HTMLInputElement>("EMAIL (OPTIONAL)");
   fireEvent.change(message, { target: { value: "Please keep this draft." } });
@@ -103,11 +79,11 @@ function requestSignal() {
 }
 
 function closeNote() {
-  fireEvent.click(screen.getByRole("button", { name: "Close note" }));
+  fireEvent.click(screen.getByRole("button", { name: "Close leave a note" }));
 }
 
 function reopenNote() {
-  fireEvent.click(screen.getByRole("button", { name: "Leave a note" }));
+  fireEvent.click(screen.getByRole("button", { name: "08 Leave a note" }));
 }
 
 it("preserves the draft and enables retry after a non-JSON 429 response", async () => {
@@ -215,7 +191,7 @@ it("aborts at 15 seconds and restores retry without losing the draft", async () 
 it("preserves an unsent draft across close and reopen", () => {
   const { message, email, submit } = fillNote();
   closeNote();
-  expect(screen.queryByRole("dialog")).toBeNull();
+  expect(screen.queryByRole("complementary")).toBeNull();
   reopenNote();
   expect(message.value).toBe("Please keep this draft.");
   expect(email.value).toBe("visitor@example.test");
@@ -264,25 +240,22 @@ it("focuses the note on open and restores the trigger on close", () => {
   const { message } = fillNote();
   expect(document.activeElement).toBe(message);
   closeNote();
-  expect(document.activeElement).toBe(screen.getByRole("button", { name: "Leave a note" }));
+  expect(document.activeElement).toBe(screen.getByRole("button", { name: "08 Leave a note" }));
 });
 
-it.each(["close", "unmount"])("restores existing body styles and scroll position on %s", (action) => {
+it.each(["close", "unmount"])("leaves body styles and scroll position intact on %s", (action) => {
   const previous = { position: "relative", top: "7px", left: "3px", width: "90%", overflow: "auto", paddingRight: "11px" };
   Object.assign(document.body.style, previous);
-  setWindowProperty("scrollX", 12);
-  setWindowProperty("scrollY", 240);
   const { unmount } = fillNote();
-  expect(document.body.style.position).toBe("fixed");
-  expect(document.body.style.top).toBe("-240px");
-  expect(document.body.style.left).toBe("-12px");
-  expect(document.body.style.overflow).toBe("hidden");
+  for (const [property, value] of Object.entries(previous)) {
+    expect(document.body.style[property as keyof typeof previous]).toBe(value);
+  }
   if (action === "close") closeNote();
   else unmount();
   for (const [property, value] of Object.entries(previous)) {
     expect(document.body.style[property as keyof typeof previous]).toBe(value);
   }
-  expect(window.scrollTo).toHaveBeenCalledWith({ left: 12, top: 240, behavior: "instant" });
+  expect(window.scrollTo).not.toHaveBeenCalled();
 });
 
 it.each(["close", "unmount"])("removes visualViewport listeners and panel overrides on %s", (action) => {
@@ -291,21 +264,45 @@ it.each(["close", "unmount"])("removes visualViewport listeners and panel overri
   const add = vi.spyOn(viewport, "addEventListener");
   const remove = vi.spyOn(viewport, "removeEventListener");
   const { unmount } = fillNote();
-  const dialog = screen.getByRole("dialog");
-  expect(dialog.style.getPropertyValue("--note-viewport-height")).toBe("600px");
-  expect(dialog.style.getPropertyValue("--note-viewport-top")).toBe("10px");
+  const panel = screen.getByRole("complementary");
+  expect(panel.style.getPropertyValue("--panel-height")).toBe("600px");
+  expect(panel.style.getPropertyValue("--panel-top")).toBe("10px");
   viewport.height = 400;
   viewport.dispatchEvent(new Event("resize"));
-  expect(dialog.style.getPropertyValue("--note-viewport-height")).toBe("400px");
+  expect(panel.style.getPropertyValue("--panel-height")).toBe("400px");
   viewport.offsetTop = 30;
   viewport.dispatchEvent(new Event("scroll"));
-  expect(dialog.style.getPropertyValue("--note-viewport-top")).toBe("30px");
+  expect(panel.style.getPropertyValue("--panel-top")).toBe("30px");
   expect(add.mock.calls.map(([type]) => type).sort()).toEqual(["resize", "scroll"]);
   if (action === "close") closeNote();
   else unmount();
   expect(remove.mock.calls).toEqual(add.mock.calls);
-  viewport.dispatchEvent(new Event("resize"));
-  viewport.dispatchEvent(new Event("scroll"));
-  expect(dialog.style.getPropertyValue("--note-viewport-height")).toBe("");
-  expect(dialog.style.getPropertyValue("--note-viewport-top")).toBe("");
+  expect(panel.style.getPropertyValue("--panel-height")).toBe("");
+  expect(panel.style.getPropertyValue("--panel-top")).toBe("");
+});
+
+it("keeps a draft while switching sections and submits an anonymous payload", async () => {
+  const { message, email } = fillNote();
+  fireEvent.change(email, { target: { value: "" } });
+  fireEvent.click(screen.getByRole("button", { name: "01 About" }));
+  reopenNote();
+  expect(message.value).toBe("Please keep this draft.");
+  fetchMock.mockResolvedValueOnce(Response.json({ ok: true }));
+  fireEvent.click(screen.getByRole("button", { name: "SEND NOTE" }));
+  await waitFor(() => expect(screen.getByRole("status").textContent).toBe("Note sent."));
+  expect(JSON.parse(fetchMock.mock.calls[0][1]!.body as string)).toEqual({ message: "Please keep this draft." });
+});
+
+it("validates empty messages and optional email before sending", () => {
+  const { message, email, submit } = fillNote();
+  fireEvent.change(message, { target: { value: "   " } });
+  fireEvent.click(submit);
+  expect(screen.getByRole("status").textContent).toBe("Please write a note first.");
+  expect(document.activeElement).toBe(message);
+  fireEvent.change(message, { target: { value: "A note" } });
+  fireEvent.change(email, { target: { value: "invalid" } });
+  fireEvent.click(submit);
+  expect(screen.getByRole("status").textContent).toBe("Enter a valid email address or leave it blank.");
+  expect(document.activeElement).toBe(email);
+  expect(fetchMock).not.toHaveBeenCalled();
 });
