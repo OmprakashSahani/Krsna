@@ -57,10 +57,11 @@ export function CentralSystem({ paused, onToggleMotion }: { paused: boolean; onT
             <OptimizationOrbit />
             <FourROrbit />
             <g className={styles.fixedNotes}>
-              <text x="0" y="-94" textAnchor="middle">x ∈ ℝⁿ</text>
-              <text x="0" y="101" textAnchor="middle">∇L(θ)</text>
+              <text className={styles.mathLabel} x="0" y="-94" textAnchor="middle">θ − η∇L</text>
+              <text className={styles.mathLabel} x="-3" y="101" textAnchor="end">∇L</text>
+              <text className={styles.mathLabel} x="1" y="101" textAnchor="start">(θ)</text>
               <text x="0" y="-50" textAnchor="middle">LEARN / UPDATE</text>
-              <text x="0" y="54" textAnchor="middle">↺ ITERATE</text>
+              <text x="0" y="54" textAnchor="middle"><tspan className={styles.iterateSymbol}>↺</tspan><tspan dx="2">ITERATE</tspan></text>
             </g>
           </g>
         </svg>

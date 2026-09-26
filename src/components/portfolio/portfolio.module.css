@@ -14,18 +14,11 @@
 }
 :global(.site-shell:has(.portfolio-home)) { width: 100%; max-width: none; }
 :global(.portfolio-home + .site-footer) { display: none; }
-.hub { --composition-duration: 550ms; --composition-ease: cubic-bezier(.22,.68,0,1); --panel-surface: #e8e4da; --panel-rule: #cbc7bd; --annotation-ink: color-mix(in srgb, var(--muted) 85%, var(--ink)); position: relative; height: 100svh; min-height: 780px; overflow: clip; color: var(--ink); }
-.registrationMarks { position: fixed; inset: 28px; z-index: 1; pointer-events: none; }
-.registrationMarks > span { position: absolute; width: 22px; height: 22px; border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); opacity: .65; }
-.registrationMarks > span::after { content: ""; position: absolute; top: -1px; left: -1px; width: 2px; height: 2px; background: var(--accent); }
-.registrationMarks > span:nth-child(1) { top: 0; left: 0; }
-.registrationMarks > span:nth-child(2) { top: 0; right: 0; transform: scaleX(-1); }
-.registrationMarks > span:nth-child(3) { bottom: 0; left: 0; transform: scaleY(-1); }
-.registrationMarks > span:nth-child(4) { bottom: 0; right: 0; transform: scale(-1); }
+.hub { --composition-duration: 550ms; --composition-ease: cubic-bezier(.22,.68,0,1); --panel-surface: #e8e4da; --panel-rule: #cbc7bd; position: relative; height: 100svh; min-height: 780px; overflow: clip; color: var(--ink); }
 .hub button { color: inherit; cursor: pointer; }
 .hub :is(a, button, input, textarea, [tabindex]):focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
 .stage { position: absolute; left: 0; top: 0; width: 100%; height: 100%; transition: left var(--composition-duration) var(--composition-ease), width var(--composition-duration) var(--composition-ease); }
-.identityNote { position: absolute; left: 50%; top: max(22px, calc(50% - 357px)); transform: translateX(-50%); width: max-content; font: 10px/1.6 var(--font-editorial-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--annotation-ink); }
+.identityNote { position: absolute; left: 50%; top: max(22px, calc(50% - 357px)); transform: translateX(-50%); width: max-content; font: 10px/1.6 var(--font-editorial-mono); letter-spacing: .08em; text-transform: uppercase; color: #454549; opacity: 1; font-weight: 500; }
 .identityNote span { margin-left: 12px; letter-spacing: 0; text-transform: none; }
 .instrument { position: absolute; left: 50%; top: 50%; width: min(580px, 47vw); transform: translate(-50%, -50%) scale(1); transition: transform var(--composition-duration) var(--composition-ease); }
 .system { position: relative; width: 100%; aspect-ratio: 1; }
@@ -48,7 +41,10 @@
 .reviewDescription { fill: #64646a; font-size: 11px; }
 .observation { fill: var(--accent); }
 .fixedNotes { fill: var(--muted); font-size: 10px; letter-spacing: .5px; }
-.fixedNotes text:nth-child(-n+3) { fill: var(--annotation-ink); }
+.fixedNotes text { fill: #454549; opacity: 1; font-weight: 500; }
+.fixedNotes .mathLabel { font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif; font-size: 12px; font-weight: 400; letter-spacing: 0; }
+.fixedNotes .iterateSymbol { font-size: 11px; font-weight: 500; }
+.fixedNotes .mathSuperscript { font-size: 7.5px; }
 .fixedNotes text:nth-last-child(-n+2) { font-size: 8px; letter-spacing: 1.5px; }
 .optimization { animation: orbit 64s linear infinite; }
 .optimizationText { animation: orbit 64s linear infinite reverse; }
@@ -60,10 +56,10 @@
 .systemCaption { position: absolute; top: calc(100% + 4px); width: 100%; text-align: center; font: 9px/1.7 var(--font-editorial-mono); color: var(--muted); }
 .systemCaption p { margin: 4px 0; }
 .systemCaption p:first-child { color: var(--ink); font-size: 10px; }
-.systemCaption p:first-child > span:last-child { margin-left: 10px; font-size: 9px; color: var(--annotation-ink); }
-.systemCaption p:nth-child(2) { color: var(--annotation-ink); }
+.systemCaption p:first-child > span:last-child { margin-left: 10px; font-size: 9px; color: #454549; opacity: 1; font-weight: 500; }
+.systemCaption p:nth-child(2) { color: #454549; opacity: 1; font-weight: 500; }
 .captionMark { position: relative; margin-right: 5px; color: transparent; }
-.captionMark::after { content: ""; position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; background: var(--accent); transform: translate(-50%, -50%); }
+.captionMark::after { content: ""; position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; background: var(--accent); transform: translate(-50%, -50%); }
 .motionControl { padding: 5px 8px; border: 0; background: transparent; color: var(--muted) !important; font: 9px/1.6 var(--font-editorial-mono); text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 4px; }
 .navigation { position: absolute; inset: 0; pointer-events: none; }
 .navLabel { position: absolute; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 0; border: 0; background: transparent; font: 11px/1.5 var(--font-editorial-mono); letter-spacing: .035em; text-transform: uppercase; white-space: nowrap; pointer-events: auto; transform: translateX(0); transition: left var(--composition-duration) var(--composition-ease), top var(--composition-duration) var(--composition-ease), transform var(--composition-duration) var(--composition-ease), color var(--composition-duration) var(--composition-ease); }
@@ -109,8 +105,6 @@
 .panelContent { padding: 38px 36px 65px; font-size: 15px; line-height: 1.75; }
 .sheetIdentity { display: none; }
 @media (min-width: 801px) and (max-width: 1200px) {
-  .registrationMarks { inset: 22px; }
-  .registrationMarks > span { width: 18px; height: 18px; }
   .instrument { width: 470px; }
   .navLabel { font-size: 10px; gap: 7px; }
   .navMarker { width: 18px; }
@@ -137,7 +131,6 @@
   .hub:not([data-panel="closed"]) .navLabel:nth-child(7), .hub:not([data-panel="closed"]) .navLabel:nth-child(8) { top: calc(50% + 332px); }
 }
 @media (max-width: 800px) {
-  .registrationMarks { display: none; }
   .hub { height: auto; min-height: 100svh; overflow: clip; }
   .stage, .hub[data-panel] .stage { position: relative; left: 0; width: 100%; height: auto; padding: 32px 20px 40px; transition: none; }
   .identityNote, .hub:not([data-panel="closed"]) .identityNote { position: static; transform: none; margin: 0 auto 10px; font-size: 9px; }
