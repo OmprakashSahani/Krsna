@@ -13,8 +13,8 @@ afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 const route = "/projects/evidencepatch";
 const repository = "https://github.com/OmprakashSahani/evidencepatch";
 
-it("links EvidencePatch internally from home and the index while retaining its repository", () => {
-  const home = render(<HomePage />);
+it("links EvidencePatch internally from home and the index while retaining its repository", async () => {
+  const home = render(await HomePage({ searchParams: Promise.resolve({}) }));
   fireEvent.click(home.getByRole("button", { name: "03 Current work" }));
   const homeLink = home.getByRole("link", { name: "EvidencePatch — View project" });
   expect(homeLink.getAttribute("href")).toBe(route);

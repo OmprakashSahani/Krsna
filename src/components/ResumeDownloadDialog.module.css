@@ -79,8 +79,17 @@
   color: var(--ink);
 }
 
-.dialog > div:not(.header) { margin-inline: 1.5rem; }
-.dialog > object { flex: 1; min-height: 0; }
+.dialog > div:not(.header) {
+  width: auto;
+  margin-inline: 1.5rem;
+}
+
+.dialog > div:last-child {
+  flex: 1 1 0;
+  height: auto;
+  min-height: 0;
+  margin-bottom: 1.5rem;
+}
 .close:focus-visible { outline: 2px solid var(--foreground); outline-offset: 4px; }
 
 @keyframes resume-enter {

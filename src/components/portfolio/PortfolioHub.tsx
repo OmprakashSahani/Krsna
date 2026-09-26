@@ -15,11 +15,14 @@ import { NotePanel, type NotePanelHandle } from "./NotePanel";
 import { sections, type SectionId } from "./sections";
 import styles from "./portfolio.module.css";
 
-export function PortfolioHub() {
-  const [active, setActive] = useState<SectionId | null>(null);
-  const [lastSection, setLastSection] = useState<SectionId>("about");
-  const [lastOnSide, setLastOnSide] = useState({ left: "about", right: "favorites" } as Record<"left" | "right", SectionId>);
-  const [visited, setVisited] = useState<SectionId[]>([]);
+export function PortfolioHub({ initialSection = null }: { initialSection?: SectionId | null }) {
+  const initialSide = initialSection ? sections.find(item => item.id === initialSection)!.side : null;
+  const [active, setActive] = useState<SectionId | null>(initialSection);
+  const [lastSection, setLastSection] = useState<SectionId>(initialSection ?? "about");
+  const [lastOnSide, setLastOnSide] = useState({
+    left: initialSide === "left" && initialSection ? initialSection : "about",
+    right: initialSide === "right" && initialSection ? initialSection : "favorites",
+  } as Record<"left" | "right", SectionId>);
   const [paused, setPaused] = useState(false);
   const note = useRef<NotePanelHandle>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -32,7 +35,6 @@ export function PortfolioHub() {
     setLastSection(id);
     const side = sections.find(item => item.id === id)!.side;
     setLastOnSide(previous => ({ ...previous, [side]: id }));
-    setVisited(previous => previous.includes(id) ? previous : [...previous, id]);
   }
 
   const close = useCallback(() => {
@@ -76,7 +78,7 @@ export function PortfolioHub() {
     {(["left", "right"] as const).map(side => {
       const current = sections.find(item => item.id === lastOnSide[side])!;
       return <SidePanel key={side} section={current} open={active !== null && section.side === side} onClose={close}>
-        {sections.filter(item => item.side === side).map(item => <div key={item.id} hidden={item.id !== current.id}>{visited.includes(item.id) ? panels[item.id] : null}</div>)}
+        {sections.filter(item => item.side === side).map(item => <div key={item.id} hidden={item.id !== current.id}>{panels[item.id]}</div>)}
       </SidePanel>;
     })}
   </main>;
