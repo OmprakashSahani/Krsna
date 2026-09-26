@@ -1,13 +1,14 @@
 // @vitest-environment jsdom
 
-import { cleanup, render, within } from "@testing-library/react";
-import { afterEach, expect, it } from "vitest";
+import { cleanup, fireEvent, render, within } from "@testing-library/react";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import HomePage from "@/app/page";
 import LeRobotStateAtlasPage from "@/app/projects/lerobot-state-atlas/page";
 import { projects } from "@/data/projects";
 import { ProjectIndex } from "./ProjectIndex";
 
-afterEach(cleanup);
+beforeEach(() => vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 it("renders the Gaussian Splat video with intentional inline playback and native controls", () => {
   const page = render(<LeRobotStateAtlasPage />);
@@ -25,7 +26,8 @@ it("renders the Gaussian Splat video with intentional inline playback and native
 it("links LeRobot to its portfolio page from home and the index while retaining its repository", () => {
   const route = "/projects/lerobot-state-atlas";
   const home = render(<HomePage />);
-  const homeLink = home.getByRole("link", { name: "LeRobot State Atlas" });
+  fireEvent.click(home.getByRole("button", { name: "03 Current work" }));
+  const homeLink = home.getByRole("link", { name: "LeRobot State Atlas — View project" });
   expect(homeLink.getAttribute("href")).toBe(route);
   expect(homeLink.hasAttribute("target")).toBe(false);
   home.unmount();

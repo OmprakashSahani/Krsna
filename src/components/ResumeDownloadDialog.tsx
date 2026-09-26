@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import styles from "./resume.module.css";
 import dialogStyles from "./ResumeDownloadDialog.module.css";
 
-const resumePath = "/documents/omprakash-sahani-resume.pdf";
+import { ResumeDocument } from "./portfolio/ResumePanel";
 
 export function ResumeDownloadDialog() {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -63,12 +62,12 @@ export function ResumeDownloadDialog() {
       <button
         ref={trigger}
         type="button"
-        className={styles.downloadPlaceholder}
+        className={dialogStyles.trigger}
         onClick={open}
         aria-haspopup="dialog"
         aria-controls="resume-preview-dialog"
       >
-        Download Resume
+        Resume
       </button>
 
       <dialog
@@ -130,24 +129,7 @@ export function ResumeDownloadDialog() {
           </button>
         </header>
 
-        <div className={dialogStyles.preview}>
-          <object
-            className={dialogStyles.document}
-            data={resumePath}
-            type="application/pdf"
-            aria-label="Omprakash Sahani resume preview"
-          >
-            <p className={dialogStyles.fallback}>
-              Your browser could not display the resume preview.
-            </p>
-          </object>
-        </div>
-
-        <footer className={dialogStyles.footer}>
-          <a className={dialogStyles.download} href={resumePath} download>
-            DOWNLOAD RESUME
-          </a>
-        </footer>
+        <ResumeDocument />
       </dialog>
     </>
   );
