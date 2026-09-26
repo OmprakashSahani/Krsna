@@ -71,7 +71,6 @@ export function PortfolioHub({ initialSection = null }: { initialSection?: Secti
   };
 
   return <main id="main-content" className={`portfolio-home ${styles.hub}`} data-panel={active ? section.side : "closed"}>
-    <div className={styles.registrationMarks} aria-hidden="true"><span /><span /><span /><span /></div>
     <div ref={stage} className={styles.stage}>
       <div className={styles.identityNote}>Omprakash Sahani <span>/ a practice in learning</span></div>
       <CentralSystem paused={paused} onToggleMotion={() => setPaused(previous => !previous)} />
