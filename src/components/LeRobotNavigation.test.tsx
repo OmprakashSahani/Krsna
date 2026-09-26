@@ -23,9 +23,9 @@ it("renders the Gaussian Splat video with intentional inline playback and native
   expect(video.hasAttribute("muted")).toBe(false);
 });
 
-it("links LeRobot to its portfolio page from home and the index while retaining its repository", () => {
+it("links LeRobot to its portfolio page from home and the index while retaining its repository", async () => {
   const route = "/projects/lerobot-state-atlas";
-  const home = render(<HomePage />);
+  const home = render(await HomePage({ searchParams: Promise.resolve({}) }));
   fireEvent.click(home.getByRole("button", { name: "03 Current work" }));
   const homeLink = home.getByRole("link", { name: "LeRobot State Atlas — View project" });
   expect(homeLink.getAttribute("href")).toBe(route);
