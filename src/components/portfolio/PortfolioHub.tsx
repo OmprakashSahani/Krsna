@@ -14,8 +14,9 @@ import { FavoritesPanel } from "./FavoritesPanel";
 import { ResearchPanel } from "./ResearchPanel";
 import { WritingPanel } from "./WritingPanel";
 import { ContactPanel } from "./ContactPanel";
+import { KrishnaPanel } from "./KrishnaPanel";
 import { NotePanel, type NotePanelHandle } from "./NotePanel";
-import { sections, type SectionId } from "./sections";
+import { panelDefinitions, type PanelId, type SectionId } from "./sections";
 import styles from "./portfolio.module.css";
 
 export function PortfolioHub() {
@@ -27,20 +28,20 @@ export function PortfolioHub() {
     panelParams.length === 1 ? panelParams[0] : undefined,
     projectParams.length === 1 ? projectParams[0] : undefined,
   );
-  const initialSide = active ? sections.find(item => item.id === active)!.side : null;
-  const [visited, setVisited] = useState<SectionId[]>(() => active ? [active] : []);
-  const [lastSection, setLastSection] = useState<SectionId>(active ?? "about");
+  const initialSide = active ? panelDefinitions.find(item => item.id === active)!.side : null;
+  const [visited, setVisited] = useState<PanelId[]>(() => active ? [active] : []);
+  const [lastSection, setLastSection] = useState<PanelId>(active ?? "about");
   const [lastOnSide, setLastOnSide] = useState({
     left: initialSide === "left" && active ? active : "about",
     right: initialSide === "right" && active ? active : "favorites",
-  } as Record<"left" | "right", SectionId>);
+  } as Record<"left" | "right", PanelId>);
   const [paused, setPaused] = useState(false);
   const note = useRef<NotePanelHandle>(null);
   const stage = useRef<HTMLDivElement>(null);
   const projectTrigger = useRef<HTMLAnchorElement | null>(null);
   const previousProject = useRef(project);
   const previousActive = useRef(active);
-  const section = sections.find(item => item.id === (active ?? lastSection))!;
+  const section = panelDefinitions.find(item => item.id === (active ?? lastSection))!;
 
   // Retain each side's content and lazy previews across URL navigation, including history.
   if (active && (lastSection !== active || !visited.includes(active))) {
@@ -110,7 +111,7 @@ export function PortfolioHub() {
   const panels = {
     about: <AboutPanel />, resume: <ResumePanel showPreview={visited.includes("resume")} />, work: <WorkPanel active={active === "work"} showPreview={visited.includes("work")} project={project} onProject={openProject} onBack={closeProject} />,
     favorites: <FavoritesPanel active={active === "favorites"} />, research: <ResearchPanel />, writing: <WritingPanel />,
-    contact: <ContactPanel />, note: <NotePanel ref={note} />,
+    contact: <ContactPanel />, note: <NotePanel ref={note} />, krishna: <KrishnaPanel />,
   };
 
   return <main id="main-content" className={`portfolio-home ${styles.hub}`} data-panel={active ? section.side : "closed"}>
@@ -120,9 +121,9 @@ export function PortfolioHub() {
       <HubNavigation active={active} onSelect={select} />
     </div>
     {(["left", "right"] as const).map(side => {
-      const current = sections.find(item => item.id === lastOnSide[side])!;
+      const current = panelDefinitions.find(item => item.id === lastOnSide[side])!;
       return <SidePanel key={side} section={current} open={active !== null && section.side === side} onClose={close}>
-        {sections.filter(item => item.side === side).map(item => <div key={item.id} hidden={item.id !== current.id}>{panels[item.id]}</div>)}
+        {panelDefinitions.filter(item => item.side === side).map(item => <div key={item.id} hidden={item.id !== current.id}>{panels[item.id]}</div>)}
       </SidePanel>;
     })}
   </main>;

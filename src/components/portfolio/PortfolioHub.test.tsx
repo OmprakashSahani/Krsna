@@ -91,7 +91,7 @@ it("keeps the shared Resume dialog preview enabled by default", () => {
 
 it("starts with a stable Krsna link, eight section controls, and no modal", () => {
   const view = render(<PortfolioHub />);
-  expect(view.getByRole("link", { name: "Kṛṣṇa — open the Krishna page" }).getAttribute("href")).toBe("/krishna");
+  expect(view.getByRole("link", { name: "Kṛṣṇa — open the Kṛṣṇa panel" }).getAttribute("href")).toBe("/?panel=krishna");
   expect(view.getByRole("heading", { level: 1 }).textContent).toBe("Krsna");
   expect(view.queryByRole("complementary")).toBeNull();
   expect(view.queryByRole("dialog")).toBeNull();

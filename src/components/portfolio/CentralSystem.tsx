@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import { OptimizationOrbit } from "./OptimizationOrbit";
 import { FourROrbit, reviews } from "./FourROrbit";
+import { sectionHref } from "./navigation-state";
 import styles from "./portfolio.module.css";
 
 export function CentralSystem({ paused, onToggleMotion }: { paused: boolean; onToggleMotion: () => void }) {
@@ -66,7 +67,7 @@ export function CentralSystem({ paused, onToggleMotion }: { paused: boolean; onT
           </g>
         </svg>
         <h1 ref={wordmark} className={styles.center}>
-          <Link href="/krishna" aria-label="Kṛṣṇa — open the Krishna page">
+          <Link id="hub-krishna" href={sectionHref("krishna")} scroll={false} prefetch={false} aria-label="Kṛṣṇa — open the Kṛṣṇa panel" aria-controls="portfolio-panel-right">
             K<span className={styles.diacriticLetter}>r<span className={styles.diacriticDot} aria-hidden="true" /></span><span className={styles.diacriticLetter}>s<span className={styles.diacriticDot} aria-hidden="true" /></span><span className={styles.diacriticLetter}>n<span className={styles.diacriticDot} aria-hidden="true" /></span>a<span className={styles.wordmarkRule} aria-hidden="true" />
           </Link>
         </h1>
