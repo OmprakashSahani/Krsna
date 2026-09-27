@@ -1,23 +1,5 @@
 import type { ReactNode } from "react";
-import Link from "next/link";
 import styles from "./project-page.module.css";
-
-export function ProjectPageHeader({
-  title,
-  backHref,
-  backLabel,
-}: {
-  title: string;
-  backHref: string;
-  backLabel: string;
-}) {
-  return (
-    <header className={styles.projectHeader}>
-      <Link className={styles.backLink} href={backHref} aria-label={backLabel}>←</Link>
-      <span className={styles.projectLabel}>{title}</span>
-    </header>
-  );
-}
 
 export function ProjectIntro({
   headingId,

@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { setTestUrl } from "@/test/portfolio-navigation";
 
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
@@ -10,6 +11,7 @@ let originalBodyStyle: string | null;
 const windowDescriptors = new Map<string, PropertyDescriptor | undefined>();
 
 beforeEach(() => {
+  setTestUrl("/");
   vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
   originalBodyStyle = document.body.getAttribute("style");
   unexpectedFetchCalls = 0;

@@ -1,6 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { projectHref, type ProjectSlug } from "@/data/project-details";
+import { portfolioState, sectionHref } from "./navigation-state";
 import { CentralSystem } from "./CentralSystem";
 import { HubNavigation } from "./HubNavigation";
 import { SidePanel } from "./SidePanel";
@@ -15,45 +18,85 @@ import { NotePanel, type NotePanelHandle } from "./NotePanel";
 import { sections, type SectionId } from "./sections";
 import styles from "./portfolio.module.css";
 
-export function PortfolioHub({ initialSection = null }: { initialSection?: SectionId | null }) {
-  const initialSide = initialSection ? sections.find(item => item.id === initialSection)!.side : null;
-  const [active, setActive] = useState<SectionId | null>(initialSection);
-  const [visited, setVisited] = useState<SectionId[]>(() => initialSection ? [initialSection] : []);
-  const [lastSection, setLastSection] = useState<SectionId>(initialSection ?? "about");
+export function PortfolioHub() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const panelParams = searchParams.getAll("panel");
+  const projectParams = searchParams.getAll("project");
+  const { section: active, project } = portfolioState(
+    panelParams.length === 1 ? panelParams[0] : undefined,
+    projectParams.length === 1 ? projectParams[0] : undefined,
+  );
+  const initialSide = active ? sections.find(item => item.id === active)!.side : null;
+  const [visited, setVisited] = useState<SectionId[]>(() => active ? [active] : []);
+  const [lastSection, setLastSection] = useState<SectionId>(active ?? "about");
   const [lastOnSide, setLastOnSide] = useState({
-    left: initialSide === "left" && initialSection ? initialSection : "about",
-    right: initialSide === "right" && initialSection ? initialSection : "favorites",
+    left: initialSide === "left" && active ? active : "about",
+    right: initialSide === "right" && active ? active : "favorites",
   } as Record<"left" | "right", SectionId>);
   const [paused, setPaused] = useState(false);
   const note = useRef<NotePanelHandle>(null);
   const stage = useRef<HTMLDivElement>(null);
+  const projectTrigger = useRef<HTMLAnchorElement | null>(null);
+  const previousProject = useRef(project);
+  const previousActive = useRef(active);
   const section = sections.find(item => item.id === (active ?? lastSection))!;
 
+  // Retain each side's content and lazy previews across URL navigation, including history.
+  if (active && (lastSection !== active || !visited.includes(active))) {
+    if (!visited.includes(active)) setVisited([...visited, active]);
+    setLastSection(active);
+    setLastOnSide({ ...lastOnSide, [section.side]: active });
+  }
+
   function select(id: SectionId) {
-    if (id === active) return;
+    if (id === active && !project) return;
     if (id === "note") note.current?.prepare();
-    setVisited(previous => previous.includes(id) ? previous : [...previous, id]);
-    setActive(id);
-    setLastSection(id);
-    const side = sections.find(item => item.id === id)!.side;
-    setLastOnSide(previous => ({ ...previous, [side]: id }));
+    router.push(sectionHref(id), { scroll: false });
   }
 
   const close = useCallback(() => {
-    setActive(null);
-    // The sheet's inert background must become interactive before focus returns.
-    if (stage.current) stage.current.inert = false;
-    document.getElementById(`hub-${lastSection}`)?.focus({ preventScroll: true });
-  }, [lastSection]);
+    router.push("/", { scroll: false });
+  }, [router]);
+
+  const closeProject = useCallback(() => {
+    // Replacing also works for direct arrivals; Back never reopens a closed detail.
+    router.replace(sectionHref("work"), { scroll: false });
+  }, [router]);
+
+  function openProject(slug: ProjectSlug, trigger: HTMLAnchorElement) {
+    projectTrigger.current = trigger;
+    if (project === slug) return;
+    router.push(projectHref(slug), { scroll: false });
+  }
+
+  useEffect(() => {
+    if (previousProject.current && !project && active === "work") {
+      const trigger = projectTrigger.current?.isConnected ? projectTrigger.current :
+        document.getElementById(`project-view-${previousProject.current}`);
+      trigger?.focus({ preventScroll: true });
+    } else if (previousActive.current && !active) {
+      if (stage.current) stage.current.inert = false;
+      document.getElementById(`hub-${previousActive.current}`)?.focus({ preventScroll: true });
+    }
+    previousProject.current = project;
+    previousActive.current = active;
+  }, [active, project]);
+
+  useEffect(() => {
+    if (searchParams.has("project") && (!project || searchParams.get("panel") !== "work")) {
+      router.replace(project ? projectHref(project) : sectionHref(active), { scroll: false });
+    }
+  }, [active, project, router, searchParams]);
 
   useEffect(() => {
     if (!active) return;
     const escape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") { event.preventDefault(); close(); }
+      if (event.key === "Escape") { event.preventDefault(); if (project) closeProject(); else close(); }
     };
     document.addEventListener("keydown", escape);
     return () => document.removeEventListener("keydown", escape);
-  }, [active, close]);
+  }, [active, project, close, closeProject]);
 
   useEffect(() => {
     // Desktop panels are nonmodal. Only the covered mobile stage is inert.
@@ -65,7 +108,7 @@ export function PortfolioHub({ initialSection = null }: { initialSection?: Secti
   }, [active]);
 
   const panels = {
-    about: <AboutPanel />, resume: <ResumePanel showPreview={visited.includes("resume")} />, work: <WorkPanel active={active === "work"} showPreview={visited.includes("work")} />,
+    about: <AboutPanel />, resume: <ResumePanel showPreview={visited.includes("resume")} />, work: <WorkPanel active={active === "work"} showPreview={visited.includes("work")} project={project} onProject={openProject} onBack={closeProject} />,
     favorites: <FavoritesPanel active={active === "favorites"} />, research: <ResearchPanel />, writing: <WritingPanel />,
     contact: <ContactPanel />, note: <NotePanel ref={note} />,
   };

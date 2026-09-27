@@ -1,50 +1,5 @@
-:global(.site-header):has(+ .projectPage) {
-  display: none;
-}
-
-.projectPage + :global(.site-footer) {
-  display: none;
-}
-
-.projectPage {
-  display: grid;
-  grid-template-rows: auto minmax(min-content, 1fr) auto;
-  min-height: 100svh;
-}
-
-.projectHeader {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.5rem 0 .85rem;
-  border-bottom: 1px solid #34343a;
-}
-
-.backLink {
-  color: var(--ink);
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1;
-  text-decoration: none;
-}
-
-.backLink:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 4px;
-}
-
-.projectLabel {
-  color: var(--body);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.4;
-  text-align: right;
-}
-
 .projectComposition {
   min-width: 0;
-  padding-bottom: clamp(5rem, 10vw, 9rem);
   color: var(--body);
   font-size: 14.5px;
   font-weight: 450;
@@ -52,8 +7,7 @@
 }
 
 .intro {
-  max-width: 46rem;
-  padding-block: clamp(2.5rem, 5vw, 4rem) 3rem;
+  padding-bottom: 2rem;
 }
 
 .eyebrow,
@@ -101,9 +55,9 @@
 
 .bodyGrid {
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  column-gap: clamp(2rem, 4vw, 3rem);
+  row-gap: 2.5rem;
 }
 
 .narrative {
@@ -125,7 +79,7 @@
 
 .metrics {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem 1rem;
   margin: 1.5rem 0 1rem;
   padding-block: 1.25rem;
@@ -160,10 +114,7 @@
 }
 
 .projectRail {
-  --rail-inset: clamp(1.5rem, 3vw, 2.5rem);
   min-width: 0;
-  padding-left: var(--rail-inset);
-  border-left: 1px solid var(--rule);
   font-size: 12px;
   font-weight: 400;
   line-height: 1.7;
@@ -173,60 +124,15 @@
   position: relative;
 }
 
-.railSection::before {
-  content: "";
-  position: absolute;
-  top: calc(.6875rem * .9 - 2.5px);
-  /* Centre the 5px marker on the rail's existing 1px border. */
-  left: calc(-1 * var(--rail-inset) - 3px);
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--muted);
-}
-
-.projectRail[data-trace="none"] .railSection::before {
-  content: none;
-}
-
 .leftRailMarker {
   display: none;
-}
-
-@media (min-width: 1081px) {
-  .bodyGrid[data-trace="left"] {
-    grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
-  }
-
-  .projectRail[data-trace="left"] {
-    padding-left: 0;
-    padding-right: var(--rail-inset);
-    border-left: 0;
-    border-right: 1px solid var(--rule);
-  }
-
-  .projectRail[data-trace="left"] .railSection::before {
-    content: none;
-  }
-
-  .leftRailMarker {
-    display: block;
-    position: absolute;
-    top: calc(.6875rem * .9 - 2.5px);
-    /* Mirror the right rail: centre each marker on the border beside its heading. */
-    right: calc(-1 * var(--rail-inset) - 3px);
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--muted);
-  }
 }
 
 .horizontalTrace {
   position: relative;
   display: flex;
   justify-content: space-between;
-  margin-top: clamp(3rem, 6vw, 5rem);
+  margin-top: 2.5rem;
   padding-inline: 3px;
 }
 
@@ -284,7 +190,7 @@
 }
 
 .toolGroups {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .facts dt,
@@ -308,48 +214,4 @@
 
 .railSection p {
   margin: 0;
-}
-
-.footerRule {
-  padding: 1.1rem 0 1.5rem;
-  border-top: 1px solid #85858d;
-}
-
-@media (max-width: 1080px) {
-  .bodyGrid {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: 3rem;
-    max-width: var(--biography-width);
-  }
-
-  .projectRail {
-    padding-left: 0;
-    border-left: 0;
-  }
-
-  .railSection::before {
-    display: none;
-  }
-}
-
-@media (max-width: 720px) {
-  .projectHeader {
-    padding-top: 1.25rem;
-  }
-}
-
-@media (max-width: 560px) {
-  .projectComposition {
-    font-size: 14px;
-  }
-
-  .metrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 420px) {
-  .toolGroups {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }

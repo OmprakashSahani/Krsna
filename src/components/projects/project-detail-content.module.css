@@ -1,0 +1,19 @@
+.detail {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.back {
+  min-height: 44px;
+  margin: 0 0 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: 11px/1.5 var(--font-editorial-mono);
+  letter-spacing: .07em;
+}
+
+.detail :is(img, video, svg) { max-width: 100%; height: auto; }
+.detail video { width: 100%; }
+.detail pre { max-width: 100%; overflow-x: auto; }
+.detail table { display: block; max-width: 100%; overflow-x: auto; }

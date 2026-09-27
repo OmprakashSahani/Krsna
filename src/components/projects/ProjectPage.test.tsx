@@ -5,26 +5,21 @@ import { afterEach, expect, it } from "vitest";
 import {
   ProjectExternalLink,
   ProjectIntro,
-  ProjectPageHeader,
   ProjectRailSection,
   ProjectStorySection,
 } from "./ProjectPage";
 
 afterEach(cleanup);
 
-it("preserves the caller's back navigation and introductory content", () => {
+it("preserves the introductory content and heading semantics", () => {
   const view = render(
     <>
-      <ProjectPageHeader title="Example project" backHref="/projects" backLabel="Return to projects" />
       <ProjectIntro headingId="example-title" eyebrow="Project / Research" title="Example project" subtitle="An investigation">
         <p>Project-specific introduction.</p>
       </ProjectIntro>
     </>,
   );
 
-  const back = view.getByRole("link", { name: "Return to projects" });
-  expect(back.getAttribute("href")).toBe("/projects");
-  expect(back.hasAttribute("target")).toBe(false);
   expect(view.getByRole("heading", { level: 1, name: "Example project" }).id).toBe("example-title");
   expect(view.getByText("Project-specific introduction.").tagName).toBe("P");
 });
