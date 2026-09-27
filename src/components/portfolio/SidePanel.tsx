@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, type ReactNode } from "react";
-import type { Section } from "./sections";
+import type { PanelDefinition } from "./sections";
 import styles from "./portfolio.module.css";
 
-export function SidePanel({ section, open, onClose, children }: { section: Section; open: boolean; onClose: () => void; children: ReactNode }) {
+export function SidePanel({ section, open, onClose, children }: { section: PanelDefinition; open: boolean; onClose: () => void; children: ReactNode }) {
   const panel = useRef<HTMLElement>(null);
   const heading = useRef<HTMLHeadingElement>(null);
 
@@ -40,8 +39,12 @@ export function SidePanel({ section, open, onClose, children }: { section: Secti
 
   return <aside ref={panel} id={`portfolio-panel-${section.side}`} className={styles.panel} data-side={section.side} data-open={open} aria-labelledby={`panel-title-${section.side}`} aria-hidden={!open} inert={!open}>
     <div className={styles.panelTop}>
-      <h2 id={`panel-title-${section.side}`} ref={heading} tabIndex={-1}><span>{section.index} /</span> {section.label}</h2>
-      <Link href="/krishna" className={styles.sheetIdentity}>Krsna</Link>
+      <h2
+        id={`panel-title-${section.side}`}
+        ref={heading}
+        tabIndex={-1}
+        className={section.id === "krishna" ? styles.krishnaPanelTitle : undefined}
+      >{section.index && <><span>{section.index} /</span>{" "}</>}{section.label}</h2>
       <button type="button" onClick={onClose} aria-label={`Close ${section.label.toLowerCase()}`}><span aria-hidden="true">×</span></button>
     </div>
     <div className={styles.panelContent}>{children}</div>

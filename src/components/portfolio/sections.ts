@@ -10,3 +10,8 @@ export const sections = [
 ] as const;
 export type SectionId = typeof sections[number]["id"];
 export type Section = typeof sections[number];
+
+// Kṛṣṇa is a panel destination, separate from the eight visible navigation items.
+export const panelDefinitions = [...sections, { id: "krishna", label: "Kṛṣṇa", side: "right" }] as const;
+export type PanelId = typeof panelDefinitions[number]["id"];
+export type PanelDefinition = { id: PanelId; label: string; side: "left" | "right"; index?: string };
