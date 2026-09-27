@@ -1,39 +1,40 @@
 // @vitest-environment jsdom
 
+import { setTestUrl } from "@/test/portfolio-navigation";
 import { cleanup, fireEvent, render, within } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import HomePage from "@/app/page";
-import EvidencePatchPage, { metadata } from "@/app/projects/evidencepatch/page";
+import EvidencePatchContent from "@/components/projects/EvidencePatchContent";
+import { projectMetadata } from "@/data/project-details";
+const metadata = projectMetadata("evidencepatch");
 import { projects } from "@/data/projects";
-import { ProjectIndex } from "./ProjectIndex";
+import { ProjectDetailContent } from "./projects/ProjectDetailContent";
 
-beforeEach(() => vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
+beforeEach(() => { setTestUrl("/"); vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })); });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
-const route = "/projects/evidencepatch";
+const route = "/?panel=work&project=evidencepatch";
 const repository = "https://github.com/OmprakashSahani/evidencepatch";
 
-it("links EvidencePatch internally from home and the index while retaining its repository", async () => {
+it("links EvidencePatch internally from Current Work while retaining its repository", async () => {
   const home = render(await HomePage({ searchParams: Promise.resolve({}) }));
   fireEvent.click(home.getByRole("button", { name: "03 Current work" }));
   const homeLink = home.getByRole("link", { name: "EvidencePatch — View project" });
   expect(homeLink.getAttribute("href")).toBe(route);
   expect(homeLink.hasAttribute("target")).toBe(false);
   expect(home.getByRole("link", { name: /Atlas AI/ }).getAttribute("href")).toBe("https://github.com/OmprakashSahani/atlas-ai");
-  home.unmount();
+  expect(home.getByRole("link", { name: "EvidencePatch — GitHub (opens in a new tab)" }).getAttribute("href")).toBe("https://github.com/OmprakashSahani/evidencepatch");
+  expect(projects.find(project => project.title === "EvidencePatch")).toMatchObject({ slug: "evidencepatch", repository: "https://github.com/OmprakashSahani/evidencepatch" });
+  expect(home.queryByRole("link", { name: /Full project index/ })).toBeNull();
+  expect(home.queryByRole("link", { name: "Atlas AI — View project" })).toBeNull();
 
-  const index = render(<ProjectIndex />);
-  const article = index.getByRole("heading", { name: "EvidencePatch" }).closest("article");
-  expect(article).not.toBeNull();
-  const link = within(article!).getByRole("link", { name: "View project" });
-  expect(link.getAttribute("href")).toBe(route);
-  expect(link.hasAttribute("target")).toBe(false);
-  expect(projects.find((project) => project.title === "EvidencePatch")).toMatchObject({ page: route, repository });
 });
 
-it("provides accessible home and source links without inventing a live demo or license", () => {
-  const page = render(<EvidencePatchPage />);
-  expect(page.getByRole("link", { name: "Return to homepage" }).getAttribute("href")).toBe("/");
+it("provides accessible Current Work and source links without inventing a live demo or license", () => {
+  const close = vi.fn();
+  const page = render(<ProjectDetailContent project="evidencepatch" onBack={close} />);
+  fireEvent.click(page.getByRole("button", { name: "← CURRENT WORK" }));
+  expect(close).toHaveBeenCalledOnce();
   for (const [label, href] of [
     ["GitHub Repository", repository],
     ["Public MCP Demo", `${repository}/blob/main/docs/public_mcp_demo.md`],
@@ -43,13 +44,13 @@ it("provides accessible home and source links without inventing a live demo or l
     expect(link.getAttribute("target")).toBe("_blank");
     expect(link.getAttribute("rel")?.split(" ")).toEqual(expect.arrayContaining(["noopener", "noreferrer"]));
   }
-  expect(page.getAllByRole("link")).toHaveLength(4);
+  expect(page.getAllByRole("link")).toHaveLength(3);
   expect(page.queryByRole("link", { name: /Live Demo/i })).toBeNull();
   expect(page.queryByText("License")).toBeNull();
 });
 
 it("links the participation certificate preview to the original PDF with accessible new-tab text", () => {
-  const page = render(<EvidencePatchPage />);
+  const page = render(<EvidencePatchContent />);
   const preview = page.getByRole("img", { name: "micro1 Frontier Engineering Challenge 2026 Certificate of Participation for Omprakash Sahani" });
   const link = page.getByRole("link", { name: /View micro1 Frontier Engineering Challenge certificate \(PDF\).*opens in a new tab/ });
   expect(link.contains(preview)).toBe(true);
@@ -63,7 +64,7 @@ it("links the participation certificate preview to the original PDF with accessi
 });
 
 it("puts metadata before the story and preserves list and decorative-trace accessibility", () => {
-  const page = render(<EvidencePatchPage />);
+  const page = render(<EvidencePatchContent />);
   const rail = page.getByRole("complementary", { name: "Project facts" });
   const story = rail.nextElementSibling;
   expect(rail.getAttribute("data-trace")).toBe("left");
@@ -83,7 +84,7 @@ it("puts metadata before the story and preserves list and decorative-trace acces
 });
 
 it("keeps the benchmark limitations and human-review boundary explicit", () => {
-  const page = render(<EvidencePatchPage />);
+  const page = render(<EvidencePatchContent />);
   const result = page.getByRole("region", { name: "Measured Result" });
   expect(result.textContent).toContain("12 synthetic");
   expect(result.textContent).toContain("gpt-5.6-sol");

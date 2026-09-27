@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { setTestUrl } from "@/test/portfolio-navigation";
 import { cleanup, fireEvent, render } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
@@ -8,7 +9,7 @@ import { aboutStories } from "@/data/about";
 import { sections } from "./sections";
 import { ResumeDownloadDialog } from "@/components/ResumeDownloadDialog";
 
-beforeEach(() => vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
+beforeEach(() => { setTestUrl("/"); vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })); });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 it("includes panel content in the initial HTML without mounting heavyweight previews", () => {
@@ -18,7 +19,7 @@ it("includes panel content in the initial HTML without mounting heavyweight prev
   for (const text of ["Omprakash Sahani", "Resume / PDF document", "DOWNLOAD RESUME", "Open PDF", "LeRobot State Atlas", "SplatLab", "SearchEval Lab", "EvidencePatch", "Atlas AI", "ML Systems", "Coming soon.", "Omprakash.Sahani1206@gmail.com"])
     expect(content).toContain(text);
   expect(document.querySelector('a[download]')?.getAttribute("href")).toBe("/documents/omprakash-sahani-resume.pdf");
-  expect(document.querySelector('a[aria-label="LeRobot State Atlas — View project"]')?.getAttribute("href")).toBe("/projects/lerobot-state-atlas");
+  expect(document.querySelector('a[aria-label="LeRobot State Atlas — View project"]')?.getAttribute("href")).toBe("/?panel=work&project=lerobot-state-atlas");
   expect(document.querySelector("object")).toBeNull();
   expect(document.querySelector("video")).toBeNull();
 
@@ -70,12 +71,13 @@ it("mounts the Resume preview on first visit while preserving actions and the pr
 });
 
 it.each(["resume", "work"] as const)("includes the initially visited %s preview in the initial HTML", (initialSection) => {
-  const html = new DOMParser().parseFromString(renderToStaticMarkup(<PortfolioHub initialSection={initialSection} />), "text/html");
+  setTestUrl(`/?panel=${initialSection}`);
+  const html = new DOMParser().parseFromString(renderToStaticMarkup(<PortfolioHub />), "text/html");
   const preview = initialSection === "resume" ? "object" : "video";
   const other = initialSection === "resume" ? "video" : "object";
   expect(html.querySelector(preview)).not.toBeNull();
   expect(html.querySelector(other)).toBeNull();
-  const view = render(<PortfolioHub initialSection={initialSection} />);
+  const view = render(<PortfolioHub />);
   expect(view.container.querySelector(preview)).not.toBeNull();
   expect(view.container.querySelector(other)).toBeNull();
 });
@@ -104,12 +106,14 @@ it.each(sections)("opens $label on its assigned side and restores focus on Escap
   {
     const trigger = view.getByRole("button", { name: `${section.index} ${section.label}` });
     fireEvent.click(trigger);
+    expect(window.location.search).toBe(`?panel=${section.id}`);
     const panel = view.getByRole("complementary");
     expect(panel.getAttribute("data-side")).toBe(section.side);
     expect(trigger.getAttribute("aria-expanded")).toBe("true");
     expect(panel.contains(document.activeElement)).toBe(true);
     expect(view.getAllByRole("button").filter(button => button.getAttribute("aria-expanded") === "true")).toHaveLength(1);
     fireEvent.keyDown(document.activeElement!, { key: "Escape" });
+    expect(window.location.search).toBe("");
     expect(view.queryByRole("complementary")).toBeNull();
     expect(document.activeElement).toBe(trigger);
   }

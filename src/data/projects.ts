@@ -1,9 +1,11 @@
+import { type ProjectSlug } from "./project-details";
+
 export type Project = {
   number: string;
   title: string;
   area: string;
   description: string;
-  page?: string;
+  slug?: ProjectSlug;
   repository?: string;
 };
 
@@ -28,7 +30,7 @@ export const projects: readonly Project[] = [
     title: "EvidencePatch",
     area: "Software evidence",
     description: "Evidence-aware software change decisions.",
-    page: "/projects/evidencepatch",
+    slug: "evidencepatch",
     repository: "https://github.com/OmprakashSahani/evidencepatch",
   },
   {
@@ -37,7 +39,7 @@ export const projects: readonly Project[] = [
     area: "Search evaluation",
     description:
       "Retrieval evaluation and regression analysis across relevance, latency, and query-level failures.",
-    page: "/projects/searcheval-lab",
+    slug: "searcheval-lab",
     repository: "https://github.com/OmprakashSahani/searcheval-lab",
   },
   {
@@ -46,7 +48,7 @@ export const projects: readonly Project[] = [
     area: "Robotics data systems",
     description:
       "Robotics dataset diagnostics, dual-arm trajectory playback, and workspace coverage.",
-    page: "/projects/lerobot-state-atlas",
+    slug: "lerobot-state-atlas",
     repository: "https://github.com/OmprakashSahani/lerobot-state-atlas",
   },
 ] as const;

@@ -12,7 +12,8 @@ export function SidePanel({ section, open, onClose, children }: { section: Secti
   useEffect(() => {
     if (!open) return;
     panel.current?.scrollTo?.({ top: 0, behavior: "instant" });
-    const target = section.id === "note" ? panel.current?.querySelector<HTMLTextAreaElement>("textarea") : heading.current;
+    const target = section.id === "note" ? panel.current?.querySelector<HTMLTextAreaElement>("textarea") :
+      panel.current?.querySelector<HTMLButtonElement>("[data-panel-autofocus]") ?? heading.current;
     target?.focus({ preventScroll: true });
   }, [open, section.id]);
 

@@ -1,31 +1,22 @@
 import type { Metadata, Viewport } from "next";
 import { PortfolioHub } from "@/components/portfolio/PortfolioHub";
-import type { SectionId } from "@/components/portfolio/sections";
+import { projectMetadata } from "@/data/project-details";
+import { portfolioState } from "@/components/portfolio/navigation-state";
 
-export const metadata: Metadata = { alternates: { canonical: "/" } };
 export const viewport: Viewport = { colorScheme: "light", themeColor: "#F3F0E7" };
 
-const allowedPanels = new Set<SectionId>([
-  "about",
-  "resume",
-  "work",
-  "favorites",
-  "research",
-  "writing",
-  "contact",
-  "note",
-]);
+type HomeProps = { searchParams: Promise<{ panel?: string | string[]; project?: string | string[] }> };
+
+export async function generateMetadata({ searchParams }: HomeProps): Promise<Metadata> {
+  const { panel, project } = await searchParams;
+  const state = portfolioState(panel, project);
+  return state.project ? projectMetadata(state.project) : { alternates: { canonical: "/" } };
+}
 
 export default async function HomePage({
   searchParams,
-}: {
-  searchParams: Promise<{ panel?: string }>;
-}) {
-  const { panel } = await searchParams;
-  const initialSection =
-    panel && allowedPanels.has(panel as SectionId)
-      ? (panel as SectionId)
-      : null;
-
-  return <PortfolioHub initialSection={initialSection} />;
+}: HomeProps) {
+  // Resolve request state before rendering so deep links are server rendered.
+  await searchParams;
+  return <PortfolioHub />;
 }
