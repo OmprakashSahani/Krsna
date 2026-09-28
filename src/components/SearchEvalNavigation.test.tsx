@@ -3,7 +3,8 @@
 import { setTestUrl } from "@/test/portfolio-navigation";
 import { cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import HomePage from "@/app/page";
+import HomePage from "@/app/(portfolio)/page";
+import PortfolioLayout from "@/app/(portfolio)/layout";
 import SearchEvalLabContent from "@/components/projects/SearchEvalLabContent";
 import { projectMetadata } from "@/data/project-details";
 const metadata = projectMetadata("searcheval-lab");
@@ -17,7 +18,7 @@ const route = "/?panel=work&project=searcheval-lab";
 const repository = "https://github.com/OmprakashSahani/searcheval-lab";
 
 it("links SearchEval internally from Current Work while retaining its repository", async () => {
-  const home = render(await HomePage({ searchParams: Promise.resolve({}) }));
+  const home = render(<PortfolioLayout>{await HomePage({ searchParams: Promise.resolve({}) })}</PortfolioLayout>);
   fireEvent.click(home.getByRole("button", { name: "03 Current work" }));
   const homeLink = home.getByRole("link", { name: "SearchEval Lab — View project" });
   expect(homeLink.getAttribute("href")).toBe(route);

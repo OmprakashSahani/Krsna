@@ -10,5 +10,6 @@ export function portfolioState(panel: unknown, project: unknown): { section: Pan
 }
 
 export function sectionHref(section: PanelId | null) {
+  if (section === "krishna") return "/krishna";
   return section ? `/?panel=${section}` : "/";
 }

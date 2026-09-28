@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { PortfolioHub } from "./PortfolioHub";
 import { sections } from "./sections";
-import { portfolioState } from "./navigation-state";
+import PortfolioLayout from "@/app/(portfolio)/layout";
+import { SiteHeader } from "@/components/SiteHeader";
 
 // Model Next Link's client navigation against the shared history test router.
 vi.mock("next/link", () => ({
@@ -29,18 +30,18 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.useRealTimers(); });
 
 function openKrishna() {
-  const view = render(<PortfolioHub />);
+  const view = render(<PortfolioLayout>{null}</PortfolioLayout>);
   const trigger = view.getByRole("link", { name: "Kṛṣṇa — open the Kṛṣṇa panel" });
   fireEvent.click(trigger);
   return { ...view, trigger };
 }
 
 it("opens the unnumbered Kṛṣṇa destination inside the existing right shell", () => {
-  const view = render(<PortfolioHub />);
+  const view = render(<PortfolioLayout>{null}</PortfolioLayout>);
   const right = view.container.querySelector("#portfolio-panel-right");
   expect(view.getByRole("link", { name: "Kṛṣṇa — open the Kṛṣṇa panel" }).getAttribute("data-prefetch")).toBe("false");
   fireEvent.click(view.getByRole("link", { name: "Kṛṣṇa — open the Kṛṣṇa panel" }));
-  expect(window.location.pathname + window.location.search).toBe("/?panel=krishna");
+  expect(window.location.pathname + window.location.search).toBe("/krishna");
   expect(view.getByRole("complementary", { name: "Kṛṣṇa" })).toBe(right);
   expect(right?.getAttribute("data-side")).toBe("right");
   expect(right?.getAttribute("aria-hidden")).toBe("false");
@@ -116,18 +117,18 @@ it("restores Kṛṣṇa with browser Back and Forward in the same shell", async
     window.history.forward();
     await new Promise(resolve => window.addEventListener("popstate", resolve, { once: true }));
   });
-  expect(window.location.search).toBe("?panel=krishna");
+  expect(window.location.pathname + window.location.search).toBe("/krishna");
   expect(view.getByRole("complementary", { name: "Kṛṣṇa" })).toBe(panel);
   expect(document.activeElement?.id).toBe("panel-title-right");
 });
 
 it("server renders and restores a direct Kṛṣṇa link", () => {
-  setTestUrl("/?panel=krishna");
+  setTestUrl("/krishna");
   const html = new DOMParser().parseFromString(renderToStaticMarkup(<PortfolioHub />), "text/html");
   expect(html.querySelector("#portfolio-panel-right")?.getAttribute("data-open")).toBe("true");
   expect(html.querySelector("#portfolio-panel-left")?.getAttribute("data-open")).toBe("false");
   expect(html.querySelector('#portfolio-panel-right article')?.textContent).toContain("ŚB 10.21.5");
-  const view = render(<PortfolioHub />);
+  const view = render(<PortfolioLayout>{null}</PortfolioLayout>);
   expect(view.getByRole("complementary", { name: "Kṛṣṇa" }).id).toBe("portfolio-panel-right");
   expect(view.container.querySelector("object, video")).toBeNull();
   fireEvent.click(view.getByRole("button", { name: "Close kṛṣṇa" }));
@@ -143,7 +144,7 @@ it.each(sections.filter(section => section.side === "right"))("reuses the right 
   expect(view.queryByRole("heading", { name: "ŚB 10.21.5" })).toBeNull();
   fireEvent.click(view.trigger);
   expect(view.getAllByRole("complementary")).toEqual([panel]);
-  expect(window.location.search).toBe("?panel=krishna");
+  expect(window.location.pathname + window.location.search).toBe("/krishna");
   expect(document.activeElement?.id).toBe("panel-title-right");
 });
 
@@ -159,18 +160,63 @@ it.each([false, true])("preserves the shared desktop/mobile inert behavior (mobi
 });
 
 it("does not render a duplicate Krsna identity link in the shared panel header", () => {
-  const view = render(<PortfolioHub />);
+  const view = render(<PortfolioLayout>{null}</PortfolioLayout>);
   fireEvent.click(view.getByRole("button", { name: "01 About" }));
   expect(
     within(view.getByRole("complementary")).queryByRole("link", { name: "Krsna" }),
   ).toBeNull();
 });
 
-it("ignores stale project state for Kṛṣṇa and clears it from the URL", () => {
-  expect(portfolioState("krishna", "evidencepatch")).toEqual({ section: "krishna", project: null });
+it("normalizes stale project state to the canonical route if a legacy query reaches the client", () => {
   setTestUrl("/?panel=krishna&project=evidencepatch");
-  const view = render(<PortfolioHub />);
-  expect(window.location.search).toBe("?panel=krishna");
+  const view = render(<PortfolioLayout>{null}</PortfolioLayout>);
+  expect(window.location.pathname + window.location.search).toBe("/krishna");
   expect(view.getByRole("complementary", { name: "Kṛṣṇa" })).toBeTruthy();
   expect(view.container.querySelector("[data-project], video, object")).toBeNull();
+});
+
+it("pushes close after Back/Forward so Back naturally reopens Kṛṣṇa without duplicate entries", async () => {
+  const startLength = window.history.length;
+  const view = openKrishna();
+  const traverse = async (direction: "back" | "forward") => {
+    await act(async () => {
+      window.history[direction]();
+      await new Promise(resolve => window.addEventListener("popstate", resolve, { once: true }));
+    });
+  };
+  expect(window.history.length).toBe(startLength + 1);
+  await traverse("back");
+  expect(window.location.pathname + window.location.search).toBe("/");
+  expect(document.activeElement).toBe(view.trigger);
+  await traverse("forward");
+  expect(window.location.pathname + window.location.search).toBe("/krishna");
+  fireEvent.click(view.getByRole("button", { name: "Close kṛṣṇa" }));
+  expect(window.location.pathname + window.location.search).toBe("/");
+  expect(window.history.length).toBe(startLength + 2);
+  expect(document.activeElement).toBe(view.trigger);
+  await traverse("back");
+  expect(window.location.pathname + window.location.search).toBe("/krishna");
+  expect(view.getByRole("complementary", { name: "Kṛṣṇa" })).toBeTruthy();
+  expect(document.activeElement?.id).toBe("panel-title-right");
+  await traverse("back");
+  expect(window.location.pathname + window.location.search).toBe("/");
+});
+
+it("returns to Favorites with Back after visiting the canonical Kṛṣṇa route", async () => {
+  setTestUrl("/?panel=favorites");
+  const view = openKrishna();
+  const panel = view.getByRole("complementary");
+  await act(async () => {
+    window.history.back();
+    await new Promise(resolve => window.addEventListener("popstate", resolve, { once: true }));
+  });
+  expect(window.location.pathname + window.location.search).toBe("/?panel=favorites");
+  expect(view.getByRole("complementary", { name: "04 / Favorites" })).toBe(panel);
+  expect(document.activeElement?.id).toBe("panel-title-right");
+});
+
+it.each(["/", "/krishna"])("keeps the homepage composition free of the standalone site header on %s", route => {
+  setTestUrl(route);
+  const view = render(<SiteHeader />);
+  expect(view.container.innerHTML).toBe("");
 });
