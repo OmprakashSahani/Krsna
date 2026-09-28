@@ -10,7 +10,7 @@ function subscribe(listener: () => void) {
     window.removeEventListener("popstate", listener);
   };
 }
-const snapshot = () => window.location.search;
+const snapshot = () => window.location.pathname + window.location.search;
 
 export function setTestUrl(url: string) {
   window.history.replaceState(null, "", url);
@@ -27,8 +27,10 @@ const router = {
 
 vi.mock("next/navigation", () => ({
   useRouter: () => router,
+  usePathname: () => useSyncExternalStore(subscribe, snapshot, snapshot).split("?")[0],
   useSearchParams: () => {
-    const search = useSyncExternalStore(subscribe, snapshot, snapshot);
+    const url = useSyncExternalStore(subscribe, snapshot, snapshot);
+    const search = url.includes("?") ? url.slice(url.indexOf("?")) : "";
     return useMemo(() => new URLSearchParams(search), [search]);
   },
 }));

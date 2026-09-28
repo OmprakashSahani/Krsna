@@ -3,7 +3,8 @@
 import { setTestUrl } from "@/test/portfolio-navigation";
 import { cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import HomePage from "@/app/page";
+import HomePage from "@/app/(portfolio)/page";
+import PortfolioLayout from "@/app/(portfolio)/layout";
 import LeRobotStateAtlasContent from "@/components/projects/LeRobotStateAtlasContent";
 import { projects } from "@/data/projects";
 
@@ -25,7 +26,7 @@ it("renders the Gaussian Splat video with intentional inline playback and native
 
 it("links LeRobot to its portfolio page from Current Work while retaining its repository", async () => {
   const route = "/?panel=work&project=lerobot-state-atlas";
-  const home = render(await HomePage({ searchParams: Promise.resolve({}) }));
+  const home = render(<PortfolioLayout>{await HomePage({ searchParams: Promise.resolve({}) })}</PortfolioLayout>);
   fireEvent.click(home.getByRole("button", { name: "03 Current work" }));
   const homeLink = home.getByRole("link", { name: "LeRobot State Atlas — View project" });
   expect(homeLink.getAttribute("href")).toBe(route);

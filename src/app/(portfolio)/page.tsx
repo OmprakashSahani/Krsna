@@ -1,10 +1,8 @@
-import type { Metadata, Viewport } from "next";
-import { PortfolioHub } from "@/components/portfolio/PortfolioHub";
+import type { Metadata } from "next";
+import { permanentRedirect } from "next/navigation";
 import { projectMetadata } from "@/data/project-details";
 import { portfolioState } from "@/components/portfolio/navigation-state";
 import { krishnaMetadata } from "@/data/krishna";
-
-export const viewport: Viewport = { colorScheme: "light", themeColor: "#F3F0E7" };
 
 type HomeProps = { searchParams: Promise<{ panel?: string | string[]; project?: string | string[] }> };
 
@@ -18,7 +16,8 @@ export async function generateMetadata({ searchParams }: HomeProps): Promise<Met
 export default async function HomePage({
   searchParams,
 }: HomeProps) {
-  // Resolve request state before rendering so deep links are server rendered.
-  await searchParams;
-  return <PortfolioHub />;
+  const { panel, project } = await searchParams;
+  if (portfolioState(panel, project).section === "krishna") permanentRedirect("/krishna");
+  // The shared layout owns the shell so route changes preserve panels and focus.
+  return null;
 }

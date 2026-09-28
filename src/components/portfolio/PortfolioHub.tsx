@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { projectHref, type ProjectSlug } from "@/data/project-details";
 import { portfolioState, sectionHref } from "./navigation-state";
 import { CentralSystem } from "./CentralSystem";
@@ -21,10 +21,11 @@ import styles from "./portfolio.module.css";
 
 export function PortfolioHub() {
   const router = useRouter();
+  const routePanel = usePathname() === "/krishna" ? "krishna" : null;
   const searchParams = useSearchParams();
   const panelParams = searchParams.getAll("panel");
   const projectParams = searchParams.getAll("project");
-  const { section: active, project } = portfolioState(
+  const { section: active, project } = routePanel ? { section: routePanel, project: null } as const : portfolioState(
     panelParams.length === 1 ? panelParams[0] : undefined,
     projectParams.length === 1 ? projectParams[0] : undefined,
   );
@@ -85,10 +86,10 @@ export function PortfolioHub() {
   }, [active]);
 
   useEffect(() => {
-    if (searchParams.has("project") && (!project || panelParams.length !== 1 || searchParams.get("panel") !== "work")) {
+    if (!routePanel && searchParams.has("project") && (!project || panelParams.length !== 1 || searchParams.get("panel") !== "work")) {
       router.replace(project ? projectHref(project) : sectionHref(active), { scroll: false });
     }
-  }, [active, project, panelParams.length, router, searchParams]);
+  }, [active, project, panelParams.length, routePanel, router, searchParams]);
 
   useEffect(() => {
     if (!active) return;

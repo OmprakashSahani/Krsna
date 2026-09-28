@@ -6,7 +6,7 @@ import { ResumeDownloadDialog } from "./ResumeDownloadDialog";
 
 export function SiteHeader() {
   const pathname = usePathname();
-  if (pathname === "/") return null;
+  if (pathname === "/" || pathname === "/krishna") return null;
   return (
     <header className="site-header">
       <Link className="site-logo" href="/krishna" aria-label="Kṛṣṇa verse">

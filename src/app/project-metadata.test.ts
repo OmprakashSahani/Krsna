@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { generateMetadata } from "./page";
+import { generateMetadata } from "./(portfolio)/page";
 import { projectDetails, projectHref, type ProjectSlug } from "@/data/project-details";
 import { portfolioState } from "@/components/portfolio/navigation-state";
 

@@ -12,7 +12,7 @@ import { ResumeDownloadDialog } from "@/components/ResumeDownloadDialog";
 beforeEach(() => { setTestUrl("/"); vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })); });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
-it.each(["invalid", "__proto__", "about&panel=resume", "krishna&panel=krishna"])("ignores malformed or repeated panel values: %s", panel => {
+it.each(["invalid", "__proto__", "about&panel=resume", "krishna&panel=krishna", "krishna&panel=about", "about&panel=krishna"])("ignores malformed or repeated panel values: %s", panel => {
   setTestUrl(`/?panel=${panel}`);
   const view = render(<PortfolioHub />);
   expect(view.queryByRole("complementary")).toBeNull();
@@ -99,7 +99,7 @@ it("keeps the shared Resume dialog preview enabled by default", () => {
 
 it("starts with a stable Krsna link, eight section controls, and no modal", () => {
   const view = render(<PortfolioHub />);
-  expect(view.getByRole("link", { name: "Kṛṣṇa — open the Kṛṣṇa panel" }).getAttribute("href")).toBe("/?panel=krishna");
+  expect(view.getByRole("link", { name: "Kṛṣṇa — open the Kṛṣṇa panel" }).getAttribute("href")).toBe("/krishna");
   expect(view.getByRole("heading", { level: 1 }).textContent).toBe("Krsna");
   expect(view.queryByRole("complementary")).toBeNull();
   expect(view.queryByRole("dialog")).toBeNull();
