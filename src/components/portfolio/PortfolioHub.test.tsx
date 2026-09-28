@@ -12,6 +12,14 @@ import { ResumeDownloadDialog } from "@/components/ResumeDownloadDialog";
 beforeEach(() => { setTestUrl("/"); vi.stubGlobal("matchMedia", () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })); });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
+it.each(["invalid", "__proto__", "about&panel=resume", "krishna&panel=krishna"])("ignores malformed or repeated panel values: %s", panel => {
+  setTestUrl(`/?panel=${panel}`);
+  const view = render(<PortfolioHub />);
+  expect(view.queryByRole("complementary")).toBeNull();
+  expect(view.container.querySelector("object, video")).toBeNull();
+  expect(view.container.querySelector("main")?.getAttribute("data-panel")).toBe("closed");
+});
+
 it("includes panel content in the initial HTML without mounting heavyweight previews", () => {
   const document = new DOMParser().parseFromString(renderToStaticMarkup(<PortfolioHub />), "text/html");
   const content = document.body.textContent;

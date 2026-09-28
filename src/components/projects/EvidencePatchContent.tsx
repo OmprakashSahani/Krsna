@@ -43,28 +43,28 @@ export default function EvidencePatchContent() {
           </figure>
         </div>
 
-        <div className={styles.bodyGrid} data-trace="left">
-          <aside className={styles.projectRail} data-trace="left" aria-label="Project facts">
-            <ProjectRailSection headingId="challenge-heading" title="Challenge" trace="left" className={localStyles.provenance}>
+        <div className={styles.bodyGrid}>
+          <aside className={styles.projectRail} aria-label="Project facts">
+            <ProjectRailSection headingId="challenge-heading" title="Challenge" className={localStyles.provenance}>
               <p>EvidencePatch was part of the <strong>micro1 Frontier Engineering Challenge 2026</strong>.</p>
               <p className={localStyles.note}>Certificate of Participation</p>
             </ProjectRailSection>
 
-            <ProjectRailSection headingId="links-heading" title="Links" trace="left">
+            <ProjectRailSection headingId="links-heading" title="Links">
               <div className={styles.projectLinks}>
                 <ProjectExternalLink href="https://github.com/OmprakashSahani/evidencepatch">GitHub Repository</ProjectExternalLink>
                 <ProjectExternalLink href="https://github.com/OmprakashSahani/evidencepatch/blob/main/docs/public_mcp_demo.md">Public MCP Demo</ProjectExternalLink>
               </div>
             </ProjectRailSection>
 
-            <ProjectRailSection headingId="facts-heading" title="Project" trace="left">
+            <ProjectRailSection headingId="facts-heading" title="Project">
               <dl className={styles.facts}>
                 <div><dt>Area</dt><dd>Clinical Informatics · AI Systems</dd></div>
                 <div><dt>Status</dt><dd>Research prototype</dd></div>
               </dl>
             </ProjectRailSection>
 
-            <ProjectRailSection headingId="features-heading" title="Features" trace="left">
+            <ProjectRailSection headingId="features-heading" title="Features">
               <ul className={styles.railList} role="list">
                 <li>Clinical Change Contract</li>
                 <li>Deterministic governance</li>
@@ -77,24 +77,24 @@ export default function EvidencePatchContent() {
               </ul>
             </ProjectRailSection>
 
-            <ProjectRailSection headingId="tools-heading" title="Tools" trace="left">
+            <ProjectRailSection headingId="tools-heading" title="Tools">
               <div className={`${styles.toolGroups} ${localStyles.toolColumns}`}>
                 <div>
-                  <h3 className={styles.railLabel}>Core</h3>
+                  <h5 className={styles.railLabel}>Core</h5>
                   <ul className={styles.railList} role="list"><li>Python</li><li>MCP SDK</li></ul>
                 </div>
                 <div>
-                  <h3 className={styles.railLabel}>Agent / Discovery</h3>
+                  <h5 className={styles.railLabel}>Agent / Discovery</h5>
                   <ul className={styles.railList} role="list"><li>OpenAI Codex CLI</li><li>Exa MCP</li></ul>
                 </div>
                 <div>
-                  <h3 className={styles.railLabel}>Quality / Evaluation</h3>
+                  <h5 className={styles.railLabel}>Quality / Evaluation</h5>
                   <ul className={styles.railList} role="list"><li>Pytest</li></ul>
                 </div>
               </div>
             </ProjectRailSection>
 
-            <ProjectRailSection headingId="stack-heading" title="Agent Stack" trace="left">
+            <ProjectRailSection headingId="stack-heading" title="Agent Stack">
               <dl className={styles.facts}>
                 <div><dt>Codex</dt><dd>gpt-5.6-sol</dd></div>
                 <div><dt>Exa MCP</dt><dd>Public evidence discovery</dd></div>
@@ -102,7 +102,7 @@ export default function EvidencePatchContent() {
               </dl>
             </ProjectRailSection>
 
-            <ProjectRailSection headingId="author-heading" title="Built By" trace="left" className={localStyles.provenance}>
+            <ProjectRailSection headingId="author-heading" title="Built By" className={localStyles.provenance}>
               <p><strong>Omprakash Sahani</strong></p>
               <p className={localStyles.note}>Independent project</p>
             </ProjectRailSection>

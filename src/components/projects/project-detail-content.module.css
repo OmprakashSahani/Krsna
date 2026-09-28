@@ -13,7 +13,5 @@
   letter-spacing: .07em;
 }
 
-.detail :is(img, video, svg) { max-width: 100%; height: auto; }
+.detail :is(img, video) { max-width: 100%; height: auto; }
 .detail video { width: 100%; }
-.detail pre { max-width: 100%; overflow-x: auto; }
-.detail table { display: block; max-width: 100%; overflow-x: auto; }

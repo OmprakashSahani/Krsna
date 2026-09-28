@@ -1,8 +1,8 @@
 import styles from "./panels.module.css";
 
-export const resumePath = "/documents/omprakash-sahani-resume.pdf";
+const resumePath = "/documents/omprakash-sahani-resume.pdf";
 
-// Shared with the resume dialog used on secondary routes.
+// Shared with the resume dialog in the fallback-page header.
 export function ResumeDocument({ showPreview = true }: { showPreview?: boolean }) {
   return <>
     <div className={styles.resumeActions}>

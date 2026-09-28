@@ -13,7 +13,16 @@ export function SidePanel({ section, open, onClose, children }: { section: Panel
     panel.current?.scrollTo?.({ top: 0, behavior: "instant" });
     const target = section.id === "note" ? panel.current?.querySelector<HTMLTextAreaElement>("textarea") :
       panel.current?.querySelector<HTMLButtonElement>("[data-panel-autofocus]") ?? heading.current;
-    target?.focus({ preventScroll: true });
+    let frame: number | undefined;
+    const focusWhenVisible = () => {
+      if (!target) return;
+      // Wait for the existing opening transition to make the target focusable.
+      if (getComputedStyle(target).visibility === "hidden") {
+        frame = requestAnimationFrame(focusWhenVisible);
+      } else target.focus({ preventScroll: true });
+    };
+    focusWhenVisible();
+    return () => { if (frame !== undefined) cancelAnimationFrame(frame); };
   }, [open, section.id]);
 
   useEffect(() => {

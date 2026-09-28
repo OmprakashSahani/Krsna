@@ -38,7 +38,6 @@ export function PortfolioHub() {
   const [paused, setPaused] = useState(false);
   const note = useRef<NotePanelHandle>(null);
   const stage = useRef<HTMLDivElement>(null);
-  const projectTrigger = useRef<HTMLAnchorElement | null>(null);
   const previousProject = useRef(project);
   const previousActive = useRef(active);
   const section = panelDefinitions.find(item => item.id === (active ?? lastSection))!;
@@ -52,7 +51,6 @@ export function PortfolioHub() {
 
   function select(id: SectionId) {
     if (id === active && !project) return;
-    if (id === "note") note.current?.prepare();
     router.push(sectionHref(id), { scroll: false });
   }
 
@@ -65,16 +63,14 @@ export function PortfolioHub() {
     router.replace(sectionHref("work"), { scroll: false });
   }, [router]);
 
-  function openProject(slug: ProjectSlug, trigger: HTMLAnchorElement) {
-    projectTrigger.current = trigger;
+  function openProject(slug: ProjectSlug) {
     if (project === slug) return;
     router.push(projectHref(slug), { scroll: false });
   }
 
   useEffect(() => {
     if (previousProject.current && !project && active === "work") {
-      const trigger = projectTrigger.current?.isConnected ? projectTrigger.current :
-        document.getElementById(`project-view-${previousProject.current}`);
+      const trigger = document.getElementById(`project-view-${previousProject.current}`);
       trigger?.focus({ preventScroll: true });
     } else if (previousActive.current && !active) {
       if (stage.current) stage.current.inert = false;
@@ -85,10 +81,14 @@ export function PortfolioHub() {
   }, [active, project]);
 
   useEffect(() => {
-    if (searchParams.has("project") && (!project || searchParams.get("panel") !== "work")) {
+    if (active === "note") note.current?.prepare();
+  }, [active]);
+
+  useEffect(() => {
+    if (searchParams.has("project") && (!project || panelParams.length !== 1 || searchParams.get("panel") !== "work")) {
       router.replace(project ? projectHref(project) : sectionHref(active), { scroll: false });
     }
-  }, [active, project, router, searchParams]);
+  }, [active, project, panelParams.length, router, searchParams]);
 
   useEffect(() => {
     if (!active) return;

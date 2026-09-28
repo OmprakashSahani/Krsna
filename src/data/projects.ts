@@ -1,7 +1,6 @@
 import { type ProjectSlug } from "./project-details";
 
 export type Project = {
-  number: string;
   title: string;
   area: string;
   description: string;
@@ -11,7 +10,6 @@ export type Project = {
 
 export const projects: readonly Project[] = [
   {
-    number: "01",
     title: "Atlas AI",
     area: "ML infrastructure",
     description:
@@ -19,14 +17,6 @@ export const projects: readonly Project[] = [
     repository: "https://github.com/OmprakashSahani/atlas-ai",
   },
   {
-    number: "02",
-    title: "Codex Benchmark Guardian",
-    area: "Performance repair",
-    description: "Benchmark-gated repair for performance regressions.",
-    repository: "https://github.com/OmprakashSahani/codex-benchmark-guardian",
-  },
-  {
-    number: "03",
     title: "EvidencePatch",
     area: "Software evidence",
     description: "Evidence-aware software change decisions.",
@@ -34,7 +24,6 @@ export const projects: readonly Project[] = [
     repository: "https://github.com/OmprakashSahani/evidencepatch",
   },
   {
-    number: "04",
     title: "SearchEval Lab",
     area: "Search evaluation",
     description:
@@ -43,7 +32,6 @@ export const projects: readonly Project[] = [
     repository: "https://github.com/OmprakashSahani/searcheval-lab",
   },
   {
-    number: "05",
     title: "LeRobot State Atlas",
     area: "Robotics data systems",
     description:

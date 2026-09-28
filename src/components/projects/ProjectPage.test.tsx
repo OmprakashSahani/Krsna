@@ -20,7 +20,7 @@ it("preserves the introductory content and heading semantics", () => {
     </>,
   );
 
-  expect(view.getByRole("heading", { level: 1, name: "Example project" }).id).toBe("example-title");
+  expect(view.getByRole("heading", { level: 3, name: "Example project" }).id).toBe("example-title");
   expect(view.getByText("Project-specific introduction.").tagName).toBe("P");
 });
 
@@ -38,7 +38,7 @@ it("labels story and rail sections while retaining flexible semantic children", 
   );
 
   const story = within(view.getByRole("region", { name: "Findings" }));
-  expect(story.getByRole("heading", { level: 2, name: "Findings" }).id).toBe("findings");
+  expect(story.getByRole("heading", { level: 4, name: "Findings" }).id).toBe("findings");
   expect(story.getByRole("term").textContent).toBe("Observations");
   expect(story.getByRole("definition").textContent).toBe("3");
   const rail = view.getByRole("region", { name: "Methods" });

@@ -5,7 +5,7 @@ import styles from "./panels.module.css";
 export function AboutPanel() {
   const [introduction, background, ...remainingStories] = aboutStories;
 
-  return <div className={styles.about}>
+  return <div>
     <section className={styles.story} aria-labelledby="about-introduction">
       <div className={styles.aboutHero}>
         <figure className={styles.portrait}>

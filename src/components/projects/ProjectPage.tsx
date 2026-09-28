@@ -17,7 +17,7 @@ export function ProjectIntro({
   return (
     <div className={styles.intro}>
       <p className={styles.eyebrow}>{eyebrow}</p>
-      <h1 id={headingId}>{title}</h1>
+      <h3 id={headingId}>{title}</h3>
       <p className={styles.subtitle}>{subtitle}</p>
       {children}
     </div>
@@ -34,17 +34,16 @@ type ProjectSectionProps = {
 export function ProjectStorySection({ headingId, title, children, className }: ProjectSectionProps) {
   return (
     <section className={[styles.storySection, className].filter(Boolean).join(" ")} aria-labelledby={headingId}>
-      <h2 id={headingId} className={styles.sectionHeading}>{title}</h2>
+      <h4 id={headingId} className={styles.sectionHeading}>{title}</h4>
       {children}
     </section>
   );
 }
 
-export function ProjectRailSection({ headingId, title, children, className, trace }: ProjectSectionProps & { trace?: "left" }) {
+export function ProjectRailSection({ headingId, title, children, className }: ProjectSectionProps) {
   return (
     <section className={[styles.railSection, className].filter(Boolean).join(" ")} aria-labelledby={headingId}>
-      {trace === "left" && <span className={styles.leftRailMarker} aria-hidden="true" />}
-      <h2 id={headingId} className={styles.sectionHeading}>{title}</h2>
+      <h4 id={headingId} className={styles.sectionHeading}>{title}</h4>
       {children}
     </section>
   );
@@ -59,7 +58,6 @@ export function ProjectExternalLink({ href, children }: { href: string; children
   );
 }
 
-// Place this horizontal trace at the content edge; rail traces retain their existing layout.
 export function ProjectTrace() {
   return (
     <div className={styles.horizontalTrace} aria-hidden="true">
