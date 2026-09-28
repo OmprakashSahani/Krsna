@@ -56,8 +56,12 @@ export function PortfolioHub() {
   }
 
   const close = useCallback(() => {
+    if (stage.current) stage.current.inert = false;
+    if (active) {
+      document.getElementById(`hub-${active}`)?.focus({ preventScroll: true });
+    }
     window.history.pushState(null, "", "/");
-  }, []);
+  }, [active]);
 
   const closeProject = useCallback(() => {
     // Replacing also works for direct arrivals; Back never reopens a closed detail.
