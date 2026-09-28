@@ -52,12 +52,12 @@ export function PortfolioHub() {
 
   function select(id: SectionId) {
     if (id === active && !project) return;
-    router.push(sectionHref(id), { scroll: false });
+    window.history.pushState(null, "", sectionHref(id));
   }
 
   const close = useCallback(() => {
-    router.push("/", { scroll: false });
-  }, [router]);
+    window.history.pushState(null, "", "/");
+  }, []);
 
   const closeProject = useCallback(() => {
     // Replacing also works for direct arrivals; Back never reopens a closed detail.
