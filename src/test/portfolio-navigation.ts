@@ -12,6 +12,12 @@ function subscribe(listener: () => void) {
 }
 const snapshot = () => window.location.pathname + window.location.search;
 
+const nativePushState = window.history.pushState.bind(window.history);
+window.history.pushState = (data, unused, url) => {
+  nativePushState(data, unused, url);
+  window.dispatchEvent(new Event(change));
+};
+
 export function setTestUrl(url: string) {
   window.history.replaceState(null, "", url);
   window.dispatchEvent(new Event(change));
@@ -20,7 +26,6 @@ export function setTestUrl(url: string) {
 const router = {
   push: (url: string) => {
     window.history.pushState(null, "", url);
-    window.dispatchEvent(new Event(change));
   },
   replace: setTestUrl,
 };

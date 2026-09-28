@@ -52,12 +52,25 @@ export function PortfolioHub() {
 
   function select(id: SectionId) {
     if (id === active && !project) return;
-    router.push(sectionHref(id), { scroll: false });
+    const href = sectionHref(id);
+    if (project || routePanel) {
+      router.push(href, { scroll: false });
+      return;
+    }
+    window.history.pushState(null, "", href);
   }
 
   const close = useCallback(() => {
-    router.push("/", { scroll: false });
-  }, [router]);
+    if (stage.current) stage.current.inert = false;
+    if (active) {
+      document.getElementById(`hub-${active}`)?.focus({ preventScroll: true });
+    }
+    if (project || routePanel) {
+      router.push("/", { scroll: false });
+      return;
+    }
+    window.history.pushState(null, "", "/");
+  }, [active, project, routePanel, router]);
 
   const closeProject = useCallback(() => {
     // Replacing also works for direct arrivals; Back never reopens a closed detail.
