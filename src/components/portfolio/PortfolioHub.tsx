@@ -52,7 +52,12 @@ export function PortfolioHub() {
 
   function select(id: SectionId) {
     if (id === active && !project) return;
-    window.history.pushState(null, "", sectionHref(id));
+    const href = sectionHref(id);
+    if (project || routePanel) {
+      router.push(href, { scroll: false });
+      return;
+    }
+    window.history.pushState(null, "", href);
   }
 
   const close = useCallback(() => {
@@ -60,8 +65,12 @@ export function PortfolioHub() {
     if (active) {
       document.getElementById(`hub-${active}`)?.focus({ preventScroll: true });
     }
+    if (project || routePanel) {
+      router.push("/", { scroll: false });
+      return;
+    }
     window.history.pushState(null, "", "/");
-  }, [active]);
+  }, [active, project, routePanel, router]);
 
   const closeProject = useCallback(() => {
     // Replacing also works for direct arrivals; Back never reopens a closed detail.
