@@ -26,7 +26,7 @@
   font-weight: 500;
 }
 
-.intro h1 {
+.intro h3 {
   margin: 0;
   color: var(--ink);
   font-size: clamp(1.75rem, 3vw, 2.5rem);
@@ -122,10 +122,6 @@
 
 .railSection {
   position: relative;
-}
-
-.leftRailMarker {
-  display: none;
 }
 
 .horizontalTrace {

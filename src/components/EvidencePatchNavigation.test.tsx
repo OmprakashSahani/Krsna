@@ -59,27 +59,23 @@ it("links the participation certificate preview to the original PDF with accessi
   expect(link.getAttribute("rel")?.split(" ")).toEqual(expect.arrayContaining(["noopener", "noreferrer"]));
   const challenge = page.getByRole("region", { name: "Challenge" });
   expect(challenge.textContent).toBe("ChallengeEvidencePatch was part of the micro1 Frontier Engineering Challenge 2026.Certificate of Participation");
-  const intro = page.getByRole("heading", { level: 1, name: "EvidencePatch" }).parentElement;
+  const intro = page.getByRole("heading", { level: 3, name: "EvidencePatch" }).parentElement;
   expect(intro?.textContent).not.toContain("EvidencePatch was part of the micro1 Frontier Engineering Challenge 2026.");
 });
 
-it("puts metadata before the story and preserves list and decorative-trace accessibility", () => {
+it("puts metadata before the story and preserves list semantics", () => {
   const page = render(<EvidencePatchContent />);
   const rail = page.getByRole("complementary", { name: "Project facts" });
   const story = rail.nextElementSibling;
-  expect(rail.getAttribute("data-trace")).toBe("left");
   expect(story).not.toBeNull();
-  expect(within(rail).getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent)).toEqual([
+  expect(within(rail).getAllByRole("heading", { level: 4 }).map((heading) => heading.textContent)).toEqual([
     "Challenge", "Links", "Project", "Features", "Tools", "Agent Stack", "Built By",
   ]);
-  expect(within(story as HTMLElement).getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent)).toEqual([
+  expect(within(story as HTMLElement).getAllByRole("heading", { level: 4 }).map((heading) => heading.textContent)).toEqual([
     "Overview", "The Problem", "Design Principle", "Architecture", "What I Built", "Measured Result", "Main Failure Mode", "Public Evidence Demo", "Boundaries",
   ]);
   for (const list of page.getAllByRole("list")) {
     expect(list.getAttribute("role")).toBe("list");
-  }
-  for (const section of within(rail).getAllByRole("region")) {
-    expect(section.firstElementChild?.getAttribute("aria-hidden")).toBe("true");
   }
 });
 

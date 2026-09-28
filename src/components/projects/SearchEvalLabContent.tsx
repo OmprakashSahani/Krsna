@@ -128,15 +128,15 @@ export default function SearchEvalLabContent() {
             <ProjectRailSection headingId="tools-heading" title="Tools" className={`${localStyles.metadataSection} ${localStyles.tools}`}>
               <div className={`${styles.toolGroups} ${localStyles.toolColumns}`}>
                 <div>
-                  <h3 className={styles.railLabel}>Core</h3>
+                  <h5 className={styles.railLabel}>Core</h5>
                   <ul className={styles.railList}><li>Python</li><li>NumPy</li><li>scikit-learn</li><li>Pydantic</li></ul>
                 </div>
                 <div>
-                  <h3 className={styles.railLabel}>Interface</h3>
+                  <h5 className={styles.railLabel}>Interface</h5>
                   <ul className={styles.railList}><li>Typer</li><li>Rich</li><li>FastAPI</li><li>Uvicorn</li></ul>
                 </div>
                 <div>
-                  <h3 className={styles.railLabel}>Quality</h3>
+                  <h5 className={styles.railLabel}>Quality</h5>
                   <ul className={styles.railList}><li>Pytest</li><li>Ruff</li><li>GitHub Actions</li></ul>
                 </div>
               </div>

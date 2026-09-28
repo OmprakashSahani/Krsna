@@ -47,7 +47,10 @@ it.each(Object.keys(projectDetails) as ProjectSlug[])("replaces the list with %s
   expect(view.queryByRole("link", { name: `${projectDetails[slug].title} — View project` })).toBeNull();
   expect(work.querySelector("video")).toBe(video);
   expect(detail.contains(document.activeElement)).toBe(true);
-  expect(within(detail).getByRole("heading", { level: 1, name: projectDetails[slug].title })).toBeTruthy();
+  expect(within(detail).getByRole("heading", { level: 3, name: projectDetails[slug].title })).toBeTruthy();
+  expect(detail.querySelector("h1, h2")).toBeNull();
+  expect(within(detail).getByRole("heading", { level: 4, name: "Boundaries" })).toBeTruthy();
+  expect(within(detail).getByRole("heading", { level: 5, name: "Core" })).toBeTruthy();
   expect(within(detail).getByRole("region", { name: "Boundaries" }).textContent!.length).toBeGreaterThan(200);
   expect(detail.querySelector("main, footer, .site-header")).toBeNull();
   fireEvent.click(within(detail).getByRole("button", { name: "← CURRENT WORK" }));
@@ -100,6 +103,20 @@ it("rejects repeated project parameters consistently with server metadata", () =
   expect(window.location.search).toBe("?panel=work");
 });
 
+it.each(["work&panel=about", "about&panel=work"])("normalizes ambiguous panels %s with a valid project", panels => {
+  setTestUrl(`/?panel=${panels}&project=evidencepatch`);
+  const view = render(<PortfolioHub />);
+  expect(window.location.search).toBe("?panel=work&project=evidencepatch");
+  expect(view.getByRole("region", { name: "EvidencePatch case study" }).closest("aside")?.id).toBe("portfolio-panel-left");
+});
+
+it("normalizes a project-only deep link into Current Work", () => {
+  setTestUrl("/?project=searcheval-lab");
+  const view = render(<PortfolioHub />);
+  expect(window.location.search).toBe("?panel=work&project=searcheval-lab");
+  expect(view.getByRole("region", { name: "SearchEval Lab case study" })).toBeTruthy();
+});
+
 it("keeps modified project clicks available as normal deep links", () => {
   const view = openWork();
   const trigger = view.getByRole("link", { name: "EvidencePatch — View project" });
@@ -132,7 +149,7 @@ it("switches projects without replacing Work and clears project state for anothe
   fireEvent.click(view.getByRole("link", { name: "SearchEval Lab — View project" }));
   expect(window.location.search).toBe("?panel=work&project=searcheval-lab");
   expect(view.getByRole("complementary", { name: "03 / Current work" })).toBe(work);
-  expect(view.queryByRole("heading", { level: 1, name: "EvidencePatch" })).toBeNull();
+  expect(view.queryByRole("heading", { level: 3, name: "EvidencePatch" })).toBeNull();
   fireEvent.click(view.getByRole("button", { name: "01 About" }));
   expect(window.location.search).toBe("?panel=about");
   expect(view.queryByRole("region", { name: /case study$/ })).toBeNull();
@@ -209,4 +226,21 @@ it("pauses the retained summary video when the case study replaces the list", ()
   fireEvent.click(view.getByRole("button", { name: "← CURRENT WORK" }));
   expect(view.getByLabelText("Gaussian Splat workspace reconstruction demo")).toBe(video);
   pause.mockRestore();
+});
+
+it("restores focus to the project returned to through history, not the last clicked project", async () => {
+  const view = openWork();
+  const evidence = view.getByRole("link", { name: "EvidencePatch — View project" });
+  fireEvent.click(evidence);
+  fireEvent.click(view.getByRole("button", { name: "03 Current work" }));
+  fireEvent.click(view.getByRole("link", { name: "LeRobot State Atlas — View project" }));
+  for (let index = 0; index < 2; index++) {
+    await act(async () => {
+      window.history.back();
+      await new Promise(resolve => window.addEventListener("popstate", resolve, { once: true }));
+    });
+  }
+  expect(window.location.search).toBe("?panel=work&project=evidencepatch");
+  fireEvent.keyDown(document.activeElement!, { key: "Escape" });
+  expect(document.activeElement).toBe(evidence);
 });

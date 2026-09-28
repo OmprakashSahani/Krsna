@@ -2,10 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import "@fontsource-variable/jetbrains-mono/wght.css";
-import "@fontsource/carlito/400.css";
-import "@fontsource/carlito/400-italic.css";
-import "@fontsource/carlito/700.css";
-import "@fontsource/carlito/700-italic.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
 

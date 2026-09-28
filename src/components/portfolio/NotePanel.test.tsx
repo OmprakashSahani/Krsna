@@ -237,6 +237,25 @@ it("starts a fresh editable draft when reopening after success", async () => {
   expect(screen.getByRole("status").textContent).toBe("");
 });
 
+it("starts a fresh draft when browser history reopens a successfully sent note", async () => {
+  fetchMock.mockResolvedValueOnce(Response.json({ ok: true }));
+  const { message, email, submit } = fillNote();
+  fireEvent.click(submit);
+  await waitFor(() => expect(screen.getByRole("status").textContent).toBe("Note sent."));
+  closeNote();
+  await act(async () => {
+    window.history.back();
+    await new Promise(resolve => window.addEventListener("popstate", resolve, { once: true }));
+  });
+  expect(window.location.search).toBe("?panel=note");
+  expect(message.readOnly).toBe(false);
+  expect(email.readOnly).toBe(false);
+  expect(submit.disabled).toBe(false);
+  expect(screen.getByRole("status").textContent).toBe("");
+  expect(document.activeElement).toBe(message);
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+});
+
 it("focuses the note on open and restores the trigger on close", () => {
   // Native Tab order, modality, and inertness require browser verification.
   const { message } = fillNote();

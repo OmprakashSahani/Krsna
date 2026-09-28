@@ -8,7 +8,7 @@ import styles from "./panels.module.css";
 
 const currentProjects: Project[] = [
   projects.find(project => project.title === "LeRobot State Atlas")!,
-  { number: "", title: "SplatLab", description: "Engineering and debugging tool for Gaussian Splatting.", area: "Gaussian Splatting", repository: "https://github.com/OmprakashSahani-Labs/splatlab" },
+  { title: "SplatLab", description: "Engineering and debugging tool for Gaussian Splatting.", area: "Gaussian Splatting", repository: "https://github.com/OmprakashSahani-Labs/splatlab" },
   ...["SearchEval Lab", "EvidencePatch", "Atlas AI"].map(title => projects.find(project => project.title === title)!),
 ];
 
@@ -16,7 +16,7 @@ export function WorkPanel({ active, showPreview, project: selectedProject, onPro
   active: boolean;
   showPreview: boolean;
   project: ProjectSlug | null;
-  onProject: (slug: ProjectSlug, trigger: HTMLAnchorElement) => void;
+  onProject: (slug: ProjectSlug) => void;
   onBack: () => void;
 }) {
   const video = useRef<HTMLVideoElement>(null);
@@ -46,7 +46,7 @@ export function WorkPanel({ active, showPreview, project: selectedProject, onPro
     if ((!active || selectedProject) && video.current && !video.current.paused) video.current.pause();
   }, [active, selectedProject]);
   return <>
-    <div ref={list} className={styles.projectList} hidden={Boolean(selectedProject)}>
+    <div ref={list} hidden={Boolean(selectedProject)}>
       {currentProjects.map((project, index) => <article key={project.title} className={styles.project}>
         <p className={styles.annotation}>{String(index + 1).padStart(2, "0")} / {project.area}</p>
         <h3>{project.title}</h3><p>{project.description}</p>
@@ -56,7 +56,7 @@ export function WorkPanel({ active, showPreview, project: selectedProject, onPro
             if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
             event.preventDefault();
             listScroll.current = list.current?.closest("aside")?.scrollTop ?? 0;
-            onProject(project.slug!, event.currentTarget);
+            onProject(project.slug!);
           }}>View project ↗</a>}
           <a href={project.repository} target="_blank" rel="noopener noreferrer" aria-label={`${project.title} — GitHub (opens in a new tab)`}>GitHub ↗</a>
         </div>

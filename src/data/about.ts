@@ -1,14 +1,6 @@
-// Existing homepage biography and About story, preserved verbatim.
-export const biography = [
-  "I'm Omprakash Sahani. I'm a software engineer interested in machine learning and the systems behind it. I like understanding how things actually work — how models are evaluated, why performance changes, what happens inside distributed systems, how search quality is measured, and how data affects what a robot can learn.",
-  "I started with a Diploma in Computer Engineering and later completed my B.Tech in Computer Science and Engineering. A lot of my learning has also come from building projects on my own. When something interests me, I like going deeper into it, building something practical, measuring how it behaves, finding where it fails, and then trying to improve it. That is what led me toward ML systems, search evaluation, distributed systems, and robot learning.",
-  "I care about building software that is not only technically interesting, but useful in the real world. I think good engineering should help people, make difficult things easier to understand, and solve meaningful problems. I still have a lot to learn, and that is something I genuinely enjoy. I want to keep learning, building, and using what I learn to create systems that are reliable, understandable, and helpful to others."
-] as const;
-
 export const aboutStories = [
   {
     "id": "introduction",
-    "label": "Introduction",
     "title": "I did not start with computers",
     "paragraphs": [
       {
@@ -19,7 +11,6 @@ export const aboutStories = [
   },
   {
     "id": "background",
-    "label": "Background",
     "title": "Background",
     "paragraphs": [
       {
@@ -46,7 +37,6 @@ export const aboutStories = [
   },
   {
     "id": "underneath",
-    "label": "Underneath the model",
     "title": "From building models to understanding what is underneath them",
     "paragraphs": [
       {
@@ -97,7 +87,6 @@ export const aboutStories = [
   },
   {
     "id": "learning",
-    "label": "How I learn",
     "title": "How I learn and build",
     "paragraphs": [
       {
@@ -136,7 +125,6 @@ export const aboutStories = [
   },
   {
     "id": "always",
-    "label": "Always learning",
     "title": "Always learning",
     "paragraphs": [
       {
@@ -183,7 +171,6 @@ export const aboutStories = [
   },
   {
     "id": "beyond",
-    "label": "Beyond engineering",
     "title": "Beyond engineering",
     "paragraphs": [
       {

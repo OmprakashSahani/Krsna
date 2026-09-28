@@ -105,15 +105,15 @@ export default function LeRobotStateAtlasContent() {
             <ProjectRailSection headingId="tools-heading" title="Tools">
               <div className={styles.toolGroups}>
                 <div>
-                  <h3 className={styles.railLabel}>Core</h3>
+                  <h5 className={styles.railLabel}>Core</h5>
                   <ul className={styles.railList}><li>Python</li><li>LeRobot</li><li>PyTorch</li><li>Plotly</li></ul>
                 </div>
                 <div>
-                  <h3 className={styles.railLabel}>Web</h3>
+                  <h5 className={styles.railLabel}>Web</h5>
                   <ul className={styles.railList}><li>Next.js</li><li>React</li><li>Three.js</li><li>React Three Fiber</li></ul>
                 </div>
                 <div className={localStyles.environmentTools}>
-                  <h3 className={styles.railLabel}>Environment</h3>
+                  <h5 className={styles.railLabel}>Environment</h5>
                   <ul className={styles.railList}><li>Spark / Gaussian Splat</li></ul>
                 </div>
               </div>

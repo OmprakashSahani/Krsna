@@ -9,7 +9,6 @@ export const sections = [
   { id: "note", index: "08", label: "Leave a note", side: "right" },
 ] as const;
 export type SectionId = typeof sections[number]["id"];
-export type Section = typeof sections[number];
 
 // Kṛṣṇa is a panel destination, separate from the eight visible navigation items.
 export const panelDefinitions = [...sections, { id: "krishna", label: "Kṛṣṇa", side: "right" }] as const;

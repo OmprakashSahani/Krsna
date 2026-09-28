@@ -44,7 +44,6 @@
 .fixedNotes text { fill: #454549; opacity: 1; font-weight: 500; }
 .fixedNotes .mathLabel { font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif; font-size: 12px; font-weight: 400; letter-spacing: 0; }
 .fixedNotes .iterateSymbol { font-size: 11px; font-weight: 500; }
-.fixedNotes .mathSuperscript { font-size: 7.5px; }
 .fixedNotes text:nth-last-child(-n+2) { font-size: 8px; letter-spacing: 1.5px; }
 .optimization { animation: orbit 64s linear infinite; }
 .optimizationText { animation: orbit 64s linear infinite reverse; }
