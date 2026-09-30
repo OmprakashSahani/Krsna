@@ -130,14 +130,14 @@ it("mounts only the selected project's heavy detail media", () => {
   const view = render(<PortfolioHub />);
   expect(view.container.querySelector("video, object, [data-project], img[alt*='Certificate']")).toBeNull();
   fireEvent.click(view.getByRole("button", { name: "03 Current work" }));
-  expect(view.container.querySelectorAll("video")).toHaveLength(1);
+  expect(view.container.querySelectorAll("video")).toHaveLength(2);
   fireEvent.click(view.getByRole("link", { name: "EvidencePatch — View project" }));
-  expect(view.container.querySelectorAll("video")).toHaveLength(1);
+  expect(view.container.querySelectorAll("video")).toHaveLength(2);
   expect(view.getByRole("img", { name: /Certificate of Participation/ })).toBeTruthy();
   fireEvent.click(view.getByRole("button", { name: "← CURRENT WORK" }));
   expect(view.container.querySelector("[data-project]")).toBeNull();
   fireEvent.click(view.getByRole("link", { name: "LeRobot State Atlas — View project" }));
-  expect(view.container.querySelectorAll("video")).toHaveLength(2);
+  expect(view.container.querySelectorAll("video")).toHaveLength(3);
   expect(view.queryByRole("img", { name: /Certificate of Participation/ })).toBeNull();
 });
 
