@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { projectHref, type ProjectSlug } from "@/data/project-details";
+import { projectDetails, projectHref, type ProjectSlug } from "@/data/project-details";
 import { portfolioState, sectionHref } from "./navigation-state";
 import { CentralSystem } from "./CentralSystem";
 import { HubNavigation } from "./HubNavigation";
@@ -18,6 +18,38 @@ import { KrishnaPanel } from "./KrishnaPanel";
 import { NotePanel, type NotePanelHandle } from "./NotePanel";
 import { panelDefinitions, type PanelId, type SectionId } from "./sections";
 import styles from "./portfolio.module.css";
+
+const portfolioTitle = "Omprakash Sahani — ML Systems Engineer";
+const portfolioDescription =
+  "Portfolio of Omprakash Sahani, an ML systems and software engineer working across evaluation, performance, and distributed systems.";
+
+function setMetaContent(selector: string, content: string) {
+  document.head.querySelector<HTMLMetaElement>(selector)?.setAttribute("content", content);
+}
+
+function syncPortfolioMetadata(project: ProjectSlug | null) {
+  const details = project ? projectDetails[project] : null;
+  const title = details ? `${details.title} — Omprakash Sahani` : portfolioTitle;
+  const description = details?.description ?? portfolioDescription;
+
+  document.title = title;
+
+  setMetaContent('meta[name="description"]', description);
+  setMetaContent('meta[property="og:title"]', title);
+  setMetaContent('meta[property="og:description"]', description);
+  setMetaContent('meta[property="og:site_name"]', "Omprakash Sahani");
+  setMetaContent('meta[property="og:type"]', "website");
+  setMetaContent('meta[name="twitter:card"]', "summary");
+  setMetaContent('meta[name="twitter:title"]', title);
+  setMetaContent('meta[name="twitter:description"]', description);
+
+  const canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  if (canonical) {
+    const current = new URL(canonical.href);
+    const origin = `${current.protocol}//${current.host}`;
+    canonical.href = new URL(project ? projectHref(project) : "/", origin).href;
+  }
+}
 
 export function PortfolioHub() {
   const router = useRouter();
@@ -79,8 +111,12 @@ export function PortfolioHub() {
 
   function openProject(slug: ProjectSlug) {
     if (project === slug) return;
-    router.push(projectHref(slug), { scroll: false });
+    window.history.pushState(null, "", projectHref(slug));
   }
+
+  useEffect(() => {
+    if (!routePanel) syncPortfolioMetadata(project);
+  }, [project, routePanel]);
 
   useEffect(() => {
     if (previousProject.current && !project && active === "work") {

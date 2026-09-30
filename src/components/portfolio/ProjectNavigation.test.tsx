@@ -171,6 +171,7 @@ it("restores project state with browser Back and Forward without remounting Work
   expect(view.queryByRole("region", { name: /case study$/ })).toBeNull();
   expect(document.activeElement).toBe(trigger);
   expect(work.scrollTop).toBe(300);
+  expect(document.title).toBe("Omprakash Sahani — ML Systems Engineer");
   work.scrollTop = 420;
   fireEvent.scroll(work);
   await act(async () => {
@@ -178,6 +179,7 @@ it("restores project state with browser Back and Forward without remounting Work
     await new Promise(resolve => window.addEventListener("popstate", resolve, { once: true }));
   });
   await waitFor(() => expect(view.getByRole("region", { name: "EvidencePatch case study" })).toBeTruthy());
+  await waitFor(() => expect(document.title).toBe("EvidencePatch — Omprakash Sahani"));
   expect(view.getByRole("complementary", { name: "03 / Current work" })).toBe(work);
   expect(work.scrollTop).toBe(0);
   fireEvent.click(view.getByRole("button", { name: "← CURRENT WORK" }));
@@ -243,4 +245,102 @@ it("restores focus to the project returned to through history, not the last clic
   expect(window.location.search).toBe("?panel=work&project=evidencepatch");
   fireEvent.keyDown(document.activeElement!, { key: "Escape" });
   expect(document.activeElement).toBe(evidence);
+});
+
+it("keeps project metadata synchronized across client project navigation", async () => {
+  document.title = "Omprakash Sahani — ML Systems Engineer";
+
+  const description = document.createElement("meta");
+  description.name = "description";
+  description.content =
+    "Portfolio of Omprakash Sahani, an ML systems and software engineer working across evaluation, performance, and distributed systems.";
+  document.head.append(description);
+
+  const canonical = document.createElement("link");
+  canonical.rel = "canonical";
+  canonical.href = "https://krsna-supreme-personality-of-godhead.vercel.app/";
+  document.head.append(canonical);
+
+  const ogTitle = document.createElement("meta");
+  ogTitle.setAttribute("property", "og:title");
+  ogTitle.content = "Omprakash Sahani — ML Systems Engineer";
+  document.head.append(ogTitle);
+
+  const ogDescription = document.createElement("meta");
+  ogDescription.setAttribute("property", "og:description");
+  ogDescription.content = description.content;
+  document.head.append(ogDescription);
+
+  const ogSiteName = document.createElement("meta");
+  ogSiteName.setAttribute("property", "og:site_name");
+  ogSiteName.content = "Omprakash Sahani";
+  document.head.append(ogSiteName);
+
+  const ogType = document.createElement("meta");
+  ogType.setAttribute("property", "og:type");
+  ogType.content = "website";
+  document.head.append(ogType);
+
+  const twitterCard = document.createElement("meta");
+  twitterCard.name = "twitter:card";
+  twitterCard.content = "summary";
+  document.head.append(twitterCard);
+
+  const twitterTitle = document.createElement("meta");
+  twitterTitle.name = "twitter:title";
+  twitterTitle.content = "Omprakash Sahani — ML Systems Engineer";
+  document.head.append(twitterTitle);
+
+  const twitterDescription = document.createElement("meta");
+  twitterDescription.name = "twitter:description";
+  twitterDescription.content = description.content;
+  document.head.append(twitterDescription);
+
+  const view = openWork();
+  fireEvent.click(view.getByRole("link", { name: "LeRobot State Atlas — View project" }));
+
+  await waitFor(() => {
+    expect(document.title).toBe("LeRobot State Atlas — Omprakash Sahani");
+  });
+
+  expect(description.content).toBe(projectDetails["lerobot-state-atlas"].description);
+  expect(canonical.href).toBe(
+    "https://krsna-supreme-personality-of-godhead.vercel.app/?panel=work&project=lerobot-state-atlas",
+  );
+  expect(ogTitle.content).toBe("LeRobot State Atlas — Omprakash Sahani");
+  expect(ogDescription.content).toBe(projectDetails["lerobot-state-atlas"].description);
+  expect(ogSiteName.content).toBe("Omprakash Sahani");
+  expect(ogType.content).toBe("website");
+  expect(twitterCard.content).toBe("summary");
+  expect(twitterTitle.content).toBe("LeRobot State Atlas — Omprakash Sahani");
+  expect(twitterDescription.content).toBe(projectDetails["lerobot-state-atlas"].description);
+
+  fireEvent.click(view.getByRole("button", { name: "← CURRENT WORK" }));
+
+  await waitFor(() => {
+    expect(document.title).toBe("Omprakash Sahani — ML Systems Engineer");
+  });
+
+  const homeDescription =
+    "Portfolio of Omprakash Sahani, an ML systems and software engineer working across evaluation, performance, and distributed systems.";
+
+  expect(description.content).toBe(homeDescription);
+  expect(canonical.href).toBe("https://krsna-supreme-personality-of-godhead.vercel.app/");
+  expect(ogTitle.content).toBe("Omprakash Sahani — ML Systems Engineer");
+  expect(ogDescription.content).toBe(homeDescription);
+  expect(ogSiteName.content).toBe("Omprakash Sahani");
+  expect(ogType.content).toBe("website");
+  expect(twitterCard.content).toBe("summary");
+  expect(twitterTitle.content).toBe("Omprakash Sahani — ML Systems Engineer");
+  expect(twitterDescription.content).toBe(homeDescription);
+
+  description.remove();
+  canonical.remove();
+  ogTitle.remove();
+  ogDescription.remove();
+  ogSiteName.remove();
+  ogType.remove();
+  twitterCard.remove();
+  twitterTitle.remove();
+  twitterDescription.remove();
 });
